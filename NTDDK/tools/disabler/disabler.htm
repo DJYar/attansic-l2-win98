@@ -1,0 +1,97 @@
+
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<META NAME="Generator" CONTENT="Microsoft Word 97">
+<TITLE>Disabler</TITLE>
+</HEAD>
+<BODY LINK="#0000ff">
+
+<FONT FACE="Verdana" SIZE=5><H2>Disabler</H2>
+</FONT><FONT FACE="Verdana" SIZE=2>
+<P><span style="color:#FF0000;font-size:10pt;font-family:Arial">[This is preliminary documentation and subject to change.]</span></P>
+
+
+<h3>SUMMARY</H3></FONT><FONT FACE="Verdana" SIZE=2><P>
+Disabler.exe is a command-line tool that repeatedly disables and re-enables (or, optionally, removes/refreshes) a Device Manager object for use in testing how that driver responds to many load/unload events. This test works on both Microsoft&#174; Windows&#174; 2000 and Microsoft Windows 98.<P>
+
+<B>Note:</B> WHQL is currently using this for some of their programs. 
+<P>
+
+<h3>IMPLEMENTATION</H3></FONT><FONT FACE="Verdana" SIZE=2><P>
+The core of the program revolves around a CM_DisableDevNode() and CM_Enable_DevNode() loop. The test first looks for all the devices it can test. Certain classes of devices are not testable in this fashion; for example, devices whose classes are SYSTEM will not be tested. Excluded classes include SYSTEM, VOLUME, LEGACYDRIVER, DISPLAY, MONITOR, CDROM, FDC, and FLOPPYDISK.<P>
+
+The core algorithm of the test is as follows.<P>
+
+<li>Get information on the device being tested (status and problem code, etc.).
+
+<li>Get information about the device's children (again, status and problem code, etc.).
+
+<li>Disable that device, or remove this device.
+
+<li>Wait (this delay time is settable).
+
+<li>Enable this device or refresh its parent.
+
+<li>Wait (allow for the device's children to re-enumerate and restart).
+
+<li>Check that all the children came back and are working by checking the problem code, status code, etc.
+
+<li>Check that the device node came back and is working by checking the problem code, status code, etc.
+
+<li>(Optional) Launch a child test and record its log file (see the Usage section, below).
+
+<li>Repeat (the number of repetitions is programmable; see the Usage section, below).</li>
+<P>
+
+<h3>USAGE</H3></FONT><FONT FACE="Verdana" SIZE=2><P>
+This test can take either command-line arguments or a path to an .ini file as arguments. 
+<P>
+Here are a list of command-line arguments the test will take. Note: You can get a list of command line arguments by running with /?.
+<pre></FONT><FONT FACE="Verdana" SIZE=2>
+	<B>/?</B>&#9; Display this Help message.  
+	<B>/cl:</B>&#9; Test only the class specified.  
+	<B>/et:</B>&#9; Specify an external test.  
+	<B>/el:</B>&#9; Specify an external test log file. 
+	<B>/lf:</B>&#9; Specify the log file name.  
+	<B>/dc:</B>&#9; Specify the number of times to disable each device.  
+	<B>/dl:</B>&#9; Specify the delay time between CM actions (in milliseconds).  
+	<B>/rm</B>&#9; Specify the disable method to be REMOVE.  
+	<B>/dis</B>&#9; Specify the disable method to be DISABLE.
+</pre><P>
+
+If there are no arguments, it will prompt the user for test parameters, which include the device name, device class, number of repetitions (the number of times to disable and enable these devices), test method (remove or disable), and delay time (count of milliseconds to wait between disabling and re-enabling the device).<P>
+
+
+<b>Note:</B> To start the test using an .ini file, you can use the full path of the .ini file (C:\Foo\Inifile.ini), or you can drag the file to the test icon. See Sample.ini for details. The selections are as follows.<P><PRE></FONT><FONT FACE="Verdana" SIZE=2>
+	<B>RepetitionCount=10</B>&#9;The number of times to iterate through the test.
+	<B>Delay=3000</B>&#9;	Delay time (in milliseconds) between disable and enable.
+	<B>ClassToTest=USB</B>&#9;	This test will test all devices of class USB.
+	<B>ExternalTest=</B>&#9;	If there is an entry, will run this test between every start/stop iteration.<br> &#9;			For example, when testing net cards, you can create a .bat file to ping <br> &#9;			some server and pipe the results to a file.
+	<B>ExternLogFileName=</B>&#9;If there is an entry, will report on the results of the external test by<br> &#9			adding this log file to the test log.
+	<B>LogFileName=c:\windows\desktop\dis-samp.log</B>&#9;The log file name and location.
+</pre><P>
+
+<FONT FACE="Verdana" SIZE=2><h3>RESULTS</H3></FONT><FONT FACE="Verdana" SIZE=2><P>
+Reading the results of a test can be rather cryptic sometimes. Below are some situations in which the test will fail.<p>
+The test will fail if a device's children failed to re-appear after a stop/start operation (that is, you are testing a USB HUB, and before the test there was a USB mouse plugged into the hub, and afterward, Device Manager cannot find the mouse). <P>
+
+It'll also fail if the device or one of its children failed to restart properly. In this situation, the Device Manager shows an error code. Error codes are enumerated in Cfg.h.<p>
+
+It will fail if there is a change in the status code of the device or one of its children&#151;that is, if DN_LIAR gets set after a start/stop operation. Status codes are enumerated in Cfg.h<P>
+
+It will fail if the device cannot be disabled. Sometimes this is normal if the device is in use, so make sure no one's using that device while it's being tested. <p>
+
+And finally, the most common form of failure: the test will fail if the machine bugchecks. Refer to the bugcheck documentation debugging documentation for more information.<p>
+
+<B>Note:</B> Watch for memory leaks. Drivers can allocate memory, and not freeing memory on shutdown can cause a machine to leak a lot of memory in a very short time. Try using Poolmon for detection of memory leaks.<P>
+
+</FONT><P ALIGN="CENTER"><A HREF="#top"><FONT FACE="Verdana" SIZE=2>Top of page</FONT></A><FONT FACE="Verdana" SIZE=2> </P></FONT>
+<TABLE CELLSPACING=0 BORDER=0 WIDTH=624>
+<TR><TD VALIGN="MIDDLE" BGCOLOR="#00ffff" HEIGHT=2>
+<P></TD>
+</TR>
+</TABLE>
+
+<FONT FACE="MS Sans Serif" SIZE=1><P>&copy; 1999 Microsoft Corporation</FONT><FONT FACE="Verdana" SIZE=2> </P></FONT></BODY>
+</HTML>

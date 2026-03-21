@@ -1,0 +1,5 @@
+DIRS= \
+     irda \
+     wshsmple \
+     ndis \
+     config

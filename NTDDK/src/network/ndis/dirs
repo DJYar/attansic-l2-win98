@@ -1,0 +1,7 @@
+DIRS= \
+     tbatm155 \
+     e100bex \
+     ne2000 \
+     passthru \
+     atmsmple \
+     packet

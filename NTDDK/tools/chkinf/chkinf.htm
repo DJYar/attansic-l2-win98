@@ -1,0 +1,282 @@
+<html>
+
+<head>
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<meta NAME="GENERATOR" CONTENT="Microsoft FrontPage 4.0">
+<title>ChkINF</title>
+</head>
+
+<body LINK="#0000ff">
+<font FACE="Verdana" SIZE="5">
+
+<h2>INF File Syntax Checker</h2>
+</font><font FACE="Verdana" SIZE="2">
+
+<p><span style="color:#FF0000;font-size:10pt;font-family:Arial">[This is preliminary
+documentation and subject to change.]</span></p>
+
+<h3>SUMMARY</h3>
+
+ChkINF is a Perl script
+that checks the structure and syntax of Microsoft® Windows® 2000 device driver
+.inf files. Results are presented in HTML format, and include a list of the
+errors and warnings detected in each .inf file, with each error and warning
+shown next to the errant .inf file entry. Please note the Limitations section
+below. Note that ChkINF does not support Windows 98 .inf files.<p>
+
+The tool includes support
+for all .inf sections and directives that apply to all classes of devices.
+ChkINF includes specific device class support for the following device classes:
+
+<blockquote>
+  <p>1394 Host Bus Controllers (class = 1394)</p>
+  <p>Battery Devices (class = Battery)</p>
+  <p>CD-ROM Drivers (class = CDROM)</p>
+  <p>Disk Drives (class = DiskDrive)</p>
+  <p>Display Adapters (class = Display)</p>
+  <p>Floppy Disk Controllers (class = FDC)</p>
+  <p>Floppy Disk Drives (class = FloppyDisk)</p>
+  <p>Hard Disk Controllers (class = HDC)</p>
+  <p>Human Input Devices (class = HIDClass)</p>
+  <p>Imaging Devices (class = Image)</p>
+  <p>IrDA Devices (class = Infrared) </p>
+  <p>Memory Technology Drivers (class = MTD)</p>
+  <p>Modems (class = Modem) </p>
+  <p>Monitors (class = Monitor) </p>
+  <p>Multifunction Devices (class = Multifunction) </p>
+  <p>Multi-port Serial Adapters (class = MultiportSerial) </p>
+  <p>Network Adapters (class = Net) </p>
+  <p>PCMCIA Adapters (class = PCMCIA) </p>
+  <p>Ports - COM &amp; LPT serial ports (class = Ports) </p>
+  <p>SCSI and RAID Controllers (class = SCSIAdapter) </p>
+  <p>Smart Card Readers (class = SmartCardReader) </p>
+  <p>Storage Volumes (class = Volume) </p>
+  <p>System Devices (class = System) </p>
+  <p>USB (class = USB) </p>
+</blockquote>
+
+<p> ChkINF does not check device specific INF extension for the following device classes:
+
+<blockquote>
+  <p>Keyboards (class = Keyboard)</p>
+  <p>Medium Changers (class = MediumChanger)</p>
+  <p>Mice (class = Mouse) </p>
+  <p>Multimedia (class = Media)</p>
+  <p>Network Clients (class = NetClient)</p>
+  <p>Network Service (class = NetService) </p>
+  <p>Network Transport (class = NetTrans) </p>
+  <p>Printers (class = Printer) </p>
+  <p>Tape Drives (class = TapeDrive) </p>
+</blockquote>
+
+
+<p>The tool has not been extensively tested. Review your results carefully. </p>
+
+<h3>RUNNING THE TOOL</h3>
+
+<p><b>Note:</b>  Because ChkINF is a Perl script,
+in order to use the tool you will need to obtain a Perl interpreter. ChkINF
+requires a Perl interpreter that is Version 5.003_07 or greater. ChkINF should
+work with any version of Perl 5.0 or greater, but has not been tested with any
+versions previous to 5.003_07.</p>
+
+<p>ChkINF has been tested
+with the following Perl interpreters: 
+ </p>
+
+<blockquote>
+  <p>GNU Perl 5.005_02 compiled for Win32</p>
+</blockquote>
+
+<blockquote>
+  <p>Perl for Win32 5.003_07 from ActiveWare Internet Corp. </p>
+</blockquote>
+<p>Microsoft neither endorses nor recommends any specific Perl interpreters.</p>
+
+<p>ChkINF is located in the &lt;DDKRoot&gt;\Tools\Chkinf subdirectory, and should be
+executed from the Command Prompt.</p>
+
+<p>A batch file, <I>ChkINF.bat</I>, is provided for smooth execution. ChkINF takes the following
+arguments: </p>
+<font FACE="Courier" SIZE="3">
+
+<pre>
+Usage: ChkInf[.bat] &lt;FileList&gt; /L &lt;LogFile&gt; [/B] [/DC &lt;Options&gt;]		
+&lt;FileList&gt;		FileName | Wildcard List | Directory Name
+/L &lt;LogFile&gt;		Write an NT Log File Named &lt;LogFile&gt;
+/B			Launch Default Browser and Display Results
+/I &lt;Dir&gt;		Look for INCLUDEd infs in &lt;Dir&gt; instead of current directory
+/LO			Verify files copied (CopyFiles) against Layout.inf
+/DC &lt;Options&gt;		Use Device Class &lt;Options&gt; When Checking .infs
+/DC FAX			Check any Fax keys present in Modem .inf files only
+</pre>
+</font>
+
+<h4>Notes</h4>
+
+<ul>
+
+<li>&quot;FileName&quot; is the name of a single .inf file. <li>&quot;Wildcard&quot; List is a
+DOS wildcard (as in &quot;net*.inf&quot;). ChkINF automatically expands wildcards and
+checks all applicable .inf files. 
+<li>ChkINF checks all .inf files located in the
+&quot;DirectoryName&quot; subdirectory. 
+<li>/L creates an NT log file. 
+<li>The only Device Class option currently supported by the /DC argument is the FAX option, as listed above.
+
+<h4>Output</h4>
+
+<p>ChkINF produces three types of files at the end of the checking process.</p>
+
+<blockquote>
+  <p>Summary.htm: A single HTML file that lists all of the one or more .inf files that were
+  checked, along with the number of errors and warnings detected in each one. The name of
+  each .inf file is linked to the respective .htm file described below.</p>
+</blockquote>
+
+<blockquote>
+  <p><i>NameofINFfile</i>.htm: Results file produced for each checked .inf file.</p>
+</blockquote>
+
+<blockquote>
+  <p>An optional NT Log file may be created (see Running the Tool). </p>
+</blockquote>
+
+<p>NameofINFfile.htm includes the following:</p>
+
+<blockquote>
+  <p>Errors: A list of the errors found in the .inf file, along with the error message and
+  the line in the .inf file where it was detected. Each warning includes a link to its
+  location in the Annotated INF (see below).</p>
+</blockquote>
+
+<blockquote>
+  <p>Warnings: A list of the warnings detected in the .inf file, along with the warning
+  message and the line in the .inf file where it was detected. Each warning includes a link
+  to its location in the Annotated INF (see below).</p>
+</blockquote>
+
+<blockquote>
+  <p>Sections included from other infs: A list of the sections included from other .inf
+  files. Each section listed includes a link to its location in the Sections included from
+  other infs section (see below). This item is omitted if the .inf being checked did not
+  include any sections from other .inf files.</p>
+</blockquote>
+
+<blockquote>
+  <p>Annotated INF: The complete source for the INF file, with the warning and error
+  messages displayed adjacent to the line where the warning or error was detected.</p>
+</blockquote>
+
+<blockquote>
+  <p>Sections included from other infs: The complete source for the included sections, with
+  warning and error messages displayed adjacent to the line where the warning or error was
+  detected. This section is omitted if the INF being checked did not include any sections
+  from other INF files. </p>
+</blockquote>
+
+<p>These files are saved into the subdirectory Htm, located off the directory from which
+ChkINF is invoked. </p>
+
+<h3>LIMITATIONS</h3>
+
+<p>ChkINF does not support Windows 98
+.inf files. ChkINF will not accurately check .inf structure and syntax that is
+specific to Windows 98 .inf files. </p>
+
+<p>The tool does not perform
+device-class-specific testing for the following device classes: </p>
+
+<blockquote>
+  <p>Keyboards (class = Keyboard)</p>
+  <p>Medium Changers (class = MediumChanger)</p>
+  <p>Mice (class = Mouse) </p>
+  <p>Multimedia (class = Media)</p>
+  <p>Network Clients (class = NetClient)</p>
+  <p>Network Service (class = NetService) </p>
+  <p>Network Transport (class = NetTrans) </p>
+  <p>Printers (class = Printer) </p>
+  <p>Tape Drives (class = TapeDrive) </p>
+</blockquote>
+
+
+<p>ChkINF has been tested with the following Perl interpreters: </p>
+
+<blockquote>
+  <p>GNU Perl 5.005_02 compiled for Win32</p>
+</blockquote>
+
+<blockquote>
+  <p>Perl for Win32 5.003_07 from ActiveWare Internet Corp. </p>
+</blockquote>
+
+<p>ChkINF does not support Unicode. To
+run ChkINF on a Unicode .inf file, first save the file as an ASCII text file. </p>
+
+<p> ChkINF does not automatically search 
+the <I>\Winnt\Inf</I> directory or any other directory for INCLUDEd .inf files. Use the 
+/I argument when calling ChkINF to direct the tool to look for INCLUDEd .inf files in a specific directory. </p>
+
+<p> ChkINF warns for any sections that are not referenced by a directive
+elsewhere in the INF file. This is a change from previous versions of the tool,
+which reported errors for un-referenced sections. </p>
+
+<p> For Display .inf files, ChkINF does not check for all relevant Registry keys. An .inf file that passes
+with no errors may not function correctly. </p>
+
+<h3>CODE TOUR</h3>
+
+<h4>File Manifest</h4>
+</font><font FACE="Courier" SIZE="3">
+<TABLE BORDER=0 CELLSPACING=1 CELLPADDING=0>
+<TR><TD><u>File</u></TD><TD><u>Description<u></TD></TR>
+<TR><TD><I>ChkInf.bat</I></TD><TD>     Batch file for smooth execution. (See Running the Tool.)</TD></TR>
+<TR><TD><I>ChkInf.htm</I></TD><TD>     ChkINF readme (this file). </TD></TR>
+<TR><TD><I>ChkInf.pm</I></TD><TD>      Main module. </TD></TR>
+<TR><TD><i>1394.pm</i></TD><TD>        1394 Host Bus Controllers device class specific module.</TD></TR>
+<TR><TD><i>Battery.pm</i></TD><TD>     Battery device class specific module.</TD></TR>
+<TR><TD><i>CDROM.pm</i></TD><TD>       CD-ROM device class specific module.</TD></TR>
+<TR><TD><i>DiskDrive.pm</i></TD><TD>   Disk Drive device class specific module.</TD></TR>
+<TR><TD><I>Display.pm</I></TD><TD>     Display device class specific module.</TD></TR>
+<TR><TD><I>FaxReg.pm</I></TD><TD>      Modem device class specific sub-module used for the /DC FAX option.</TD></TR>
+<TR><TD><i>FDC.pm</i></TD><TD>         Floppy Disk Controller device class specific module.</TD></TR>
+<TR><TD><i>FloppyDisk.pm</i></TD><TD>  Floppy Disk Drives device class specific module.</TD></TR>
+<TR><TD><I>Generic.pm</I></TD><TD>     &quot;Generic&quot; module for devices for which a device class specific module does not yet exist. </TD></TR>
+<TR><TD><i>HDC.pm</i></TD><TD>         Hard Disk Controllers device class specific module.</TD></TR>
+<TR><TD><i>HIDClass.pm</i></TD><TD>    Human Input Device device class specific module.</TD></TR>
+<TR><TD><I>Image.pm</I></TD><TD>       Image device class specific module. </TD></TR>
+<TR><TD><I>Infrared.pm</I></TD><TD>    Infrared (IrDA) device class specific module.</TD></TR>
+<TR><TD><I>Modem.pm</I></TD><TD>       Modem device class specific module. </TD></TR>
+<TR><TD><I>Monitor.pm</I></TD><TD>     Monitor device class specific module. </TD></TR>
+<TR><TD><i>MTD.pm</i></TD><TD>         Memory Technology Driver device class specific module.</TD></TR>
+<TR><TD><i>Multifunction.pm</i></TD><TD>          Multifunction Devices device class specific module.</TD></TR>
+<TR><TD><i>MultiportSerial.pm</i>&nbsp;&nbsp;</TD><TD>Multi-port Serial Adapter device class specific module.</TD></TR>
+<TR><TD><I>Net.pm</I></TD><TD>         Net (network adapter) device class specific module.</TD></TR>
+<TR><TD><i>PCMCIA.pm</i></TD><TD>      PCMCIA Adapter device class specific module.</TD></TR>
+<TR><TD><i>Ports.pm</i></TD><TD>       Ports device class specific module.</TD></TR>
+<TR><TD><i>SCSIAdapter.pm</i></TD><TD>        SCSI and RAID Controllers device class specific module.</TD></TR>
+<TR><TD><i>SmartCard.pm</i></TD><TD>       Smart Card Readers device class specific module.</TD></TR>
+<TR><TD><i>System.pm</i></TD><TD>      System device class specific module.</TD></TR>
+<TR><TD><i>USB.pm</i></TD><TD>         USB device class specific module.</TD></TR>
+<TR><TD><i>Volume.pm</i></TD><TD>      Storage Volumes device class specific module.</TD></TR>
+</TABLE>
+<font FACE="Verdana" SIZE="2">
+
+<h3>FEEDBACK</h3>
+
+<p>We welcome your comments, problem reports and wish-list requests. Please submit them by pointing your Internet browser to <a href="http://www.microsoft.com/ddk">http://www.microsoft.com/ddk</a>.  </font></p>
+
+<p ALIGN="CENTER"><font FACE="Verdana" SIZE="2"><a HREF="#top">Top of page</a> </p>
+</font>
+
+<table CELLSPACING="0" BORDER="0" WIDTH="624">
+  <tr>
+    <td VALIGN="MIDDLE" BGCOLOR="#00ffff" HEIGHT="2"></td>
+  </tr>
+</table>
+<font FACE="MS Sans Serif" SIZE="1">
+
+<p>&copy; Microsoft Corporation 2000</font><font FACE="Verdana" SIZE="2"> </p>
+</font>
+</body>
+</html>

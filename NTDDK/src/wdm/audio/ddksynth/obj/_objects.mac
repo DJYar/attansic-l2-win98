@@ -1,0 +1,69 @@
+ALPHA_OBJECTS= \
+    $(_OBJ_DIR)\alpha\ddksynth.res \
+    $(_OBJ_DIR)\alpha\adapter.obj \
+    $(_OBJ_DIR)\alpha\clist.obj \
+    $(_OBJ_DIR)\alpha\control.obj \
+    $(_OBJ_DIR)\alpha\csynth.obj \
+    $(_OBJ_DIR)\alpha\instr.obj \
+    $(_OBJ_DIR)\alpha\kernhelp.obj \
+    $(_OBJ_DIR)\alpha\midi.obj \
+    $(_OBJ_DIR)\alpha\miniport.obj \
+    $(_OBJ_DIR)\alpha\mix.obj \
+    $(_OBJ_DIR)\alpha\plclock.obj \
+    $(_OBJ_DIR)\alpha\syslink.obj \
+    $(_OBJ_DIR)\alpha\voice.obj
+
+PASS0_ALPHA_OBJECTS=
+
+AXP64_OBJECTS= \
+    $(_OBJ_DIR)\axp64\ddksynth.res \
+    $(_OBJ_DIR)\axp64\adapter.obj \
+    $(_OBJ_DIR)\axp64\clist.obj \
+    $(_OBJ_DIR)\axp64\control.obj \
+    $(_OBJ_DIR)\axp64\csynth.obj \
+    $(_OBJ_DIR)\axp64\instr.obj \
+    $(_OBJ_DIR)\axp64\kernhelp.obj \
+    $(_OBJ_DIR)\axp64\midi.obj \
+    $(_OBJ_DIR)\axp64\miniport.obj \
+    $(_OBJ_DIR)\axp64\mix.obj \
+    $(_OBJ_DIR)\axp64\plclock.obj \
+    $(_OBJ_DIR)\axp64\syslink.obj \
+    $(_OBJ_DIR)\axp64\voice.obj
+
+PASS0_AXP64_OBJECTS=
+
+386_OBJECTS= \
+    $(_OBJ_DIR)\i386\ddksynth.res \
+    $(_OBJ_DIR)\i386\adapter.obj \
+    $(_OBJ_DIR)\i386\clist.obj \
+    $(_OBJ_DIR)\i386\control.obj \
+    $(_OBJ_DIR)\i386\csynth.obj \
+    $(_OBJ_DIR)\i386\instr.obj \
+    $(_OBJ_DIR)\i386\kernhelp.obj \
+    $(_OBJ_DIR)\i386\midi.obj \
+    $(_OBJ_DIR)\i386\miniport.obj \
+    $(_OBJ_DIR)\i386\mix.obj \
+    $(_OBJ_DIR)\i386\plclock.obj \
+    $(_OBJ_DIR)\i386\syslink.obj \
+    $(_OBJ_DIR)\i386\voice.obj \
+    $(_OBJ_DIR)\i386\mmx.obj
+
+PASS0_386_OBJECTS=
+
+IA64_OBJECTS= \
+    $(_OBJ_DIR)\ia64\ddksynth.res \
+    $(_OBJ_DIR)\ia64\adapter.obj \
+    $(_OBJ_DIR)\ia64\clist.obj \
+    $(_OBJ_DIR)\ia64\control.obj \
+    $(_OBJ_DIR)\ia64\csynth.obj \
+    $(_OBJ_DIR)\ia64\instr.obj \
+    $(_OBJ_DIR)\ia64\kernhelp.obj \
+    $(_OBJ_DIR)\ia64\midi.obj \
+    $(_OBJ_DIR)\ia64\miniport.obj \
+    $(_OBJ_DIR)\ia64\mix.obj \
+    $(_OBJ_DIR)\ia64\plclock.obj \
+    $(_OBJ_DIR)\ia64\syslink.obj \
+    $(_OBJ_DIR)\ia64\voice.obj
+
+PASS0_IA64_OBJECTS=
+

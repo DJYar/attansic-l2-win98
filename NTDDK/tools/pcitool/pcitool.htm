@@ -1,0 +1,90 @@
+<html>
+
+<head>
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
+<title>PCI Configuration Utility</title>
+</head>
+
+<body LINK="#0000ff">
+<font FACE="Verdana" SIZE="5">
+
+<h2>PCI Configuration Utility</h2>
+</font><font FACE="Verdana" SIZE="2">
+
+<p><span style="color:#FF0000;font-size:10pt;font-family:Arial">[This is preliminary
+documentation and subject to change.]</span></p>
+
+<h3>SUMMARY</h3>
+
+<p>The PCI Configuration control panel applet allows you to easily view and save the
+configuration information of all the PCI devices on your system. This utility works on
+both Microsoft® Windows NT® Version 4.0 and Microsoft Windows® 2000. </p>
+
+<h3>RUNNING THE TOOL</h3>
+
+<p>To install the tool, first close the Control Panel. It is important to do this before
+running Setup. Then run Setup.exe. </p>
+
+<h5>Known Issues</h5>
+
+<p>This tool does not allow you to change every PCI register. The following registers are
+read-only registers. 
+
+<ul>
+  <li>Vendor ID</li>
+  <li>Device ID</li>
+  <li>Revision ID</li>
+  <li>Sub Class Code</li>
+  <li>Class Code</li>
+  <li>Header Type</li>
+  <li>Subsystem Vendor ID</li>
+  <li>Subsystem ID</li>
+  <li>Reserved</li>
+  <li>Interrupt Pin</li>
+  <li>Min_Gnt</li>
+  <li>Max_Lat</li>
+</ul>
+
+<p>In addition, on x86 systems, this tool cannot update the registers on PCI bridge type
+devices. </p>
+
+<p>Lastly, this tool recognizes only a limited number of devices. If you see either
+VenID=xxxx or DevID=xxxx instead of a recognizable vendor name or device name in the list
+box, this means the tool is not aware of the vendor or the device. If you wish to have the
+vendor or the device recognized by the tool, please send the following information for <i>each</i>
+device to <a HREF="mailto:nt-ihv@compaq.com">nt-ihv@compaq.com</a>. 
+
+<ul>
+  <li>Vendor ID</li>
+  <li>Device ID</li>
+  <li>Subsystem Vendor ID</li>
+  <li>Subsystem ID</li>
+  <li>Vendor Name (30 characters or less)</li>
+  <li>Device Name (30 characters or less)</li>
+</ul>
+
+<h3>RESOURCES</h3>
+
+<p>PCI Configuration Utility is updated on a quaterly basis, or as often as the vendor ID
+database on the PCISIG Web site is updated. You can find the latest version of PCI
+Configuration Utility at <a
+href="http://www.compaq.com/support/files/alphant/drivers/index.html">http://www.compaq.com/support/files/alphant/drivers/index.html</a>.
+</p>
+
+<p>To report a problem or make suggestions for this tool, send mail to <a
+HREF="mailto:nt-ihv@compaq.com">nt-ihv@compaq.com</a>. </font></p>
+
+<p ALIGN="CENTER"><font FACE="Verdana" SIZE="2"><a HREF="#top">Top of page</a> </p>
+</font>
+
+<table CELLSPACING="0" BORDER="0" WIDTH="624">
+  <tr>
+    <td VALIGN="MIDDLE" BGCOLOR="#00ffff" HEIGHT="2"></td>
+  </tr>
+</table>
+<font FACE="MS Sans Serif" SIZE="1">
+
+<p>© 1999 Microsoft Corporation</font><font FACE="Verdana" SIZE="2"> </p>
+</font>
+</body>
+</html>

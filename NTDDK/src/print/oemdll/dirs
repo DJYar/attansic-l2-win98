@@ -1,0 +1,5 @@
+DIRS= \
+     oemps \
+     oemui \
+     oemuni \
+     watermark

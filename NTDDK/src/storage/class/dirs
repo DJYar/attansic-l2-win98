@@ -1,0 +1,6 @@
+DIRS= \
+     spti \
+     cdrom \
+     classpnp \
+     disk \
+     tape

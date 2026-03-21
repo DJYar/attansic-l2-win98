@@ -1,0 +1,16 @@
+DIRS= \
+     debugging \
+     wdm \
+     audio \
+     kernel \
+     general \
+     setup \
+     storage \
+     ime \
+     input \
+     network \
+     print \
+     smartcrd \
+     vdd \
+     video \
+     preview

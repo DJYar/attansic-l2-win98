@@ -1,0 +1,36 @@
+ALPHA_OBJECTS= \
+    $(_OBJ_DIR)\alpha\codec.res \
+    $(_OBJ_DIR)\alpha\codec.obj \
+    $(_OBJ_DIR)\alpha\imaadpcm.obj \
+    $(_OBJ_DIR)\alpha\debug.obj \
+    $(_OBJ_DIR)\alpha\config.obj
+
+PASS0_ALPHA_OBJECTS=
+
+AXP64_OBJECTS= \
+    $(_OBJ_DIR)\axp64\codec.res \
+    $(_OBJ_DIR)\axp64\codec.obj \
+    $(_OBJ_DIR)\axp64\imaadpcm.obj \
+    $(_OBJ_DIR)\axp64\debug.obj \
+    $(_OBJ_DIR)\axp64\config.obj
+
+PASS0_AXP64_OBJECTS=
+
+386_OBJECTS= \
+    $(_OBJ_DIR)\i386\codec.res \
+    $(_OBJ_DIR)\i386\codec.obj \
+    $(_OBJ_DIR)\i386\imaadpcm.obj \
+    $(_OBJ_DIR)\i386\debug.obj \
+    $(_OBJ_DIR)\i386\config.obj
+
+PASS0_386_OBJECTS=
+
+IA64_OBJECTS= \
+    $(_OBJ_DIR)\ia64\codec.res \
+    $(_OBJ_DIR)\ia64\codec.obj \
+    $(_OBJ_DIR)\ia64\imaadpcm.obj \
+    $(_OBJ_DIR)\ia64\debug.obj \
+    $(_OBJ_DIR)\ia64\config.obj
+
+PASS0_IA64_OBJECTS=
+

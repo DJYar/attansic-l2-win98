@@ -1,0 +1,655 @@
+	TITLE	..\pci.c
+	.386P
+include listing.inc
+if @Version gt 510
+.model FLAT
+else
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+_BSS	SEGMENT DWORD USE32 PUBLIC 'BSS'
+_BSS	ENDS
+$$SYMBOLS	SEGMENT BYTE USE32 'DEBSYM'
+$$SYMBOLS	ENDS
+$$TYPES	SEGMENT BYTE USE32 'DEBTYP'
+$$TYPES	ENDS
+_TLS	SEGMENT DWORD USE32 PUBLIC 'TLS'
+_TLS	ENDS
+;	COMDAT ??_C@_0EF@JKN@pci?3?5matched?5bus?$DN?$CFlu?5slot?$DN?$CFlu?5fu@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0CF@BKHO@pci?3?5no?5supported?5intel?5device?5f@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+_LTEXT	SEGMENT PARA USE32 PUBLIC 'LCODE'
+_LTEXT	ENDS
+;	COMDAT _I910_PciConfigAddress@16
+_LTEXT	SEGMENT PARA USE32 PUBLIC 'LCODE'
+_LTEXT	ENDS
+;	COMDAT _I910_ReadPci32@16
+_LTEXT	SEGMENT PARA USE32 PUBLIC 'LCODE'
+_LTEXT	ENDS
+;	COMDAT _I910_ReadPci16@16
+_LTEXT	SEGMENT PARA USE32 PUBLIC 'LCODE'
+_LTEXT	ENDS
+;	COMDAT _I910_ReadPci8@16
+_LTEXT	SEGMENT PARA USE32 PUBLIC 'LCODE'
+_LTEXT	ENDS
+;	COMDAT _I910_IsSupportedIntelDevice@8
+_LTEXT	SEGMENT PARA USE32 PUBLIC 'LCODE'
+_LTEXT	ENDS
+;	COMDAT _I910_FindDevice@4
+_LTEXT	SEGMENT PARA USE32 PUBLIC 'LCODE'
+_LTEXT	ENDS
+FLAT	GROUP _DATA, CONST, _BSS
+	ASSUME	CS: FLAT, DS: FLAT, SS: FLAT
+endif
+CONST	SEGMENT
+_g_supported_devices DW 02592H
+	DW	0259aH
+	DW	02772H
+	DW	027a2H
+CONST	ENDS
+PUBLIC	_I910_FindDevice@4
+PUBLIC	??_C@_0EF@JKN@pci?3?5matched?5bus?$DN?$CFlu?5slot?$DN?$CFlu?5fu@ ; `string'
+PUBLIC	??_C@_0CF@BKHO@pci?3?5no?5supported?5intel?5device?5f@ ; `string'
+EXTRN	_I910_Log:NEAR
+;	COMDAT ??_C@_0EF@JKN@pci?3?5matched?5bus?$DN?$CFlu?5slot?$DN?$CFlu?5fu@
+; File ..\pci.c
+_DATA	SEGMENT
+??_C@_0EF@JKN@pci?3?5matched?5bus?$DN?$CFlu?5slot?$DN?$CFlu?5fu@ DB 'pci:'
+	DB	' matched bus=%lu slot=%lu func=%lu vendor=0x%04lx device=0x%0'
+	DB	'4lx', 00H					; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0CF@BKHO@pci?3?5no?5supported?5intel?5device?5f@
+_DATA	SEGMENT
+??_C@_0CF@BKHO@pci?3?5no?5supported?5intel?5device?5f@ DB 'pci: no suppor'
+	DB	'ted intel device found', 00H		; `string'
+_DATA	ENDS
+;	COMDAT _I910_FindDevice@4
+_LTEXT	SEGMENT
+_info$ = 8
+_bus$ = -12
+_slot$ = -4
+_function$ = -8
+_vendor$1448 = -20
+_device$1449 = -16
+_I910_FindDevice@4 PROC NEAR				; COMDAT
+
+; 69   : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	83 ec 14	 sub	 esp, 20			; 00000014H
+  00006	57		 push	 edi
+
+; 70   :     BYTE bus;
+; 71   :     BYTE slot;
+; 72   :     BYTE function;
+; 73   : 
+; 74   :     memset(info, 0, sizeof(*info));
+
+  00007	b9 0c 00 00 00	 mov	 ecx, 12			; 0000000cH
+  0000c	33 c0		 xor	 eax, eax
+  0000e	8b 7d 08	 mov	 edi, DWORD PTR _info$[ebp]
+  00011	f3 ab		 rep stosd
+
+; 75   : 
+; 76   :     for (bus = 0; bus < 0x100; ++bus)
+
+  00013	c6 45 f4 00	 mov	 BYTE PTR _bus$[ebp], 0
+  00017	eb 08		 jmp	 SHORT $L1439
+$L1440:
+  00019	8a 45 f4	 mov	 al, BYTE PTR _bus$[ebp]
+  0001c	04 01		 add	 al, 1
+  0001e	88 45 f4	 mov	 BYTE PTR _bus$[ebp], al
+$L1439:
+  00021	8b 4d f4	 mov	 ecx, DWORD PTR _bus$[ebp]
+  00024	81 e1 ff 00 00
+	00		 and	 ecx, 255		; 000000ffH
+  0002a	81 f9 00 01 00
+	00		 cmp	 ecx, 256		; 00000100H
+  00030	0f 8d c2 01 00
+	00		 jge	 $L1441
+
+; 78   :         for (slot = 0; slot < 32; ++slot)
+
+  00036	c6 45 fc 00	 mov	 BYTE PTR _slot$[ebp], 0
+  0003a	eb 09		 jmp	 SHORT $L1442
+$L1443:
+  0003c	8a 55 fc	 mov	 dl, BYTE PTR _slot$[ebp]
+  0003f	80 c2 01	 add	 dl, 1
+  00042	88 55 fc	 mov	 BYTE PTR _slot$[ebp], dl
+$L1442:
+  00045	8b 45 fc	 mov	 eax, DWORD PTR _slot$[ebp]
+  00048	25 ff 00 00 00	 and	 eax, 255		; 000000ffH
+  0004d	83 f8 20	 cmp	 eax, 32			; 00000020H
+  00050	0f 8d 9d 01 00
+	00		 jge	 $L1444
+
+; 80   :             for (function = 0; function < 8; ++function)
+
+  00056	c6 45 f8 00	 mov	 BYTE PTR _function$[ebp], 0
+  0005a	eb 09		 jmp	 SHORT $L1445
+$L1446:
+  0005c	8a 4d f8	 mov	 cl, BYTE PTR _function$[ebp]
+  0005f	80 c1 01	 add	 cl, 1
+  00062	88 4d f8	 mov	 BYTE PTR _function$[ebp], cl
+$L1445:
+  00065	8b 55 f8	 mov	 edx, DWORD PTR _function$[ebp]
+  00068	81 e2 ff 00 00
+	00		 and	 edx, 255		; 000000ffH
+  0006e	83 fa 08	 cmp	 edx, 8
+  00071	0f 8d 77 01 00
+	00		 jge	 $L1447
+
+; 82   :                 WORD vendor = I910_ReadPci16(bus, slot, function, 0x00);
+
+  00077	6a 00		 push	 0
+  00079	8a 45 f8	 mov	 al, BYTE PTR _function$[ebp]
+  0007c	50		 push	 eax
+  0007d	8a 4d fc	 mov	 cl, BYTE PTR _slot$[ebp]
+  00080	51		 push	 ecx
+  00081	8a 55 f4	 mov	 dl, BYTE PTR _bus$[ebp]
+  00084	52		 push	 edx
+  00085	e8 00 00 00 00	 call	 _I910_ReadPci16@16
+  0008a	66 89 45 ec	 mov	 WORD PTR _vendor$1448[ebp], ax
+
+; 83   :                 WORD device;
+; 84   : 
+; 85   :                 if (vendor == 0xFFFF)
+
+  0008e	8b 45 ec	 mov	 eax, DWORD PTR _vendor$1448[ebp]
+  00091	25 ff ff 00 00	 and	 eax, 65535		; 0000ffffH
+  00096	3d ff ff 00 00	 cmp	 eax, 65535		; 0000ffffH
+  0009b	75 14		 jne	 SHORT $L1450
+
+; 87   :                     if (function == 0)
+
+  0009d	8b 4d f8	 mov	 ecx, DWORD PTR _function$[ebp]
+  000a0	81 e1 ff 00 00
+	00		 and	 ecx, 255		; 000000ffH
+  000a6	85 c9		 test	 ecx, ecx
+  000a8	75 05		 jne	 SHORT $L1451
+
+; 89   :                         break;
+
+  000aa	e9 3f 01 00 00	 jmp	 $L1447
+$L1451:
+
+; 91   :                     continue;
+
+  000af	eb ab		 jmp	 SHORT $L1446
+$L1450:
+
+; 93   : 
+; 94   :                 device = I910_ReadPci16(bus, slot, function, 0x02);
+
+  000b1	6a 02		 push	 2
+  000b3	8a 55 f8	 mov	 dl, BYTE PTR _function$[ebp]
+  000b6	52		 push	 edx
+  000b7	8a 45 fc	 mov	 al, BYTE PTR _slot$[ebp]
+  000ba	50		 push	 eax
+  000bb	8a 4d f4	 mov	 cl, BYTE PTR _bus$[ebp]
+  000be	51		 push	 ecx
+  000bf	e8 00 00 00 00	 call	 _I910_ReadPci16@16
+  000c4	66 89 45 f0	 mov	 WORD PTR _device$1449[ebp], ax
+
+; 95   : 
+; 96   :                 if (!I910_IsSupportedIntelDevice(vendor, device))
+
+  000c8	66 8b 55 f0	 mov	 dx, WORD PTR _device$1449[ebp]
+  000cc	52		 push	 edx
+  000cd	66 8b 45 ec	 mov	 ax, WORD PTR _vendor$1448[ebp]
+  000d1	50		 push	 eax
+  000d2	e8 00 00 00 00	 call	 _I910_IsSupportedIntelDevice@8
+  000d7	85 c0		 test	 eax, eax
+  000d9	75 05		 jne	 SHORT $L1452
+
+; 98   :                     continue;
+
+  000db	e9 7c ff ff ff	 jmp	 $L1446
+$L1452:
+
+; 100  : 
+; 101  :                 info->vendor_id = vendor;
+
+  000e0	8b 4d ec	 mov	 ecx, DWORD PTR _vendor$1448[ebp]
+  000e3	81 e1 ff ff 00
+	00		 and	 ecx, 65535		; 0000ffffH
+  000e9	8b 55 08	 mov	 edx, DWORD PTR _info$[ebp]
+  000ec	89 0a		 mov	 DWORD PTR [edx], ecx
+
+; 102  :                 info->device_id = device;
+
+  000ee	8b 45 f0	 mov	 eax, DWORD PTR _device$1449[ebp]
+  000f1	25 ff ff 00 00	 and	 eax, 65535		; 0000ffffH
+  000f6	8b 4d 08	 mov	 ecx, DWORD PTR _info$[ebp]
+  000f9	89 41 04	 mov	 DWORD PTR [ecx+4], eax
+
+; 103  :                 info->revision_id = I910_ReadPci8(bus, slot, function, 0x08);
+
+  000fc	6a 08		 push	 8
+  000fe	8a 55 f8	 mov	 dl, BYTE PTR _function$[ebp]
+  00101	52		 push	 edx
+  00102	8a 45 fc	 mov	 al, BYTE PTR _slot$[ebp]
+  00105	50		 push	 eax
+  00106	8a 4d f4	 mov	 cl, BYTE PTR _bus$[ebp]
+  00109	51		 push	 ecx
+  0010a	e8 00 00 00 00	 call	 _I910_ReadPci8@16
+  0010f	25 ff 00 00 00	 and	 eax, 255		; 000000ffH
+  00114	8b 55 08	 mov	 edx, DWORD PTR _info$[ebp]
+  00117	89 42 08	 mov	 DWORD PTR [edx+8], eax
+
+; 104  :                 info->command_reg = I910_ReadPci16(bus, slot, function, 0x04);
+
+  0011a	6a 04		 push	 4
+  0011c	8a 45 f8	 mov	 al, BYTE PTR _function$[ebp]
+  0011f	50		 push	 eax
+  00120	8a 4d fc	 mov	 cl, BYTE PTR _slot$[ebp]
+  00123	51		 push	 ecx
+  00124	8a 55 f4	 mov	 dl, BYTE PTR _bus$[ebp]
+  00127	52		 push	 edx
+  00128	e8 00 00 00 00	 call	 _I910_ReadPci16@16
+  0012d	25 ff ff 00 00	 and	 eax, 65535		; 0000ffffH
+  00132	8b 4d 08	 mov	 ecx, DWORD PTR _info$[ebp]
+  00135	89 41 0c	 mov	 DWORD PTR [ecx+12], eax
+
+; 105  :                 info->bar0_mmio_base = I910_ReadPci32(bus, slot, function, 0x10) & ~0x0FUL;
+
+  00138	6a 10		 push	 16			; 00000010H
+  0013a	8a 55 f8	 mov	 dl, BYTE PTR _function$[ebp]
+  0013d	52		 push	 edx
+  0013e	8a 45 fc	 mov	 al, BYTE PTR _slot$[ebp]
+  00141	50		 push	 eax
+  00142	8a 4d f4	 mov	 cl, BYTE PTR _bus$[ebp]
+  00145	51		 push	 ecx
+  00146	e8 00 00 00 00	 call	 _I910_ReadPci32@16
+  0014b	24 f0		 and	 al, -16			; fffffff0H
+  0014d	8b 55 08	 mov	 edx, DWORD PTR _info$[ebp]
+  00150	89 42 10	 mov	 DWORD PTR [edx+16], eax
+
+; 106  :                 info->bar2_aperture_base = I910_ReadPci32(bus, slot, function, 0x18) & ~0x0FUL;
+
+  00153	6a 18		 push	 24			; 00000018H
+  00155	8a 45 f8	 mov	 al, BYTE PTR _function$[ebp]
+  00158	50		 push	 eax
+  00159	8a 4d fc	 mov	 cl, BYTE PTR _slot$[ebp]
+  0015c	51		 push	 ecx
+  0015d	8a 55 f4	 mov	 dl, BYTE PTR _bus$[ebp]
+  00160	52		 push	 edx
+  00161	e8 00 00 00 00	 call	 _I910_ReadPci32@16
+  00166	24 f0		 and	 al, -16			; fffffff0H
+  00168	8b 4d 08	 mov	 ecx, DWORD PTR _info$[ebp]
+  0016b	89 41 18	 mov	 DWORD PTR [ecx+24], eax
+
+; 107  :                 info->bar0_size = 0;
+
+  0016e	8b 55 08	 mov	 edx, DWORD PTR _info$[ebp]
+  00171	c7 42 14 00 00
+	00 00		 mov	 DWORD PTR [edx+20], 0
+
+; 108  :                 info->bar2_size = 0;
+
+  00178	8b 45 08	 mov	 eax, DWORD PTR _info$[ebp]
+  0017b	c7 40 1c 00 00
+	00 00		 mov	 DWORD PTR [eax+28], 0
+
+; 109  :                 info->bus = bus;
+
+  00182	8b 4d f4	 mov	 ecx, DWORD PTR _bus$[ebp]
+  00185	81 e1 ff 00 00
+	00		 and	 ecx, 255		; 000000ffH
+  0018b	8b 55 08	 mov	 edx, DWORD PTR _info$[ebp]
+  0018e	89 4a 20	 mov	 DWORD PTR [edx+32], ecx
+
+; 110  :                 info->slot = slot;
+
+  00191	8b 45 fc	 mov	 eax, DWORD PTR _slot$[ebp]
+  00194	25 ff 00 00 00	 and	 eax, 255		; 000000ffH
+  00199	8b 4d 08	 mov	 ecx, DWORD PTR _info$[ebp]
+  0019c	89 41 24	 mov	 DWORD PTR [ecx+36], eax
+
+; 111  :                 info->function = function;
+
+  0019f	8b 55 f8	 mov	 edx, DWORD PTR _function$[ebp]
+  001a2	81 e2 ff 00 00
+	00		 and	 edx, 255		; 000000ffH
+  001a8	8b 45 08	 mov	 eax, DWORD PTR _info$[ebp]
+  001ab	89 50 28	 mov	 DWORD PTR [eax+40], edx
+
+; 112  :                 info->found = 1;
+
+  001ae	8b 4d 08	 mov	 ecx, DWORD PTR _info$[ebp]
+  001b1	c7 41 2c 01 00
+	00 00		 mov	 DWORD PTR [ecx+44], 1
+
+; 113  : 
+; 114  :                 I910_Log("pci: matched bus=%lu slot=%lu func=%lu vendor=0x%04lx device=0x%04lx",
+; 115  :                          info->bus,
+; 116  :                          info->slot,
+; 117  :                          info->function,
+; 118  :                          info->vendor_id,
+; 119  :                          info->device_id);
+
+  001b8	8b 55 08	 mov	 edx, DWORD PTR _info$[ebp]
+  001bb	8b 42 04	 mov	 eax, DWORD PTR [edx+4]
+  001be	50		 push	 eax
+  001bf	8b 4d 08	 mov	 ecx, DWORD PTR _info$[ebp]
+  001c2	8b 11		 mov	 edx, DWORD PTR [ecx]
+  001c4	52		 push	 edx
+  001c5	8b 45 08	 mov	 eax, DWORD PTR _info$[ebp]
+  001c8	8b 48 28	 mov	 ecx, DWORD PTR [eax+40]
+  001cb	51		 push	 ecx
+  001cc	8b 55 08	 mov	 edx, DWORD PTR _info$[ebp]
+  001cf	8b 42 24	 mov	 eax, DWORD PTR [edx+36]
+  001d2	50		 push	 eax
+  001d3	8b 4d 08	 mov	 ecx, DWORD PTR _info$[ebp]
+  001d6	8b 51 20	 mov	 edx, DWORD PTR [ecx+32]
+  001d9	52		 push	 edx
+  001da	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0EF@JKN@pci?3?5matched?5bus?$DN?$CFlu?5slot?$DN?$CFlu?5fu@ ; `string'
+  001df	e8 00 00 00 00	 call	 _I910_Log
+  001e4	83 c4 18	 add	 esp, 24			; 00000018H
+
+; 120  :                 return TRUE;
+
+  001e7	b8 01 00 00 00	 mov	 eax, 1
+  001ec	eb 19		 jmp	 SHORT $L1435
+$L1447:
+
+; 122  :         }
+
+  001ee	e9 49 fe ff ff	 jmp	 $L1443
+$L1444:
+
+; 123  :     }
+
+  001f3	e9 21 fe ff ff	 jmp	 $L1440
+$L1441:
+
+; 124  : 
+; 125  :     I910_Log("pci: no supported intel device found");
+
+  001f8	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0CF@BKHO@pci?3?5no?5supported?5intel?5device?5f@ ; `string'
+  001fd	e8 00 00 00 00	 call	 _I910_Log
+  00202	83 c4 04	 add	 esp, 4
+
+; 126  :     return FALSE;
+
+  00205	33 c0		 xor	 eax, eax
+$L1435:
+
+; 127  : }
+
+  00207	5f		 pop	 edi
+  00208	8b e5		 mov	 esp, ebp
+  0020a	5d		 pop	 ebp
+  0020b	c2 04 00	 ret	 4
+_I910_FindDevice@4 ENDP
+_LTEXT	ENDS
+;	COMDAT _I910_ReadPci32@16
+_LTEXT	SEGMENT
+_bus$ = 8
+_slot$ = 12
+_function$ = 16
+_offset$ = 20
+_address$ = -4
+_I910_ReadPci32@16 PROC NEAR				; COMDAT
+
+; 26   : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	51		 push	 ecx
+
+; 27   :     DWORD address = I910_PciConfigAddress(bus, slot, function, offset);
+
+  00004	8a 45 14	 mov	 al, BYTE PTR _offset$[ebp]
+  00007	50		 push	 eax
+  00008	8a 4d 10	 mov	 cl, BYTE PTR _function$[ebp]
+  0000b	51		 push	 ecx
+  0000c	8a 55 0c	 mov	 dl, BYTE PTR _slot$[ebp]
+  0000f	52		 push	 edx
+  00010	8a 45 08	 mov	 al, BYTE PTR _bus$[ebp]
+  00013	50		 push	 eax
+  00014	e8 00 00 00 00	 call	 _I910_PciConfigAddress@16
+  00019	89 45 fc	 mov	 DWORD PTR _address$[ebp], eax
+
+; 28   :     _outpd(0xCF8, address);
+
+  0001c	8b 45 fc	 mov	 eax, DWORD PTR _address$[ebp]
+  0001f	66 ba f8 0c	 mov	 dx, 3320		; 00000cf8H
+  00023	ef		 out	 dx, eax
+
+; 29   :     return _inpd(0xCFC);
+
+  00024	66 ba fc 0c	 mov	 dx, 3324		; 00000cfcH
+  00028	ed		 in	 eax, dx
+
+; 30   : }
+
+  00029	8b e5		 mov	 esp, ebp
+  0002b	5d		 pop	 ebp
+  0002c	c2 10 00	 ret	 16			; 00000010H
+_I910_ReadPci32@16 ENDP
+_LTEXT	ENDS
+;	COMDAT _I910_PciConfigAddress@16
+_LTEXT	SEGMENT
+_bus$ = 8
+_slot$ = 12
+_function$ = 16
+_offset$ = 20
+_I910_PciConfigAddress@16 PROC NEAR			; COMDAT
+
+; 16   : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+
+; 17   :     return 0x80000000UL |
+; 18   :            ((DWORD)bus << 16) |
+; 19   :            ((DWORD)slot << 11) |
+; 20   :            ((DWORD)function << 8) |
+; 21   :            ((DWORD)offset & 0xFC);
+
+  00003	8b 45 08	 mov	 eax, DWORD PTR _bus$[ebp]
+  00006	25 ff 00 00 00	 and	 eax, 255		; 000000ffH
+  0000b	c1 e0 10	 shl	 eax, 16			; 00000010H
+  0000e	0d 00 00 00 80	 or	 eax, -2147483648	; 80000000H
+  00013	8b 4d 0c	 mov	 ecx, DWORD PTR _slot$[ebp]
+  00016	81 e1 ff 00 00
+	00		 and	 ecx, 255		; 000000ffH
+  0001c	c1 e1 0b	 shl	 ecx, 11			; 0000000bH
+  0001f	0b c1		 or	 eax, ecx
+  00021	8b 55 10	 mov	 edx, DWORD PTR _function$[ebp]
+  00024	81 e2 ff 00 00
+	00		 and	 edx, 255		; 000000ffH
+  0002a	c1 e2 08	 shl	 edx, 8
+  0002d	0b c2		 or	 eax, edx
+  0002f	8b 4d 14	 mov	 ecx, DWORD PTR _offset$[ebp]
+  00032	81 e1 ff 00 00
+	00		 and	 ecx, 255		; 000000ffH
+  00038	81 e1 fc 00 00
+	00		 and	 ecx, 252		; 000000fcH
+  0003e	0b c1		 or	 eax, ecx
+
+; 22   : }
+
+  00040	5d		 pop	 ebp
+  00041	c2 10 00	 ret	 16			; 00000010H
+_I910_PciConfigAddress@16 ENDP
+_LTEXT	ENDS
+;	COMDAT _I910_ReadPci16@16
+_LTEXT	SEGMENT
+_bus$ = 8
+_slot$ = 12
+_function$ = 16
+_offset$ = 20
+_value$ = -4
+_I910_ReadPci16@16 PROC NEAR				; COMDAT
+
+; 34   : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	51		 push	 ecx
+
+; 35   :     DWORD value = I910_ReadPci32(bus, slot, function, offset);
+
+  00004	8a 45 14	 mov	 al, BYTE PTR _offset$[ebp]
+  00007	50		 push	 eax
+  00008	8a 4d 10	 mov	 cl, BYTE PTR _function$[ebp]
+  0000b	51		 push	 ecx
+  0000c	8a 55 0c	 mov	 dl, BYTE PTR _slot$[ebp]
+  0000f	52		 push	 edx
+  00010	8a 45 08	 mov	 al, BYTE PTR _bus$[ebp]
+  00013	50		 push	 eax
+  00014	e8 00 00 00 00	 call	 _I910_ReadPci32@16
+  00019	89 45 fc	 mov	 DWORD PTR _value$[ebp], eax
+
+; 36   :     return (WORD)((value >> ((offset & 2) * 8)) & 0xFFFF);
+
+  0001c	8b 4d 14	 mov	 ecx, DWORD PTR _offset$[ebp]
+  0001f	81 e1 ff 00 00
+	00		 and	 ecx, 255		; 000000ffH
+  00025	83 e1 02	 and	 ecx, 2
+  00028	c1 e1 03	 shl	 ecx, 3
+  0002b	8b 45 fc	 mov	 eax, DWORD PTR _value$[ebp]
+  0002e	d3 e8		 shr	 eax, cl
+  00030	25 ff ff 00 00	 and	 eax, 65535		; 0000ffffH
+
+; 37   : }
+
+  00035	8b e5		 mov	 esp, ebp
+  00037	5d		 pop	 ebp
+  00038	c2 10 00	 ret	 16			; 00000010H
+_I910_ReadPci16@16 ENDP
+_LTEXT	ENDS
+;	COMDAT _I910_ReadPci8@16
+_LTEXT	SEGMENT
+_bus$ = 8
+_slot$ = 12
+_function$ = 16
+_offset$ = 20
+_value$ = -4
+_I910_ReadPci8@16 PROC NEAR				; COMDAT
+
+; 41   : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	51		 push	 ecx
+
+; 42   :     DWORD value = I910_ReadPci32(bus, slot, function, offset);
+
+  00004	8a 45 14	 mov	 al, BYTE PTR _offset$[ebp]
+  00007	50		 push	 eax
+  00008	8a 4d 10	 mov	 cl, BYTE PTR _function$[ebp]
+  0000b	51		 push	 ecx
+  0000c	8a 55 0c	 mov	 dl, BYTE PTR _slot$[ebp]
+  0000f	52		 push	 edx
+  00010	8a 45 08	 mov	 al, BYTE PTR _bus$[ebp]
+  00013	50		 push	 eax
+  00014	e8 00 00 00 00	 call	 _I910_ReadPci32@16
+  00019	89 45 fc	 mov	 DWORD PTR _value$[ebp], eax
+
+; 43   :     return (BYTE)((value >> ((offset & 3) * 8)) & 0xFF);
+
+  0001c	8b 4d 14	 mov	 ecx, DWORD PTR _offset$[ebp]
+  0001f	81 e1 ff 00 00
+	00		 and	 ecx, 255		; 000000ffH
+  00025	83 e1 03	 and	 ecx, 3
+  00028	c1 e1 03	 shl	 ecx, 3
+  0002b	8b 45 fc	 mov	 eax, DWORD PTR _value$[ebp]
+  0002e	d3 e8		 shr	 eax, cl
+  00030	25 ff 00 00 00	 and	 eax, 255		; 000000ffH
+
+; 44   : }
+
+  00035	8b e5		 mov	 esp, ebp
+  00037	5d		 pop	 ebp
+  00038	c2 10 00	 ret	 16			; 00000010H
+_I910_ReadPci8@16 ENDP
+_LTEXT	ENDS
+;	COMDAT _I910_IsSupportedIntelDevice@8
+_LTEXT	SEGMENT
+_vendor$ = 8
+_device$ = 12
+_i$ = -4
+_I910_IsSupportedIntelDevice@8 PROC NEAR		; COMDAT
+
+; 48   : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	51		 push	 ecx
+
+; 49   :     DWORD i;
+; 50   : 
+; 51   :     if (vendor != 0x8086)
+
+  00004	8b 45 08	 mov	 eax, DWORD PTR _vendor$[ebp]
+  00007	25 ff ff 00 00	 and	 eax, 65535		; 0000ffffH
+  0000c	3d 86 80 00 00	 cmp	 eax, 32902		; 00008086H
+  00011	74 04		 je	 SHORT $L1428
+
+; 53   :         return FALSE;
+
+  00013	33 c0		 xor	 eax, eax
+  00015	eb 3d		 jmp	 SHORT $L1426
+$L1428:
+
+; 55   : 
+; 56   :     for (i = 0; i < sizeof(g_supported_devices) / sizeof(g_supported_devices[0]); ++i)
+
+  00017	c7 45 fc 00 00
+	00 00		 mov	 DWORD PTR _i$[ebp], 0
+  0001e	eb 09		 jmp	 SHORT $L1429
+$L1430:
+  00020	8b 4d fc	 mov	 ecx, DWORD PTR _i$[ebp]
+  00023	83 c1 01	 add	 ecx, 1
+  00026	89 4d fc	 mov	 DWORD PTR _i$[ebp], ecx
+$L1429:
+  00029	83 7d fc 04	 cmp	 DWORD PTR _i$[ebp], 4
+  0002d	73 23		 jae	 SHORT $L1431
+
+; 58   :         if (g_supported_devices[i] == device)
+
+  0002f	8b 55 fc	 mov	 edx, DWORD PTR _i$[ebp]
+  00032	33 c0		 xor	 eax, eax
+  00034	66 8b 04 55 00
+	00 00 00	 mov	 ax, WORD PTR _g_supported_devices[edx*2]
+  0003c	8b 4d 0c	 mov	 ecx, DWORD PTR _device$[ebp]
+  0003f	81 e1 ff ff 00
+	00		 and	 ecx, 65535		; 0000ffffH
+  00045	3b c1		 cmp	 eax, ecx
+  00047	75 07		 jne	 SHORT $L1432
+
+; 60   :             return TRUE;
+
+  00049	b8 01 00 00 00	 mov	 eax, 1
+  0004e	eb 04		 jmp	 SHORT $L1426
+$L1432:
+
+; 62   :     }
+
+  00050	eb ce		 jmp	 SHORT $L1430
+$L1431:
+
+; 63   : 
+; 64   :     return FALSE;
+
+  00052	33 c0		 xor	 eax, eax
+$L1426:
+
+; 65   : }
+
+  00054	8b e5		 mov	 esp, ebp
+  00056	5d		 pop	 ebp
+  00057	c2 08 00	 ret	 8
+_I910_IsSupportedIntelDevice@8 ENDP
+_LTEXT	ENDS
+END

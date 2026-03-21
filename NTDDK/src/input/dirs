@@ -1,0 +1,8 @@
+DIRS= \
+     kbdclass \
+     mouclass \
+     mouser \
+     pnpi8042 \
+     moufiltr \
+     kbfiltr \
+     layout

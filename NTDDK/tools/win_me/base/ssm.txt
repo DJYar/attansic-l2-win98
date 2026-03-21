@@ -1,0 +1,30 @@
+Usage:
+
+	SSM /t:<Time in minutes> /a generates log files
+	SSM no switches starts the UI (Logging can be initiated from the UI)
+
+        To exit logging, right click on the SSM icon on the task bar and
+        choose exit.
+
+	Other task bar options:
+	Show UI - Stops logging and opens the UI
+	Status: Displays the status dialog
+	Exit _ exits the applciation
+	Options - Logging options that are configurable
+
+Known bugs:
+
+No module 16 analysis - 
+No way to snap thread and module list
+Occasional General Protection Fault in TOOLHELP when taking heap 16 snapshots.
+Page fault in heap query under extreme stress
+Display always appends analysis to the previous analysis
+ (should clear the screen)
+Heap 16 analysis always shows 0 for size of Block Size even though the other
+elements in the list are correct.
+
+More info:
+See the online help from the Start Menu\Programs\Development Kits\
+Windows Me DDK\Win Me DDK Documentation\Windows Me Debugger and Other Tools\
+System State Monitor for more information on general usage.
+

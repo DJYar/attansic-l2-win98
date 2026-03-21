@@ -1,0 +1,366 @@
+	TITLE	..\log.c
+	.386P
+include listing.inc
+if @Version gt 510
+.model FLAT
+else
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+_BSS	SEGMENT DWORD USE32 PUBLIC 'BSS'
+_BSS	ENDS
+$$SYMBOLS	SEGMENT BYTE USE32 'DEBSYM'
+$$SYMBOLS	ENDS
+$$TYPES	SEGMENT BYTE USE32 'DEBTYP'
+$$TYPES	ENDS
+_TLS	SEGMENT DWORD USE32 PUBLIC 'TLS'
+_TLS	ENDS
+_LDATA	SEGMENT DWORD USE32 PUBLIC 'LCODE'
+_LDATA	ENDS
+;	COMDAT ??_C@_0BA@OLIC@C?3?2I910TEST?4LOG?$AA@
+_LDATA	SEGMENT DWORD USE32 PUBLIC 'LCODE'
+_LDATA	ENDS
+;	COMDAT ??_C@_0BI@IFNA@C?3?2WINDOWS?2I910TEST?4LOG?$AA@
+_LDATA	SEGMENT DWORD USE32 PUBLIC 'LCODE'
+_LDATA	ENDS
+;	COMDAT ??_C@_0M@MILD@log?3?5opened?$AA@
+_LDATA	SEGMENT DWORD USE32 PUBLIC 'LCODE'
+_LDATA	ENDS
+;	COMDAT ??_C@_0N@NIEL@?$FL?$CF08lu?$FN?5?$CFs?$AN?6?$AA@
+_LDATA	SEGMENT DWORD USE32 PUBLIC 'LCODE'
+_LDATA	ENDS
+_LTEXT	SEGMENT PARA USE32 PUBLIC 'LCODE'
+_LTEXT	ENDS
+;	COMDAT _I910_TryOpenPath@4
+_LTEXT	SEGMENT PARA USE32 PUBLIC 'LCODE'
+_LTEXT	ENDS
+;	COMDAT _I910_LogInitEarly@0
+_LTEXT	SEGMENT PARA USE32 PUBLIC 'LCODE'
+_LTEXT	ENDS
+;	COMDAT _I910_Log
+_LTEXT	SEGMENT PARA USE32 PUBLIC 'LCODE'
+_LTEXT	ENDS
+FLAT	GROUP _DATA, CONST, _BSS, _LDATA
+	ASSUME	CS: FLAT, DS: FLAT, SS: FLAT
+endif
+PUBLIC	_I910_LogInitEarly@0
+PUBLIC	_I910_Log
+PUBLIC	??_C@_0BA@OLIC@C?3?2I910TEST?4LOG?$AA@		; `string'
+PUBLIC	??_C@_0BI@IFNA@C?3?2WINDOWS?2I910TEST?4LOG?$AA@	; `string'
+PUBLIC	??_C@_0M@MILD@log?3?5opened?$AA@		; `string'
+_BSS	SEGMENT
+_g_logReady DD	01H DUP (?)
+_BSS	ENDS
+;	COMDAT ??_C@_0BA@OLIC@C?3?2I910TEST?4LOG?$AA@
+; File ..\log.c
+_LDATA	SEGMENT
+??_C@_0BA@OLIC@C?3?2I910TEST?4LOG?$AA@ DB 'C:\I910TEST.LOG', 00H ; `string'
+_LDATA	ENDS
+;	COMDAT ??_C@_0BI@IFNA@C?3?2WINDOWS?2I910TEST?4LOG?$AA@
+_LDATA	SEGMENT
+??_C@_0BI@IFNA@C?3?2WINDOWS?2I910TEST?4LOG?$AA@ DB 'C:\WINDOWS\I910TEST.L'
+	DB	'OG', 00H					; `string'
+_LDATA	ENDS
+;	COMDAT ??_C@_0M@MILD@log?3?5opened?$AA@
+_LDATA	SEGMENT
+??_C@_0M@MILD@log?3?5opened?$AA@ DB 'log: opened', 00H	; `string'
+_LDATA	ENDS
+;	COMDAT _I910_LogInitEarly@0
+_LTEXT	SEGMENT
+_I910_LogInitEarly@0 PROC NEAR				; COMDAT
+
+; 63   : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+
+; 64   :     if (g_logReady)
+
+  00003	83 3d 00 00 00
+	00 00		 cmp	 DWORD PTR _g_logReady, 0
+  0000a	74 07		 je	 SHORT $L1717
+
+; 66   :         return TRUE;
+
+  0000c	b8 01 00 00 00	 mov	 eax, 1
+  00011	eb 32		 jmp	 SHORT $L1716
+$L1717:
+
+; 68   : 
+; 69   :     if (I910_TryOpenPath(I910_LOG_PATH_PRIMARY) || I910_TryOpenPath(I910_LOG_PATH_FALLBACK))
+
+  00013	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0BA@OLIC@C?3?2I910TEST?4LOG?$AA@ ; `string'
+  00018	e8 00 00 00 00	 call	 _I910_TryOpenPath@4
+  0001d	85 c0		 test	 eax, eax
+  0001f	75 0e		 jne	 SHORT $L1719
+  00021	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0BI@IFNA@C?3?2WINDOWS?2I910TEST?4LOG?$AA@ ; `string'
+  00026	e8 00 00 00 00	 call	 _I910_TryOpenPath@4
+  0002b	85 c0		 test	 eax, eax
+  0002d	74 14		 je	 SHORT $L1718
+$L1719:
+
+; 71   :         I910_Log("log: opened");
+
+  0002f	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0M@MILD@log?3?5opened?$AA@ ; `string'
+  00034	e8 00 00 00 00	 call	 _I910_Log
+  00039	83 c4 04	 add	 esp, 4
+
+; 72   :         return TRUE;
+
+  0003c	b8 01 00 00 00	 mov	 eax, 1
+  00041	eb 02		 jmp	 SHORT $L1716
+$L1718:
+
+; 74   : 
+; 75   :     return FALSE;
+
+  00043	33 c0		 xor	 eax, eax
+$L1716:
+
+; 76   : }
+
+  00045	5d		 pop	 ebp
+  00046	c3		 ret	 0
+_I910_LogInitEarly@0 ENDP
+_LTEXT	ENDS
+EXTRN	_IFSMgr_Ring0_OpenCreateFile@28:NEAR
+EXTRN	_UNREFERENCED_PARAMETER@4:NEAR
+_BSS	SEGMENT
+_g_logFile DD	01H DUP (?)
+_g_logCounter DD 01H DUP (?)
+_BSS	ENDS
+;	COMDAT _I910_TryOpenPath@4
+_LTEXT	SEGMENT
+_path$ = 8
+_status$ = -8
+_action$ = -4
+_I910_TryOpenPath@4 PROC NEAR				; COMDAT
+
+; 38   : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	83 ec 08	 sub	 esp, 8
+
+; 39   :     DWORD status;
+; 40   :     DWORD action = 0;
+
+  00006	c7 45 fc 00 00
+	00 00		 mov	 DWORD PTR _action$[ebp], 0
+
+; 41   : 
+; 42   :     status = IFSMgr_Ring0_OpenCreateFile((DWORD)path,
+; 43   :                                          0x40000000,
+; 44   :                                          0x00000001,
+; 45   :                                          0,
+; 46   :                                          0x00000012,
+; 47   :                                          0,
+; 48   :                                          (DWORD)&g_logFile);
+
+  0000d	68 00 00 00 00	 push	 OFFSET FLAT:_g_logFile
+  00012	6a 00		 push	 0
+  00014	6a 12		 push	 18			; 00000012H
+  00016	6a 00		 push	 0
+  00018	6a 01		 push	 1
+  0001a	68 00 00 00 40	 push	 1073741824		; 40000000H
+  0001f	8b 45 08	 mov	 eax, DWORD PTR _path$[ebp]
+  00022	50		 push	 eax
+  00023	e8 00 00 00 00	 call	 _IFSMgr_Ring0_OpenCreateFile@28
+  00028	89 45 f8	 mov	 DWORD PTR _status$[ebp], eax
+
+; 49   :     if (status != 0)
+
+  0002b	83 7d f8 00	 cmp	 DWORD PTR _status$[ebp], 0
+  0002f	74 0e		 je	 SHORT $L1713
+
+; 51   :         g_logFile = 0;
+
+  00031	c7 05 00 00 00
+	00 00 00 00 00	 mov	 DWORD PTR _g_logFile, 0
+
+; 52   :         return FALSE;
+
+  0003b	33 c0		 xor	 eax, eax
+  0003d	eb 22		 jmp	 SHORT $L1708
+$L1713:
+
+; 54   : 
+; 55   :     g_logReady = 1;
+
+  0003f	c7 05 00 00 00
+	00 01 00 00 00	 mov	 DWORD PTR _g_logReady, 1
+
+; 56   :     g_logCounter = 0;
+
+  00049	c7 05 00 00 00
+	00 00 00 00 00	 mov	 DWORD PTR _g_logCounter, 0
+
+; 57   :     UNREFERENCED_PARAMETER(action);
+
+  00053	8b 4d fc	 mov	 ecx, DWORD PTR _action$[ebp]
+  00056	51		 push	 ecx
+  00057	e8 00 00 00 00	 call	 _UNREFERENCED_PARAMETER@4
+
+; 58   :     return TRUE;
+
+  0005c	b8 01 00 00 00	 mov	 eax, 1
+$L1708:
+
+; 59   : }
+
+  00061	8b e5		 mov	 esp, ebp
+  00063	5d		 pop	 ebp
+  00064	c2 04 00	 ret	 4
+_I910_TryOpenPath@4 ENDP
+_LTEXT	ENDS
+PUBLIC	??_C@_0N@NIEL@?$FL?$CF08lu?$FN?5?$CFs?$AN?6?$AA@ ; `string'
+EXTRN	__snprintf:NEAR
+EXTRN	__vsnprintf:NEAR
+EXTRN	_IFSMgr_Ring0_WriteFile@20:NEAR
+;	COMDAT ??_C@_0N@NIEL@?$FL?$CF08lu?$FN?5?$CFs?$AN?6?$AA@
+; File ..\log.c
+_LDATA	SEGMENT
+??_C@_0N@NIEL@?$FL?$CF08lu?$FN?5?$CFs?$AN?6?$AA@ DB '[%08lu] %s', 0dH, 0aH
+	DB	00H						; `string'
+_LDATA	ENDS
+;	COMDAT _I910_Log
+_LTEXT	SEGMENT
+_fmt$ = 8
+_body$ = -588
+_line$ = -320
+_ap$ = -328
+_len$ = -332
+_written$ = -324
+_I910_Log PROC NEAR					; COMDAT
+
+; 80   : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	81 ec 4c 02 00
+	00		 sub	 esp, 588		; 0000024cH
+  00009	57		 push	 edi
+
+; 81   :     char body[256];
+; 82   :     char line[320];
+; 83   :     va_list ap;
+; 84   :     DWORD len;
+; 85   :     DWORD written = 0;
+
+  0000a	c7 85 bc fe ff
+	ff 00 00 00 00	 mov	 DWORD PTR _written$[ebp], 0
+
+; 86   : 
+; 87   :     if (!g_logReady)
+
+  00014	83 3d 00 00 00
+	00 00		 cmp	 DWORD PTR _g_logReady, 0
+  0001b	75 05		 jne	 SHORT $L1731
+
+; 89   :         return;
+
+  0001d	e9 ad 00 00 00	 jmp	 $L1725
+$L1731:
+
+; 91   : 
+; 92   :     va_start(ap, fmt);
+
+  00022	8d 45 0c	 lea	 eax, DWORD PTR _fmt$[ebp+4]
+  00025	89 85 b8 fe ff
+	ff		 mov	 DWORD PTR _ap$[ebp], eax
+
+; 93   :     _vsnprintf(body, sizeof(body) - 1, fmt, ap);
+
+  0002b	8b 8d b8 fe ff
+	ff		 mov	 ecx, DWORD PTR _ap$[ebp]
+  00031	51		 push	 ecx
+  00032	8b 55 08	 mov	 edx, DWORD PTR _fmt$[ebp]
+  00035	52		 push	 edx
+  00036	68 ff 00 00 00	 push	 255			; 000000ffH
+  0003b	8d 85 b4 fd ff
+	ff		 lea	 eax, DWORD PTR _body$[ebp]
+  00041	50		 push	 eax
+  00042	e8 00 00 00 00	 call	 __vsnprintf
+  00047	83 c4 10	 add	 esp, 16			; 00000010H
+
+; 94   :     body[sizeof(body) - 1] = '\0';
+
+  0004a	c6 85 b3 fe ff
+	ff 00		 mov	 BYTE PTR _body$[ebp+255], 0
+
+; 95   :     va_end(ap);
+
+  00051	c7 85 b8 fe ff
+	ff 00 00 00 00	 mov	 DWORD PTR _ap$[ebp], 0
+
+; 96   : 
+; 97   :     g_logCounter++;
+
+  0005b	8b 0d 00 00 00
+	00		 mov	 ecx, DWORD PTR _g_logCounter
+  00061	83 c1 01	 add	 ecx, 1
+  00064	89 0d 00 00 00
+	00		 mov	 DWORD PTR _g_logCounter, ecx
+
+; 98   :     _snprintf(line, sizeof(line) - 1, "[%08lu] %s\r\n", g_logCounter, body);
+
+  0006a	8d 95 b4 fd ff
+	ff		 lea	 edx, DWORD PTR _body$[ebp]
+  00070	52		 push	 edx
+  00071	a1 00 00 00 00	 mov	 eax, DWORD PTR _g_logCounter
+  00076	50		 push	 eax
+  00077	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0N@NIEL@?$FL?$CF08lu?$FN?5?$CFs?$AN?6?$AA@ ; `string'
+  0007c	68 3f 01 00 00	 push	 319			; 0000013fH
+  00081	8d 8d c0 fe ff
+	ff		 lea	 ecx, DWORD PTR _line$[ebp]
+  00087	51		 push	 ecx
+  00088	e8 00 00 00 00	 call	 __snprintf
+  0008d	83 c4 14	 add	 esp, 20			; 00000014H
+
+; 99   :     line[sizeof(line) - 1] = '\0';
+
+  00090	c6 45 ff 00	 mov	 BYTE PTR _line$[ebp+319], 0
+
+; 100  : 
+; 101  :     len = (DWORD)strlen(line);
+
+  00094	8d bd c0 fe ff
+	ff		 lea	 edi, DWORD PTR _line$[ebp]
+  0009a	83 c9 ff	 or	 ecx, -1
+  0009d	33 c0		 xor	 eax, eax
+  0009f	f2 ae		 repne scasb
+  000a1	f7 d1		 not	 ecx
+  000a3	83 c1 ff	 add	 ecx, -1
+  000a6	89 8d b4 fe ff
+	ff		 mov	 DWORD PTR _len$[ebp], ecx
+
+; 102  :     IFSMgr_Ring0_WriteFile(g_logFile, (DWORD)line, len, (DWORD)&written, 0);
+
+  000ac	6a 00		 push	 0
+  000ae	8d 95 bc fe ff
+	ff		 lea	 edx, DWORD PTR _written$[ebp]
+  000b4	52		 push	 edx
+  000b5	8b 85 b4 fe ff
+	ff		 mov	 eax, DWORD PTR _len$[ebp]
+  000bb	50		 push	 eax
+  000bc	8d 8d c0 fe ff
+	ff		 lea	 ecx, DWORD PTR _line$[ebp]
+  000c2	51		 push	 ecx
+  000c3	8b 15 00 00 00
+	00		 mov	 edx, DWORD PTR _g_logFile
+  000c9	52		 push	 edx
+  000ca	e8 00 00 00 00	 call	 _IFSMgr_Ring0_WriteFile@20
+$L1725:
+
+; 103  : }
+
+  000cf	5f		 pop	 edi
+  000d0	8b e5		 mov	 esp, ebp
+  000d2	5d		 pop	 ebp
+  000d3	c3		 ret	 0
+_I910_Log ENDP
+_LTEXT	ENDS
+END

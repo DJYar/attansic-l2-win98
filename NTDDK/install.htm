@@ -1,0 +1,306 @@
+<HTML><HEAD>
+   <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+   <TITLE>Getting Started</TITLE></HEAD>
+<BODY LINK="#0000FF" VLINK="#800080" BGCOLOR="#FFFFFF">
+
+<!----------------------  TITLE  -------------------------->
+<FONT FACE="Verdana, Arial, Times New Roman" SIZE=2>
+<B><FONT FACE="Verdana" SIZE=+3>
+Getting Started
+</FONT></B>
+
+<!----------------------  Description  -------------------->
+<P><FONT FACE="Verdana, Arial, Times New Roman" SIZE=2>The Microsoft<SUP>&reg;</SUP> Windows<SUP>&reg;</SUP> 2000 Driver Development Kit (DDK) provides a development environment
+for the creation of Windows&nbsp;2000 and WDM drivers. The DDK provides additional 
+driver-specific headers, libraries, sources, tools, and documentation that are used to develop drivers for 
+Windows&nbsp;2000.</FONT>
+<P>
+
+<!--------------------------- NOTE!! --------------------->
+<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0 WIDTH="90%">
+<TR VALIGN=TOP><TD ALIGN=LEFT><FONT FACE="Arial, Times New Roman" SIZE=-1><B>Note:&nbsp;&nbsp;&nbsp;</B></FONT></TD>
+<TD ALIGN=LEFT>
+<FONT FACE="Verdana, Arial, Times New Roman" SIZE=-1>
+This release of the Windows&nbsp;2000 DDK <I>must</I>
+be used to develop drivers for corresponding release of the Windows&nbsp;2000 operating system, and WDM drivers. You cannot use this DDK to create drivers for earlier versions of Windows&nbsp;2000 or for Windows&nbsp;NT<sup>&reg;</sup>&nbsp;4.0.
+In addition, driver development requires 
+Microsoft Visual C++<SUP>&reg;</SUP> 5.x or 6.x, Professional or Enterprise edition.  Microsoft Visual C++ Academic or Standard editions are not supported.</FONT></TD></TR>
+</TABLE>
+<P>
+
+<!-------------------- Legal Bits ---------------->
+<B><FONT FACE="Verdana" SIZE=+2>Legal Information</FONT></B>
+<P>
+<FONT FACE="Verdana, Arial, Times New Roman" SIZE=-1>This document is for informational purposes only. MICROSOFT
+MAKES NO WARRANTIES, EXPRESS OR IMPLIED, IN THIS DOCUMENT.</FONT>
+
+<P><FONT FACE="Verdana, Arial, Times New Roman" SIZE=-1>Microsoft may have patents, patent applications, trademarks,
+copyrights, or other intellectual property rights covering subject matter
+in this document. Except as expressly provided in any written license agreement
+from Microsoft, the furnishing of this document does not give you any license
+to these patents, trademarks, copyrights, or other intellectual property.</FONT>
+
+<P><FONT FACE="Verdana, Arial, Times New Roman" SIZE=-1>Information in this document is subject to change without
+notice and is provided for informational purposes only. The entire risk
+of the use or results of the use of this document remains with the user,
+and Microsoft Corporation makes no warranties, either express or implied.
+The names of companies, products, people, characters, and/or data mentioned
+herein are fictitious and are in no way intended to represent any real
+individual, company, product, or event, unless otherwise noted. Complying
+with all applicable copyright laws is the responsibility of the user. No
+part of this document may be reproduced or transmitted in any form or by
+any means, electronic or mechanical, for any purpose, without the express
+written permission of Microsoft Corporation.</FONT>
+
+<P><FONT FACE="Verdana, Arial, Times New Roman" SIZE=-1>ActiveSync, ActiveX, BackOffice, Direct3D, DirectAnimation,
+DirectDraw, DirectInput, DirectMusic, DirectPlay, DirectShow, DirectSound,
+DirectX, MSDN, Microsoft, MS-DOS, Outlook, Visual C++, Win32, Windows, and Windows NT
+are either registered trademarks or trademarks of Microsoft
+Corporation in the United States and/or other countries. Other product
+and company names mentioned herein may be the trademarks of their respective
+owners.</FONT>
+
+<P><FONT FACE="Verdana, Arial, Times New Roman" SIZE=-1>&copy;2000 Microsoft Corporation.
+All rights reserved.</FONT>
+
+<BR>&nbsp;<BR>
+
+<!--------  Purpose ---------------->
+<B><FONT FACE="Verdana" SIZE=+2>Introduction</FONT></B>
+
+<P>
+<FONT FACE="Verdana, Arial, Times New Roman" SIZE=2>This document presents an overview of the DDK and provides essential 
+installation information for this driver development kit. Before installing the DDK, read through this document to determine whether to install optional DDK components and how to set up your systems for a trouble-free
+installation. This document contains the following topics:</FONT>
+<P>
+
+<!------------- ToC -------------->
+<UL>
+<LI><A HREF="install.htm#INSTALL"><FONT FACE="Verdana, Arial, Times New Roman" SIZE=2>Installing the DDK</FONT></A>
+<LI><A HREF="install.htm#VERIFY"><FONT FACE="Verdana, Arial, Times New Roman" SIZE=2>Verifying DDK Installation</FONT></A>
+<LI><A HREF="install.htm#COMPILE64"><FONT FACE="Verdana, Arial, Times New Roman" SIZE=2>Compiling Your Driver for Win64</FONT></A>
+<LI><A HREF="install.htm#CERTIFICATE"><FONT FACE="Verdana, Arial, Times New Roman" SIZE=2>Driver Logo and Distribution Program</FONT></A>
+<LI><A HREF="install.htm#INFO"><FONT FACE="Verdana, Arial, Times New Roman" SIZE=2>Information on the Microsoft Web Site</FONT></A>
+<LI><A HREF="install.htm#NEWS"><FONT FACE="Verdana, Arial, Times New Roman" SIZE=2>Late-Breaking News</FONT></A>
+</UL>
+
+<!------ Installing --->
+<P>
+<A NAME="INSTALL"></A><B><FONT FACE="Verdana" SIZE=+2>Installing the DDK</FONT></B>
+
+<P><FONT FACE="Verdana, Arial, Times New Roman" SIZE=2>
+To install the Microsoft<SUP>&reg;</SUP> Windows<SUP>&reg;</SUP>&nbsp;2000 
+DDK, you must be able to access a CD-ROM drive from Windows&nbsp;2000, either locally or through a network, or you must 
+have Internet access to the <A HREF="http://www.microsoft.com/ddk">Driver Development Kits</A> Web site.</FONT>
+
+<P>
+
+<B><FONT FACE="Verdana" SIZE=+1>System Requirements</FONT></B><P>
+<FONT FACE="Verdana, Arial, Times New Roman" SIZE=2>To use this DDK on your <B>driver-development</B> machine, you will need:
+<P>
+<UL>
+<LI>Microsoft<SUP>&reg;</SUP> Windows&nbsp;2000, or Windows<SUP>&reg;</SUP> 98.
+<LI>Microsoft Visual C++<SUP>&reg;</SUP> 5.0 or 6.0, Professional or Enterprise edition. Microsoft Visual C++ Academic or Standard editions are not supported. Additionally, you must install the latest Visual C++ service pack that is available for the version you are using. See the Release Notes for more information.  Setup.exe will copy the Release Notes file from the CD to the root directory of the DDK installation.  Please see the root directory of the CD, or the installation, for Release Notes (<a href="relnote.htm"><I>relnote.htm</I></a>) and late-breaking news.
+<LI>CD-ROM drive or Internet access.
+	<BR><FONT SIZE=-1>This DDK is available on CD-ROM from MSDN&trade; or by download from the <A HREF="http://www.microsoft.com/ddk">Driver Development Kits</A> Web page. For a list of  CD-ROM drives, computer
+	systems, SCSI adapters, and other peripherals that are compatible with Windows&nbsp;2000, see the <I>Hardware Compatibility List</I>, available on the Web 
+	at <A HREF="http://www.microsoft.com/hwtest">http://www.microsoft.com/hwtest</A>.</FONT>
+<LI>At least 64MB RAM.  128MB of RAM or more is recommended.
+<LI>Up to 200MB hard-disk space for a full installation.  Significantly more space may be required to compile all samples; up to 750MB may be required.
+</UL></FONT>
+<BR><FONT FACE="Verdana, Arial,Times New Roman" SIZE=2>To use this DDK on your <B>driver-testing</B> machine, you will need:
+<P>
+<UL>
+<LI>Microsoft Windows&nbsp;2000.
+<LI>At least 64MB RAM if you are running a <I>free</I> or retail build of Windows&nbsp;2000; 
+64MB RAM if running a <I>checked</I> build.  In some cases, checked builds may require 128MB of RAM, depending on the particular drivers loaded on the machine.
+<LI>A second machine that is capable of running Windows&nbsp;2000 for kernel debugging of your under-development drivers.  This machine can be your driver-development system if desired.
+</UL>
+If you are developing WDM Drivers for the Win9x platform, you will need to consult the <b>Windows 98 DDK</b> for information on debugging on that platform.</FONT>
+
+
+
+<!-------------- DDK Install ------------->
+<P><B><FONT FACE="Verdana" SIZE=+1>DDK Installation</FONT></B>
+<P>The Windows<SUP>&reg;</SUP> 2000 DDK
+Setup program installs the DDK tools, headers, libraries, and source files that are
+necessary for driver development. 
+
+<P>To install this DDK,
+you must be able to access the CD-ROM drive from your Windows&nbsp;2000 installation,
+either locally or over a network, or you must have access to the <A HREF="http://www.microsoft.com/ddk">
+Driver Development Kits</A> Web page.
+
+<P>
+<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0 WIDTH="90%">
+<TR VALIGN=TOP><TD ALIGN=LEFT><FONT FACE="Verdana, Arial, Times New Roman" SIZE=2><B>Note:&nbsp;&nbsp;&nbsp;</B></FONT></TD>
+<TD ALIGN=LEFT><FONT FACE="Verdana, Arial, Times New Roman" SIZE=2>You must have Administrator privileges to correctly
+install the 2000 DDK.<P></FONT></TD></TR>
+
+<TR VALIGN=TOP><TD ALIGN=LEFT><FONT FACE="Verdana, Arial, Times New Roman" SIZE=2><B>Note:&nbsp;&nbsp;&nbsp;</B></FONT></TD>
+<TD ALIGN=LEFT><FONT FACE="Verdana, Arial, Times New Roman" SIZE=2>Do <B>not</B> install this DDK over previous versions of this or any other DDK.
+Improper installation of the DDK can cause the use of old and incorrect files, which will lead to unreliable
+results in any drivers you develop.<P></FONT></TD></TR>
+
+<TR VALIGN=TOP><TD ALIGN=LEFT><FONT FACE="Verdana, Arial, Times New Roman" SIZE=2><B>Note:&nbsp;</B></FONT></TD>
+<TD ALIGN=LEFT><FONT FACE="Verdana, Arial, Times New Roman" SIZE=2>The installation path and icon placement have been changed. The default
+installation path is now x:\WinDDK\2195. The icons are now placed at <I>Programs\Development Kits\Kit 2195</I>.
+<P></FONT></TD></TR></TABLE>
+
+Perform the following steps:
+<p>
+<OL>
+<LI>Execute the <I>setup.exe</I> file from the CD-ROM or execute <I>ntddk.exe</I> after downloading it from the <A HREF="http://www.microsoft.com/ddk">Driver Development Kits</A> Web page.
+<LI>Click the <b>Next</b> button to install the Windows&nbsp;2000 DDK.
+<LI>Read and accept the Software License Agreement. 
+<LI>Click the <B>Next</B> button to proceed.
+<LI>Select the installation path (it is suggested to use the path that is displayed).
+<LI>Click the <B>Next</B> button to proceed.
+<LI>Choose the components that you would like to install.
+<LI>Click the <B>Next</B> button to proceed.
+<LI>Confirm that you want to install the DDK by verifying that the installation path is correct. 
+<LI>Click the <B>Next</B> button to install the kit.
+</OL>
+<P>The <I>setenv.bat</I> batch file sets the necessary environment variables to build free or checked driver versions. To run <I>setenv.bat</I>, start either a free or checked console
+window from the Programs\Development Kits\Kit 2195\Build Environments. Drivers can then be built by running
+the BUILD utility. Invoking <B>build</B> <B>-cZ</B> at the command-line
+prompt compiles and links all drivers in the source tree of the current
+subdirectory.
+<P>
+<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0 WIDTH="90%">
+<TR VALIGN=TOP><TD ALIGN=LEFT><FONT FACE="Verdana, Arial, Times New Roman" SIZE=2><B>Note:&nbsp;&nbsp;&nbsp;</B></FONT></TD>
+<TD ALIGN=LEFT>
+<FONT FACE="Verdana, Arial, Times New Roman" SIZE=2>The build environment is set from the icons
+for a free or checked build. If the build environment is not created correctly,
+you can manually set the build environment by going to the %NTDDK%\bin
+directory and typing <I>setenv.bat DDK_DIRECTORY free/checked</I>, where
+<I>DDK_DIRECTORY</I> is the full path of the location of the Windows&nbsp;2000 DDK.</FONT></TD></TR></TABLE>
+<P>
+<TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0 WIDTH="90%">
+<TR VALIGN=TOP><TD ALIGN=LEFT><FONT FACE="Verdana, Arial, Times New Roman" SIZE=2><B>Note:&nbsp;&nbsp;&nbsp;</B></FONT></TD>
+<TD ALIGN=LEFT>
+<FONT FACE="Verdana, Arial, Times New Roman" SIZE=2>The Windows&nbsp;2000 DDK uses the current VCVars.bat to create part of the build environment. This includes setting your current
+path to include the installation source of Visual C++. You may want to delete
+the line <I>vcsource=</I>&lt;Install Path&gt; from %DDKRoot%\Bin\DDKVars.bat
+if you installed the DDK over a network. Doing so may reduce the time
+required to build the drivers.</FONT></TD></TR></TABLE>
+
+
+
+<!-------------- Verifying Your Installation ------------>
+<P><A NAME="VERIFY"></A>
+<B><FONT FACE="Verdana" SIZE=+2>Verifying DDK Installation</FONT></B>
+
+<P>Start either the <I>free</I> or <I>checked</I> build environment by choosing the appropriate icon from the
+ Windows&reg;&nbsp;2000 DDK menu. 
+
+<P>Verify your installation of the Windows&nbsp;2000 DDK by running <B>build</B> <B>-cZ</B> 
+from the %NTDDK%\src
+directory to build the complete set of installed driver sources. This can
+take more than 30 minutes to complete, depending on which DDK components
+are installed.
+
+<P>For more detailed information
+about the BUILD utility and the DDK environments, see the <I>Driver Writer's Guide</I>
+in the DDK online Help.
+
+
+
+<!------------ 64-Bit ----------------------->
+<P><A NAME="COMPILE64"></A>
+<B><FONT FACE="Verdana" SIZE=+2>Compiling Your Driver for Win64</FONT></B>
+<P>Also included in this release of the DDK is a <b>complete</b> 64-bit build environment for the upcoming Microsoft<SUP>&reg;</SUP> Win64&#153; systems.
+<P>To compile your driver with the 64-bit compiler, choose the <B>Checked 64 Bit Build Environment</B> or <B>Free 64 Bit Build Environment</B> icon in <I>Programs\Development Kits\Kit 2195\Build Environment</I>.  This will open the correct environment for the 64-bit compiler. 
+
+<P>Please see <A HREF="http://msdn.microsoft.com/developer/news/feature/win64/64bitwin.htm">
+Getting Ready for 64-bit Windows</A> for more detailed information on required code changes for 64-bit compilation.
+
+
+
+
+<!------------ Driver Logo Program ---------->
+<P><A NAME="CERTIFICATE"></A><B><FONT FACE="Verdana"><FONT SIZE=+2>Driver Logo and Distribution Program</FONT></FONT></B>
+<P>Windows Hardware Quality
+Labs (WHQL) provides fee-based compatibility testing services for driver
+and hardware developers. WHQL testing is extensive and comprehensive to
+assure a high level of compatibility between tested hardware, drivers,
+and Microsoft&reg; operating systems, including both Windows<SUP>&reg;</SUP> 2000 and Windows<SUP>&reg;</SUP> 98.
+
+<P>WHQL customers benefit in the following ways:<BR>
+<UL><LI>Devices approved by WHQL are included in the <I>Hardware
+Compatibility List</I>, which is periodically updated on the Web at <A HREF="http://www.microsoft.com/hwtest">http://www.microsoft.com/hwtest</A>.
+<UL><LI>This list is used by many Microsoft customers to make purchasing decisions.
+It also is used by Microsoft support engineers while assisting customers
+with compatibility issues.</UL>
+<LI>If your device and its drivers pass WHQL testing for compatibility with specific Windows operating systems, you are eligible
+to use the appropriate logos in
+promotional materials for that device. For example, WHQL logos include &quot;Windows&nbsp;2000 Compatible&quot; and &quot;Windows 98 Compatible.&quot;
+</UL>
+<P>
+
+
+<!--- Information @ MicroSoft.com ------>
+<A NAME="INFO"><B><FONT FACE="Verdana" SIZE=+2>Information on the Microsoft&reg; Web Site</FONT></B></A>
+<P>
+The Microsoft Driver Development Kit Web site at <A HREF="http://www.microsoft.com/ddk/">http://www.microsoft.com/ddk</A>.
+This Web site provides information and resources for driver development,
+including:
+<UL><LI>The latest version of the Windows&reg;&nbsp;2000 DDK available for public download.</LI>
+<LI>The latest documentation for the DDK, available for browsing online and for download.</LI>
+<LI>News on new DDK developments.</LI>
+<LI><B>NEW!</B>  Give us feedback on the DDK.  On the Web page for each DDK, you'll find a link to the feedback form for that DDK. Please tell us what you think: use this to report bugs, request new features, and rate the DDK. </LI>
+<LI>The latest information, updates, FAQ, and extended release notes available. </LI>
+</UL>
+<P>
+
+<P>The <B>Hardware Development Web Site</B> at <A HREF="http://www.microsoft.com/hwdev">http://www.microsoft.com/hwdev</A>
+provides connections to information from Microsoft to help with hardware
+and driver development. This Web site provides the following:
+<P>
+<UL>
+<LI>
+Driver development information for Plug and Play, power management,
+manageability, NDIS 5.0, WDM, and specific device classes such as audio and imaging.</LI>
+
+<LI>
+Third-party driver development and training resources.</LI>
+
+<LI>
+Advice from &quot;Dr.&nbsp;Iver&quot; on special driver topics such as Plug and Play, power management, and WDM.</LI>
+
+<LI>
+Specifications for Plug and Play, power management, and other
+special topics.</LI>
+</UL>
+<P>MSDN&trade;, the <B>Microsoft Developers Network</B> at <A HREF="http://msdn.microsoft.com/">http://msdn.microsoft.com</A>,
+provides tools and information from Microsoft to help with software development.
+This information includes:
+<P>
+<UL>
+<LI> Downloads for service packs or patches for Microsoft development
+tools.</LI>
+<LI>Up-to-date Platform SDK releases.</LI>
+<LI>Access to user groups, chats, event information, the MSDN
+Library Online, and a host of products and technologies for developers.</LI>
+</UL>
+<P>The Microsoft<SUP>&reg;</SUP> DirectX<SUP>&reg;</SUP> Web site at <A HREF="http://www.microsoft.com/directx">http://www.microsoft.com/directx</A>
+provides information for DirectX hardware and software developers,
+including:
+<P>
+<UL>
+<LI>Microsoft DirectX SDK download.</LI>
+<LI>Connections to technical articles, support information, and news groups.</LI></UL>
+<P>
+<!-------------------- Late Breaking News  -------------->
+
+<A NAME="NEWS"></A><P>
+
+
+<B><FONT FACE="Verdana"><FONT SIZE=+2>Late-Breaking News</FONT></FONT></B>
+<P>
+
+<FONT FACE="Verdana, Arial,Times New Roman" SIZE=2><P>For  release notes and late-breaking news, please see the Release Notes file (<a href="relnote.htm"><I>relnote.htm</I></a>). Setup.exe will copy the Release Notes file from the CD to the root directory of the DDK installation.  Updates and information will continue to be posted to the Microsoft Driver Development Kit Web site at <A HREF="http://www.microsoft.com/ddk/">http://www.microsoft.com/ddk</A></FONT>
+<BR>&nbsp;<BR>
+</FONT>
+</BODY>
+</HTML>

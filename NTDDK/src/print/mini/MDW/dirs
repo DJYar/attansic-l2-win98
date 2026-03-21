@@ -1,0 +1,11 @@
+DIRS= \
+     pcl5eres \
+     hpdjres \
+     escp2res \
+     ep9res \
+     ep24res \
+     ecp2eres \
+     canon10v \
+     escp24sc \
+     escp24tc \
+     pcpr201

@@ -1,0 +1,56 @@
+ msmpu401
+
+ Timestamp is 69a4cfae (Mon Mar 02 01:45:50 2026)
+
+ Preferred load address is 00010000
+
+ Start         Length     Name                   Class
+ 0001:00000000 00000024H .text                   CODE
+ 0002:00000000 0000002cH .idata$5                DATA
+ 0002:00000030 00000068H .rdata                  DATA
+ 0003:00000000 00000030H .data                   DATA
+ 0004:00000000 0000073dH PAGE                    CODE
+ 0005:00000000 000000a5H INIT                    CODE
+ 0005:000000a8 0000003cH .idata$2                CODE
+ 0005:000000e4 00000014H .idata$3                CODE
+ 0005:000000f8 0000002cH .idata$4                CODE
+ 0005:00000124 000000b2H .idata$6                CODE
+ 0006:00000000 00000058H .rsrc$01                DATA
+ 0006:00000060 00000360H .rsrc$02                DATA
+
+  Address         Publics by Value              Rva+Base     Lib:Object
+
+ 0001:00000000       _DbgPrint                  000102e0 f   ntoskrnl:ntoskrnl.exe
+ 0001:00000006       _PcInitializeAdapterDriver@12 000102e6 f   portcls:portcls.sys
+ 0001:0000000c       _PcAddAdapterDevice@20     000102ec f   portcls:portcls.sys
+ 0001:00000012       _PcRegisterSubdevice@12    000102f2 f   portcls:portcls.sys
+ 0001:00000018       _PcNewMiniport@8           000102f8 f   portcls:portcls.sys
+ 0001:0000001e       _PcNewPort@8               000102fe f   portcls:portcls.sys
+ 0002:00000000       __imp__KeGetCurrentIrql@0  00010320     hal:HAL.dll
+ 0002:00000004       \177HAL_NULL_THUNK_DATA    00010324     hal:HAL.dll
+ 0002:00000008       __imp__DbgPrint            00010328     ntoskrnl:ntoskrnl.exe
+ 0002:0000000c       __imp__RtlAssert@16        0001032c     ntoskrnl:ntoskrnl.exe
+ 0002:00000010       \177ntoskrnl_NULL_THUNK_DATA 00010330     ntoskrnl:ntoskrnl.exe
+ 0002:00000014       __imp__PcInitializeAdapterDriver@12 00010334     portcls:portcls.sys
+ 0002:00000018       __imp__PcAddAdapterDevice@20 00010338     portcls:portcls.sys
+ 0002:0000001c       __imp__PcRegisterSubdevice@12 0001033c     portcls:portcls.sys
+ 0002:00000020       __imp__PcNewMiniport@8     00010340     portcls:portcls.sys
+ 0002:00000024       __imp__PcNewPort@8         00010344     portcls:portcls.sys
+ 0002:00000028       \177portcls_NULL_THUNK_DATA 00010348     portcls:portcls.sys
+ 0002:00000088       _IID_IUnknown              000103a8     adapter.obj
+ 0003:00000000       __GUID_b7902fe9_fb0a_11d1_81b0_0060083316c1 000103c0     adapter.obj
+ 0003:00000010       __GUID_d3f0ce1c_fffc_11d1_81b0_0060083316c1 000103d0     adapter.obj
+ 0003:00000020       __GUID_c096df9c_fb09_11d1_81b0_0060083316c1 000103e0     adapter.obj
+ 0004:0000005a       _AddDevice@8               0001045a f   adapter.obj
+ 0004:000002cc       ?InstallSubdevice@@YGJPAX0PAGABU_GUID@@2PAUIUnknown@@PAUIResourceList@@2PAPAU2@5@Z 000106cc f   adapter.obj
+ 0004:0000062c       ?StartDevice@@YGJPAU_DEVICE_OBJECT@@PAU_IRP@@PAUIResourceList@@@Z 00010a2c f   adapter.obj
+ 0005:0000005a       _DriverEntry@8             00010b9a f   adapter.obj
+ 0005:000000a8       __IMPORT_DESCRIPTOR_ntoskrnl 00010be8     ntoskrnl:ntoskrnl.exe
+ 0005:000000bc       __IMPORT_DESCRIPTOR_HAL    00010bfc     hal:HAL.dll
+ 0005:000000d0       __IMPORT_DESCRIPTOR_portcls 00010c10     portcls:portcls.sys
+ 0005:000000e4       __NULL_IMPORT_DESCRIPTOR   00010c24     ntoskrnl:ntoskrnl.exe
+
+ entry point at        0005:0000005a
+
+ Static symbols
+

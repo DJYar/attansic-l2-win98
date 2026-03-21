@@ -1,0 +1,7 @@
+Graphedit is a DirectX/DirectShow construction tool that puts
+together DirectShow graphs and lets the user run the combined
+graph. Graphs you can build include (and are not limited to)
+playing DVD's, starting a TV tuner or DV camcorder saving a
+movie to disk, playing an MP3 over your sound card.
+
+For complete documentation, please refer to the DirectShow SDK.

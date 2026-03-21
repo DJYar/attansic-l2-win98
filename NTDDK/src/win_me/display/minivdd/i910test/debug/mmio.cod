@@ -1,0 +1,585 @@
+	TITLE	..\mmio.c
+	.386P
+include listing.inc
+if @Version gt 510
+.model FLAT
+else
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+_BSS	SEGMENT DWORD USE32 PUBLIC 'BSS'
+_BSS	ENDS
+$$SYMBOLS	SEGMENT BYTE USE32 'DEBSYM'
+$$SYMBOLS	ENDS
+$$TYPES	SEGMENT BYTE USE32 'DEBTYP'
+$$TYPES	ENDS
+_TLS	SEGMENT DWORD USE32 PUBLIC 'TLS'
+_TLS	ENDS
+;	COMDAT ??_C@_0CN@NPIG@mmio?3?5map?5skipped?0?5pci?5device?5is@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0BD@NOEI@mmio?3?5BAR0?5is?5zero?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0DF@GOOG@mmio?3?5BAR0?5size?5unknown?0?5using?5f@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0CL@IDFH@mmio?3?5map?5failed?5phys?$DN0x?$CF08lx?5si@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0DG@JONO@mmio?3?5mapped?5phys?$DN0x?$CF08lx?5?9?$DO?5lin@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0P@BPHL@unknown?5reason?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0BE@BCPP@mmio?3?5disabled?5?$CI?$CFs?$CJ?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0CD@NDOK@watchdog?5threshold?5reached?5in?5re@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0CE@HNAL@watchdog?5threshold?5reached?5in?5wr@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+_LTEXT	SEGMENT PARA USE32 PUBLIC 'LCODE'
+_LTEXT	ENDS
+;	COMDAT _I910_MapBars@4
+_LTEXT	SEGMENT PARA USE32 PUBLIC 'LCODE'
+_LTEXT	ENDS
+;	COMDAT _I910_DisableMmio@8
+_LTEXT	SEGMENT PARA USE32 PUBLIC 'LCODE'
+_LTEXT	ENDS
+;	COMDAT _I910_ValidateOffset@8
+_LTEXT	SEGMENT PARA USE32 PUBLIC 'LCODE'
+_LTEXT	ENDS
+;	COMDAT _I910_ReadMmio32@12
+_LTEXT	SEGMENT PARA USE32 PUBLIC 'LCODE'
+_LTEXT	ENDS
+;	COMDAT _I910_WriteMmio32@12
+_LTEXT	SEGMENT PARA USE32 PUBLIC 'LCODE'
+_LTEXT	ENDS
+FLAT	GROUP _DATA, CONST, _BSS
+	ASSUME	CS: FLAT, DS: FLAT, SS: FLAT
+endif
+PUBLIC	_I910_MapBars@4
+PUBLIC	??_C@_0CN@NPIG@mmio?3?5map?5skipped?0?5pci?5device?5is@ ; `string'
+PUBLIC	??_C@_0BD@NOEI@mmio?3?5BAR0?5is?5zero?$AA@	; `string'
+PUBLIC	??_C@_0DF@GOOG@mmio?3?5BAR0?5size?5unknown?0?5using?5f@ ; `string'
+PUBLIC	??_C@_0CL@IDFH@mmio?3?5map?5failed?5phys?$DN0x?$CF08lx?5si@ ; `string'
+PUBLIC	??_C@_0DG@JONO@mmio?3?5mapped?5phys?$DN0x?$CF08lx?5?9?$DO?5lin@ ; `string'
+EXTRN	_I910_Log:NEAR
+EXTRN	_MapPhysToLinear@12:NEAR
+;	COMDAT ??_C@_0CN@NPIG@mmio?3?5map?5skipped?0?5pci?5device?5is@
+; File ..\mmio.c
+_DATA	SEGMENT
+??_C@_0CN@NPIG@mmio?3?5map?5skipped?0?5pci?5device?5is@ DB 'mmio: map ski'
+	DB	'pped, pci device is not present', 00H	; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0BD@NOEI@mmio?3?5BAR0?5is?5zero?$AA@
+_DATA	SEGMENT
+??_C@_0BD@NOEI@mmio?3?5BAR0?5is?5zero?$AA@ DB 'mmio: BAR0 is zero', 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0DF@GOOG@mmio?3?5BAR0?5size?5unknown?0?5using?5f@
+_DATA	SEGMENT
+??_C@_0DF@GOOG@mmio?3?5BAR0?5size?5unknown?0?5using?5f@ DB 'mmio: BAR0 si'
+	DB	'ze unknown, using fallback size=0x%08lx', 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0CL@IDFH@mmio?3?5map?5failed?5phys?$DN0x?$CF08lx?5si@
+_DATA	SEGMENT
+??_C@_0CL@IDFH@mmio?3?5map?5failed?5phys?$DN0x?$CF08lx?5si@ DB 'mmio: map'
+	DB	' failed phys=0x%08lx size=0x%08lx', 00H	; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0DG@JONO@mmio?3?5mapped?5phys?$DN0x?$CF08lx?5?9?$DO?5lin@
+_DATA	SEGMENT
+??_C@_0DG@JONO@mmio?3?5mapped?5phys?$DN0x?$CF08lx?5?9?$DO?5lin@ DB 'mmio:'
+	DB	' mapped phys=0x%08lx -> lin=0x%08lx size=0x%08lx', 00H ; `string'
+_DATA	ENDS
+;	COMDAT _I910_MapBars@4
+_LTEXT	SEGMENT
+_ctx$ = 8
+_size$ = -4
+_I910_MapBars@4 PROC NEAR				; COMDAT
+
+; 8    : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	51		 push	 ecx
+
+; 9    :     DWORD size = ctx->pci.bar0_size;
+
+  00004	8b 45 08	 mov	 eax, DWORD PTR _ctx$[ebp]
+  00007	8b 48 14	 mov	 ecx, DWORD PTR [eax+20]
+  0000a	89 4d fc	 mov	 DWORD PTR _size$[ebp], ecx
+
+; 10   : 
+; 11   :     if (!ctx->pci.found)
+
+  0000d	8b 55 08	 mov	 edx, DWORD PTR _ctx$[ebp]
+  00010	83 7a 2c 00	 cmp	 DWORD PTR [edx+44], 0
+  00014	75 14		 jne	 SHORT $L1134
+
+; 13   :         I910_Log("mmio: map skipped, pci device is not present");
+
+  00016	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0CN@NPIG@mmio?3?5map?5skipped?0?5pci?5device?5is@ ; `string'
+  0001b	e8 00 00 00 00	 call	 _I910_Log
+  00020	83 c4 04	 add	 esp, 4
+
+; 14   :         return FALSE;
+
+  00023	33 c0		 xor	 eax, eax
+  00025	e9 bc 00 00 00	 jmp	 $L1132
+$L1134:
+
+; 16   : 
+; 17   :     if (!ctx->pci.bar0_mmio_base)
+
+  0002a	8b 45 08	 mov	 eax, DWORD PTR _ctx$[ebp]
+  0002d	83 78 10 00	 cmp	 DWORD PTR [eax+16], 0
+  00031	75 14		 jne	 SHORT $L1136
+
+; 19   :         I910_Log("mmio: BAR0 is zero");
+
+  00033	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0BD@NOEI@mmio?3?5BAR0?5is?5zero?$AA@ ; `string'
+  00038	e8 00 00 00 00	 call	 _I910_Log
+  0003d	83 c4 04	 add	 esp, 4
+
+; 20   :         return FALSE;
+
+  00040	33 c0		 xor	 eax, eax
+  00042	e9 9f 00 00 00	 jmp	 $L1132
+$L1136:
+
+; 22   : 
+; 23   :     if (size == 0)
+
+  00047	83 7d fc 00	 cmp	 DWORD PTR _size$[ebp], 0
+  0004b	75 18		 jne	 SHORT $L1138
+
+; 25   :         size = I910_MAX_MMIO_SIZE_FALLBACK;
+
+  0004d	c7 45 fc 00 00
+	00 01		 mov	 DWORD PTR _size$[ebp], 16777216 ; 01000000H
+
+; 26   :         I910_Log("mmio: BAR0 size unknown, using fallback size=0x%08lx", size);
+
+  00054	8b 4d fc	 mov	 ecx, DWORD PTR _size$[ebp]
+  00057	51		 push	 ecx
+  00058	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0DF@GOOG@mmio?3?5BAR0?5size?5unknown?0?5using?5f@ ; `string'
+  0005d	e8 00 00 00 00	 call	 _I910_Log
+  00062	83 c4 08	 add	 esp, 8
+$L1138:
+
+; 28   : 
+; 29   :     ctx->mmio_linear = MapPhysToLinear(ctx->pci.bar0_mmio_base, size, 0);
+
+  00065	6a 00		 push	 0
+  00067	8b 55 fc	 mov	 edx, DWORD PTR _size$[ebp]
+  0006a	52		 push	 edx
+  0006b	8b 45 08	 mov	 eax, DWORD PTR _ctx$[ebp]
+  0006e	8b 48 10	 mov	 ecx, DWORD PTR [eax+16]
+  00071	51		 push	 ecx
+  00072	e8 00 00 00 00	 call	 _MapPhysToLinear@12
+  00077	8b 55 08	 mov	 edx, DWORD PTR _ctx$[ebp]
+  0007a	89 42 30	 mov	 DWORD PTR [edx+48], eax
+
+; 30   :     if (!ctx->mmio_linear)
+
+  0007d	8b 45 08	 mov	 eax, DWORD PTR _ctx$[ebp]
+  00080	83 78 30 00	 cmp	 DWORD PTR [eax+48], 0
+  00084	75 1c		 jne	 SHORT $L1141
+
+; 32   :         I910_Log("mmio: map failed phys=0x%08lx size=0x%08lx", ctx->pci.bar0_mmio_base, size);
+
+  00086	8b 4d fc	 mov	 ecx, DWORD PTR _size$[ebp]
+  00089	51		 push	 ecx
+  0008a	8b 55 08	 mov	 edx, DWORD PTR _ctx$[ebp]
+  0008d	8b 42 10	 mov	 eax, DWORD PTR [edx+16]
+  00090	50		 push	 eax
+  00091	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0CL@IDFH@mmio?3?5map?5failed?5phys?$DN0x?$CF08lx?5si@ ; `string'
+  00096	e8 00 00 00 00	 call	 _I910_Log
+  0009b	83 c4 0c	 add	 esp, 12			; 0000000cH
+
+; 33   :         return FALSE;
+
+  0009e	33 c0		 xor	 eax, eax
+  000a0	eb 44		 jmp	 SHORT $L1132
+$L1141:
+
+; 35   : 
+; 36   :     ctx->mmio_size = size;
+
+  000a2	8b 4d 08	 mov	 ecx, DWORD PTR _ctx$[ebp]
+  000a5	8b 55 fc	 mov	 edx, DWORD PTR _size$[ebp]
+  000a8	89 51 34	 mov	 DWORD PTR [ecx+52], edx
+
+; 37   :     ctx->mmio_disabled = 0;
+
+  000ab	8b 45 08	 mov	 eax, DWORD PTR _ctx$[ebp]
+  000ae	c7 40 38 00 00
+	00 00		 mov	 DWORD PTR [eax+56], 0
+
+; 38   :     ctx->mmio_error_count = 0;
+
+  000b5	8b 4d 08	 mov	 ecx, DWORD PTR _ctx$[ebp]
+  000b8	c7 41 3c 00 00
+	00 00		 mov	 DWORD PTR [ecx+60], 0
+
+; 39   : 
+; 40   :     I910_Log("mmio: mapped phys=0x%08lx -> lin=0x%08lx size=0x%08lx",
+; 41   :              ctx->pci.bar0_mmio_base,
+; 42   :              (DWORD)ctx->mmio_linear,
+; 43   :              ctx->mmio_size);
+
+  000bf	8b 55 08	 mov	 edx, DWORD PTR _ctx$[ebp]
+  000c2	8b 42 34	 mov	 eax, DWORD PTR [edx+52]
+  000c5	50		 push	 eax
+  000c6	8b 4d 08	 mov	 ecx, DWORD PTR _ctx$[ebp]
+  000c9	8b 51 30	 mov	 edx, DWORD PTR [ecx+48]
+  000cc	52		 push	 edx
+  000cd	8b 45 08	 mov	 eax, DWORD PTR _ctx$[ebp]
+  000d0	8b 48 10	 mov	 ecx, DWORD PTR [eax+16]
+  000d3	51		 push	 ecx
+  000d4	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0DG@JONO@mmio?3?5mapped?5phys?$DN0x?$CF08lx?5?9?$DO?5lin@ ; `string'
+  000d9	e8 00 00 00 00	 call	 _I910_Log
+  000de	83 c4 10	 add	 esp, 16			; 00000010H
+
+; 44   : 
+; 45   :     return TRUE;
+
+  000e1	b8 01 00 00 00	 mov	 eax, 1
+$L1132:
+
+; 46   : }
+
+  000e6	8b e5		 mov	 esp, ebp
+  000e8	5d		 pop	 ebp
+  000e9	c2 04 00	 ret	 4
+_I910_MapBars@4 ENDP
+_LTEXT	ENDS
+PUBLIC	_I910_DisableMmio@8
+PUBLIC	??_C@_0P@BPHL@unknown?5reason?$AA@		; `string'
+PUBLIC	??_C@_0BE@BCPP@mmio?3?5disabled?5?$CI?$CFs?$CJ?$AA@ ; `string'
+;	COMDAT ??_C@_0P@BPHL@unknown?5reason?$AA@
+; File ..\mmio.c
+_DATA	SEGMENT
+??_C@_0P@BPHL@unknown?5reason?$AA@ DB 'unknown reason', 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0BE@BCPP@mmio?3?5disabled?5?$CI?$CFs?$CJ?$AA@
+_DATA	SEGMENT
+??_C@_0BE@BCPP@mmio?3?5disabled?5?$CI?$CFs?$CJ?$AA@ DB 'mmio: disabled (%'
+	DB	's)', 00H					; `string'
+_DATA	ENDS
+;	COMDAT _I910_DisableMmio@8
+_LTEXT	SEGMENT
+_ctx$ = 8
+_reason$ = 12
+_I910_DisableMmio@8 PROC NEAR				; COMDAT
+
+; 50   : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	51		 push	 ecx
+
+; 51   :     ctx->mmio_disabled = 1;
+
+  00004	8b 45 08	 mov	 eax, DWORD PTR _ctx$[ebp]
+  00007	c7 40 38 01 00
+	00 00		 mov	 DWORD PTR [eax+56], 1
+
+; 52   :     I910_Log("mmio: disabled (%s)", reason ? reason : "unknown reason");
+
+  0000e	83 7d 0c 00	 cmp	 DWORD PTR _reason$[ebp], 0
+  00012	74 08		 je	 SHORT $L1209
+  00014	8b 4d 0c	 mov	 ecx, DWORD PTR _reason$[ebp]
+  00017	89 4d fc	 mov	 DWORD PTR -4+[ebp], ecx
+  0001a	eb 07		 jmp	 SHORT $L1210
+$L1209:
+  0001c	c7 45 fc 00 00
+	00 00		 mov	 DWORD PTR -4+[ebp], OFFSET FLAT:??_C@_0P@BPHL@unknown?5reason?$AA@ ; `string'
+$L1210:
+  00023	8b 55 fc	 mov	 edx, DWORD PTR -4+[ebp]
+  00026	52		 push	 edx
+  00027	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0BE@BCPP@mmio?3?5disabled?5?$CI?$CFs?$CJ?$AA@ ; `string'
+  0002c	e8 00 00 00 00	 call	 _I910_Log
+  00031	83 c4 08	 add	 esp, 8
+
+; 53   : }
+
+  00034	8b e5		 mov	 esp, ebp
+  00036	5d		 pop	 ebp
+  00037	c2 08 00	 ret	 8
+_I910_DisableMmio@8 ENDP
+_LTEXT	ENDS
+PUBLIC	_I910_ReadMmio32@12
+PUBLIC	??_C@_0CD@NDOK@watchdog?5threshold?5reached?5in?5re@ ; `string'
+;	COMDAT ??_C@_0CD@NDOK@watchdog?5threshold?5reached?5in?5re@
+; File ..\mmio.c
+_DATA	SEGMENT
+??_C@_0CD@NDOK@watchdog?5threshold?5reached?5in?5re@ DB 'watchdog thresho'
+	DB	'ld reached in read', 00H			; `string'
+_DATA	ENDS
+;	COMDAT _I910_ReadMmio32@12
+_LTEXT	SEGMENT
+_ctx$ = 8
+_offset$ = 12
+_value$ = 16
+_status$ = -4
+_I910_ReadMmio32@12 PROC NEAR				; COMDAT
+
+; 83   : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	51		 push	 ecx
+
+; 84   :     DWORD status = I910_ValidateOffset(ctx, offset);
+
+  00004	8b 45 0c	 mov	 eax, DWORD PTR _offset$[ebp]
+  00007	50		 push	 eax
+  00008	8b 4d 08	 mov	 ecx, DWORD PTR _ctx$[ebp]
+  0000b	51		 push	 ecx
+  0000c	e8 00 00 00 00	 call	 _I910_ValidateOffset@8
+  00011	89 45 fc	 mov	 DWORD PTR _status$[ebp], eax
+
+; 85   : 
+; 86   :     if (status != NO_ERROR)
+
+  00014	83 7d fc 00	 cmp	 DWORD PTR _status$[ebp], 0
+  00018	74 2b		 je	 SHORT $L1172
+
+; 88   :         ctx->mmio_error_count++;
+
+  0001a	8b 55 08	 mov	 edx, DWORD PTR _ctx$[ebp]
+  0001d	8b 42 3c	 mov	 eax, DWORD PTR [edx+60]
+  00020	83 c0 01	 add	 eax, 1
+  00023	8b 4d 08	 mov	 ecx, DWORD PTR _ctx$[ebp]
+  00026	89 41 3c	 mov	 DWORD PTR [ecx+60], eax
+
+; 89   :         if (ctx->mmio_error_count >= I910_MMIO_WATCHDOG_LIMIT)
+
+  00029	8b 55 08	 mov	 edx, DWORD PTR _ctx$[ebp]
+  0002c	83 7a 3c 10	 cmp	 DWORD PTR [edx+60], 16	; 00000010H
+  00030	72 0e		 jb	 SHORT $L1173
+
+; 91   :             I910_DisableMmio(ctx, "watchdog threshold reached in read");
+
+  00032	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0CD@NDOK@watchdog?5threshold?5reached?5in?5re@ ; `string'
+  00037	8b 45 08	 mov	 eax, DWORD PTR _ctx$[ebp]
+  0003a	50		 push	 eax
+  0003b	e8 00 00 00 00	 call	 _I910_DisableMmio@8
+$L1173:
+
+; 93   :         return status;
+
+  00040	8b 45 fc	 mov	 eax, DWORD PTR _status$[ebp]
+  00043	eb 1d		 jmp	 SHORT $L1170
+$L1172:
+
+; 95   : 
+; 96   :     *value = *((volatile DWORD *)((BYTE *)ctx->mmio_linear + offset));
+
+  00045	8b 4d 08	 mov	 ecx, DWORD PTR _ctx$[ebp]
+  00048	8b 51 30	 mov	 edx, DWORD PTR [ecx+48]
+  0004b	8b 45 10	 mov	 eax, DWORD PTR _value$[ebp]
+  0004e	8b 4d 0c	 mov	 ecx, DWORD PTR _offset$[ebp]
+  00051	8b 14 0a	 mov	 edx, DWORD PTR [edx+ecx]
+  00054	89 10		 mov	 DWORD PTR [eax], edx
+
+; 97   :     ctx->mmio_error_count = 0;
+
+  00056	8b 45 08	 mov	 eax, DWORD PTR _ctx$[ebp]
+  00059	c7 40 3c 00 00
+	00 00		 mov	 DWORD PTR [eax+60], 0
+
+; 98   :     return NO_ERROR;
+
+  00060	33 c0		 xor	 eax, eax
+$L1170:
+
+; 99   : }
+
+  00062	8b e5		 mov	 esp, ebp
+  00064	5d		 pop	 ebp
+  00065	c2 0c 00	 ret	 12			; 0000000cH
+_I910_ReadMmio32@12 ENDP
+_LTEXT	ENDS
+;	COMDAT _I910_ValidateOffset@8
+_LTEXT	SEGMENT
+_ctx$ = 8
+_offset$ = 12
+_I910_ValidateOffset@8 PROC NEAR			; COMDAT
+
+; 57   : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+
+; 58   :     if (ctx->mmio_disabled)
+
+  00003	8b 45 08	 mov	 eax, DWORD PTR _ctx$[ebp]
+  00006	83 78 38 00	 cmp	 DWORD PTR [eax+56], 0
+  0000a	74 07		 je	 SHORT $L1158
+
+; 60   :         return ERROR_GEN_FAILURE;
+
+  0000c	b8 1f 00 00 00	 mov	 eax, 31			; 0000001fH
+  00011	eb 41		 jmp	 SHORT $L1157
+$L1158:
+
+; 62   : 
+; 63   :     if (!ctx->mmio_linear || ctx->mmio_size < 4)
+
+  00013	8b 4d 08	 mov	 ecx, DWORD PTR _ctx$[ebp]
+  00016	83 79 30 00	 cmp	 DWORD PTR [ecx+48], 0
+  0001a	74 09		 je	 SHORT $L1160
+  0001c	8b 55 08	 mov	 edx, DWORD PTR _ctx$[ebp]
+  0001f	83 7a 34 04	 cmp	 DWORD PTR [edx+52], 4
+  00023	73 07		 jae	 SHORT $L1159
+$L1160:
+
+; 65   :         return ERROR_DEV_NOT_EXIST;
+
+  00025	b8 37 00 00 00	 mov	 eax, 55			; 00000037H
+  0002a	eb 28		 jmp	 SHORT $L1157
+$L1159:
+
+; 67   : 
+; 68   :     if (offset & 0x3)
+
+  0002c	8b 45 0c	 mov	 eax, DWORD PTR _offset$[ebp]
+  0002f	83 e0 03	 and	 eax, 3
+  00032	85 c0		 test	 eax, eax
+  00034	74 07		 je	 SHORT $L1161
+
+; 70   :         return ERROR_INVALID_PARAMETER;
+
+  00036	b8 57 00 00 00	 mov	 eax, 87			; 00000057H
+  0003b	eb 17		 jmp	 SHORT $L1157
+$L1161:
+
+; 72   : 
+; 73   :     if (offset > (ctx->mmio_size - sizeof(DWORD)))
+
+  0003d	8b 4d 08	 mov	 ecx, DWORD PTR _ctx$[ebp]
+  00040	8b 51 34	 mov	 edx, DWORD PTR [ecx+52]
+  00043	83 ea 04	 sub	 edx, 4
+  00046	39 55 0c	 cmp	 DWORD PTR _offset$[ebp], edx
+  00049	76 07		 jbe	 SHORT $L1163
+
+; 75   :         return ERROR_INVALID_PARAMETER;
+
+  0004b	b8 57 00 00 00	 mov	 eax, 87			; 00000057H
+  00050	eb 02		 jmp	 SHORT $L1157
+$L1163:
+
+; 77   : 
+; 78   :     return NO_ERROR;
+
+  00052	33 c0		 xor	 eax, eax
+$L1157:
+
+; 79   : }
+
+  00054	5d		 pop	 ebp
+  00055	c2 08 00	 ret	 8
+_I910_ValidateOffset@8 ENDP
+_LTEXT	ENDS
+PUBLIC	_I910_WriteMmio32@12
+PUBLIC	??_C@_0CE@HNAL@watchdog?5threshold?5reached?5in?5wr@ ; `string'
+;	COMDAT ??_C@_0CE@HNAL@watchdog?5threshold?5reached?5in?5wr@
+; File ..\mmio.c
+_DATA	SEGMENT
+??_C@_0CE@HNAL@watchdog?5threshold?5reached?5in?5wr@ DB 'watchdog thresho'
+	DB	'ld reached in write', 00H			; `string'
+_DATA	ENDS
+;	COMDAT _I910_WriteMmio32@12
+_LTEXT	SEGMENT
+_ctx$ = 8
+_offset$ = 12
+_value$ = 16
+_status$ = -4
+_I910_WriteMmio32@12 PROC NEAR				; COMDAT
+
+; 103  : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	51		 push	 ecx
+
+; 104  :     DWORD status = I910_ValidateOffset(ctx, offset);
+
+  00004	8b 45 0c	 mov	 eax, DWORD PTR _offset$[ebp]
+  00007	50		 push	 eax
+  00008	8b 4d 08	 mov	 ecx, DWORD PTR _ctx$[ebp]
+  0000b	51		 push	 ecx
+  0000c	e8 00 00 00 00	 call	 _I910_ValidateOffset@8
+  00011	89 45 fc	 mov	 DWORD PTR _status$[ebp], eax
+
+; 105  : 
+; 106  :     if (status != NO_ERROR)
+
+  00014	83 7d fc 00	 cmp	 DWORD PTR _status$[ebp], 0
+  00018	74 2b		 je	 SHORT $L1185
+
+; 108  :         ctx->mmio_error_count++;
+
+  0001a	8b 55 08	 mov	 edx, DWORD PTR _ctx$[ebp]
+  0001d	8b 42 3c	 mov	 eax, DWORD PTR [edx+60]
+  00020	83 c0 01	 add	 eax, 1
+  00023	8b 4d 08	 mov	 ecx, DWORD PTR _ctx$[ebp]
+  00026	89 41 3c	 mov	 DWORD PTR [ecx+60], eax
+
+; 109  :         if (ctx->mmio_error_count >= I910_MMIO_WATCHDOG_LIMIT)
+
+  00029	8b 55 08	 mov	 edx, DWORD PTR _ctx$[ebp]
+  0002c	83 7a 3c 10	 cmp	 DWORD PTR [edx+60], 16	; 00000010H
+  00030	72 0e		 jb	 SHORT $L1186
+
+; 111  :             I910_DisableMmio(ctx, "watchdog threshold reached in write");
+
+  00032	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0CE@HNAL@watchdog?5threshold?5reached?5in?5wr@ ; `string'
+  00037	8b 45 08	 mov	 eax, DWORD PTR _ctx$[ebp]
+  0003a	50		 push	 eax
+  0003b	e8 00 00 00 00	 call	 _I910_DisableMmio@8
+$L1186:
+
+; 113  :         return status;
+
+  00040	8b 45 fc	 mov	 eax, DWORD PTR _status$[ebp]
+  00043	eb 1b		 jmp	 SHORT $L1183
+$L1185:
+
+; 115  : 
+; 116  :     *((volatile DWORD *)((BYTE *)ctx->mmio_linear + offset)) = value;
+
+  00045	8b 4d 08	 mov	 ecx, DWORD PTR _ctx$[ebp]
+  00048	8b 51 30	 mov	 edx, DWORD PTR [ecx+48]
+  0004b	8b 45 0c	 mov	 eax, DWORD PTR _offset$[ebp]
+  0004e	8b 4d 10	 mov	 ecx, DWORD PTR _value$[ebp]
+  00051	89 0c 02	 mov	 DWORD PTR [edx+eax], ecx
+
+; 117  :     ctx->mmio_error_count = 0;
+
+  00054	8b 55 08	 mov	 edx, DWORD PTR _ctx$[ebp]
+  00057	c7 42 3c 00 00
+	00 00		 mov	 DWORD PTR [edx+60], 0
+
+; 118  :     return NO_ERROR;
+
+  0005e	33 c0		 xor	 eax, eax
+$L1183:
+
+; 119  : }
+
+  00060	8b e5		 mov	 esp, ebp
+  00062	5d		 pop	 ebp
+  00063	c2 0c 00	 ret	 12			; 0000000cH
+_I910_WriteMmio32@12 ENDP
+_LTEXT	ENDS
+END

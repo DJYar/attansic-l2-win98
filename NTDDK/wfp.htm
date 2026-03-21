@@ -1,0 +1,284 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<title>Windows File Protection</title>
+</head>
+
+<body>
+<!----------------------  TITLE  -------------------------->
+<B><FONT FACE="Verdana, Arial, Helvetica" SIZE=+3>
+Windows File Protection
+</FONT></B>
+<!----------------------  SUMMARY -------------------------->
+<FONT FACE="Verdana, Arial, Helvetica" SIZE=2>
+<p>Installation programs that are not part of the operating
+system can overwrite shared system files. This has been a common problem in the
+history of the Microsoft® Windows® operating systems. Overwriting shared system
+files can result in unpredictable system performance that ranges from
+application errors to operating system crashes. The files types that are most
+commonly affected by this problem are dynamic-link libraries (DLL) and
+executable files (EXE).</p>
+
+<p>In Microsoft® Windows®&nbsp;2000, a new feature called Windows
+File Protection (WFP) will prevent the replacement of certain monitored system
+files. By preventing the replacement of essential system files, file version
+mismatches can be avoided.</p>
+
+<p>WFP protects system files by running in the background and
+detecting attempts to replace protected system files. Windows File Protection
+is triggered after it receives a directory change notification on a file in a
+protected directory. Once this notification is received, WFP determines which file
+was changed. If the file is protected, WFP looks up the file signature in a
+catalog file to determine if the new file is the correct Microsoft version. If
+it is not, the operating system replaces the file with the correct version from
+the dllcache directory or the distribution media.</p>
+
+<p>After detecting the replacement of a protected file, WFP
+searches for the replaced files in the following order:</p>
+
+<ol><li type="1">Search
+the dllcache directory.</li>
+
+<li type="1">If the
+system was installed via network install, search the network install path.
+</li>
+<li type="1">Search
+on the CD.</li></ol>
+
+<p>If the file is found in dllcache or the install source is
+auto-located, WFP will replace the file without prompting the user and move on. If the file
+cannot be found, WFP displays a dialog box that prompts the user to either
+insert CD media or cancel the restore operation.</p>
+
+<p>WFP also logs an event to the system event log, noting the
+file replacement attempt. If the administrative user cancels the WFP file
+restoration, an event noting the cancel will be logged.</p>
+
+<p>
+<b>NOTE:</b> The “hit rate” of the dllcache directory is related to the size of the
+cache specified in the SFCQuota setting. See <i>Protected File List</i>, below, for more information about the SFCQuota
+setting.</FONT></p>
+<!------------------------System File Checker--------------------->
+<B><FONT FACE="Verdana, Arial, Helvetica" SIZE=+2>System File Checker</FONT></B>
+<p><FONT FACE="Verdana, Arial, Helvetica" SIZE=-1>
+A command-line utility called System File Checker
+(SFC.EXE) allows an Administrator to scan all protected files to verify their
+versions. System File Checker can also set the registry value SFCScan
+discussed below in <i>Additional Registry Settings</i>.
+
+<p>System File Checker will also check and repopulate the
+%Systemroot%\system32\dllcache directory. If the dllcache directory becomes
+corrupted or unusable, SFC /SCANNOW, /SCANONCE /SCANBOOT, or /PURGECACHE can be
+used to repair the contents of the dllcache directory.</p>
+
+<p>Syntax of SFC.exe:</p>
+
+<p>Scans all protected system files
+and replaces incorrect versions with correct Microsoft versions.</p>
+
+<p>SFC [/SCANNOW] [/SCANONCE]
+[/SCANBOOT] [/CANCEL] [/QUIET] [/PURGECACHE] [/CACHESIZE=x] </p>
+
+<p>/SCANNOW Scans all protected system files immediately.</p>
+
+<p>/SCANONCE Scans all protected system files once.
+<p>/SCANBOOT Scans all protected system
+files at every boot.
+<p>/CANCEL Cancels all pending scans of
+protected system files.
+<p>/QUIET Replaces all incorrect file
+versions without prompting the user.</p>
+
+<p>/PURGECACHE Purges the file cache and
+scans all protected system files immediately.
+<p>/CACHESIZE=x Sets the file cache size
+(in megabytes).</p></FONT>
+<!--------------------Supported File Replacement Mechanisms------------>
+<B><FONT FACE="Verdana, Arial, Helvetica" SIZE=+2>Supported File Replacement Mechanisms</FONT></B>
+<p><FONT FACE="Verdana, Arial, Helvetica" SIZE=-1>
+Replacement of protected system files is supported using
+the following mechanisms:
+
+<ul><li>Windows&nbsp;2000 Service Pack
+installation (UPDATE.EXE)</li>
+<li>Hotfix distributions installed using HOTFIX.EXE</li>
+<li>Operating system upgrade (WINNT32.EXE)</li>
+<li>Windows Update</li>
+<li>Windows&nbsp;2000 Device Installer</li>
+</ul>
+<p>Replacing protected files by other means than those mentioned above,
+results in the files being replaced by WFP.</p>
+
+<p>To update third-party drivers that ship with
+Windows&nbsp;2000, driver developers will have two options:</p>
+
+<ul><li>Submit
+the finished driver update to Windows Hardware Quality Labs (<a
+href="http://www.microsoft.com/hwtest">http://www.microsoft.com/hwtest</a>) for
+certification.  If the driver passes, it
+will be signed by WHQL and will be installable via the Device Installer without
+issue.</li>
+
+<li>Install
+an unsigned version of a driver that is undergoing WHQL certification.  By default, the Windows&nbsp;2000 Device
+Installer will give the user a warning dialog box when an attempt is made to
+install an unsigned driver.  The user
+can choose to override that warning and install the unsigned driver.</li>
+</ul></FONT>
+<!------------------------Protected File List-------------------------->
+<B><FONT FACE="Verdana, Arial, Helvetica" SIZE=+2>Protected File List</FONT></B>
+<p><FONT FACE="Verdana, Arial, Helvetica" SIZE=-1>
+<b>All SYS,
+DLL, EXE, and OCX files that ship on the Windows&nbsp;2000 CD are protected. True
+Type fonts &#151; Micross.ttf, Tahoma.ttf, and Tahomabd.ttf &#151; are also protected.</b>
+
+<p>Maintaining cached versions of all these files in the dllcache
+directory is not desirable on all systems due to disk space considerations.
+Depending on the size of the registry value
+<b>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+NT\CurrentVersion\Winlogon\SFCQuota</b> (default is 0x32h (50MB) for Professional;
+all Windows&nbsp;2000 files are cached on Server products), WFP keeps verified file
+versions cached in the dllcache directory on the system hard drive. WFP adds
+files to the cache until the size of the dllcache directory reaches the
+SFCQuota value. Setting the SFCQuota value to 0xFFFFFFFF hex causes WFP to
+cache all protected system files. SFCQuota = 0xFFFFFFFFh is the default setting for
+Server and Advanced Server.</p>
+
+<p>After Setup is complete, WFP runs a scan of all protected
+files to ensure that they have not been modified by applications that were installed
+using unattended installation methods. This scan also populates the dllcache
+directory with verified file versions. If the dllcache directory becomes
+corrupted, run SFC /PURGECACHE. SFC will delete the contents of the dllcache directory, rescan all Windows&nbsp;2000
+files, and repopulate the dllcache directory with verified file versions.</p>
+
+<p>The location of the dllcache directory is specified in
+<b>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+NT\CurrentVersion\Winlogon\SFCDllCacheDir (REG_EXPAND_SZ)</b>. The default value
+for SFCDllCacheDir is %Systemroot%\system32\dllcache. The SFCDllCacheDir setting must be
+a local path.</p>
+
+<p>In some instances WFP may not be able to locate the
+correct version of a system file in the dllcache directory. The dllcache
+directory might contain an outdated version of the file, or not contain
+any version of the file at all. In such a case WFP will attempt to locate the
+installation media. If WFP cannot find the installation media, it will prompt the user to insert
+the appropriate media. WFP will then replace the incorrect file version that is
+being used by the operating system or that has been found in the dllcache
+directory.</p></FONT>
+<!----------------------Unattended Setup Parameters--------------------->
+<B><FONT FACE="Verdana, Arial, Helvetica" SIZE=+2>Unattended Setup Parameters</FONT></B>
+<p><FONT FACE="Verdana, Arial, Helvetica" SIZE=-1>
+<b>[SystemFileProtection]</b>
+
+<p>This section contains parameters for the WFP service. If
+this section is missing or empty, Setup will install WFP using default values.</p>
+
+<p><b>SFCShowProgress</b></p>
+
+<p>Value: 0 | 1<br>
+Default: 1</p>
+
+<p>Specifies if System File Checker displays a progress meter
+during scans.</p>
+
+<dl compact>
+	<dt>Value</dt> <dd>Description</dd>
+
+<dt>0 </dt><dd>Progress
+meter is not displayed.</dd>
+
+<dt>1 </dt><dd>Progress
+meter is displayed.</dd>
+
+</dl>
+<p><b>SFCQuota</b></p>
+
+<p>Value: &lt;size in
+MB (hex)&gt;<br>
+Default: 0x32h (50MB) for Professional,
+0xFFFFFFFFh for Server and Advanced Server.</p>
+
+<p>Specifies the size of the dllcache file cache stored on
+the system hard drive. If 0xFFFFFFFFh is specified, all system files will be
+cached in the dllcache directory.</p>
+
+<p>Example: SFCQuota = 0xFFFFFFFFh</p>
+
+<p><b>SFCDllCacheDir</b></p>
+
+<p>Value: &lt;location
+of dllcache directory&gt;<br>
+Default: %Systemroot%\system32\dllcache</p>
+
+<p>Specifies the location of the dllcache directory. This
+path must be a local path.</p>
+
+<p>Example: SFCDllCacheDir = &quot;C:\Winnt\System32\dllcache&quot;</p></FONT>
+
+<!-----------------Disabling Windows File Protection-------------------->
+<B><FONT FACE="Verdana, Arial, Helvetica" SIZE=+2>Disabling Windows File Protection</FONT></B>
+
+<p><FONT FACE="Verdana, Arial, Helvetica" SIZE=-1>
+You may disable WFP by setting the value SFCDisable
+(REG_DWORD) in <b>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+NT\CurrentVersion\Winlogon</b>. By default, SFCDisable is set to 0, which means WFP
+is active. Setting SFCDisable to 1 will disable WFP. Setting SFCDisable
+to 2 will disable WFP for the next system restart only (without a prompt to re-enable).
+
+<p><b>You must
+have a kernel debugger attached to the system via null modem cable (for example:I386kd.exe or Windbg.exe) to use SFCDisable = 1 or SFCDisable = 2.</b></p>
+
+<p>After WFP is disabled using the SFCDisable = 1 setting, the
+following message will appear after logon:<BLOCKQUOTE>
+"Warning!
+Windows File Protection is not active on this system. Would you like to enable
+Windows File Protection now? This will
+enable Windows File Protection until the next system restart. &lt;Yes&gt;
+&lt;No&gt;."</BLOCKQUOTE>
+
+<p>Clicking <b>Yes</b>
+will reactivate WFP until the next system restart. This message will appear at every
+successful logon until SFCDisable is set to 0.</p>
+
+<p><b>NOTE:</b> The above message will only be presented to
+Administrators.</p></FONT>
+<!--------------Additional Registry Settings--------------------------->
+<B><FONT FACE="Verdana, Arial, Helvetica" SIZE=+2>Additional Registry Settings</FONT></B>
+
+<p><FONT FACE="Verdana, Arial, Helvetica" SIZE=-1>
+All registry settings for WFP/System File Checker are
+located in <b>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows
+NT\CurrentVersion\Winlogon</b>. By default, only Administrators and System will be able to modify these settings.
+
+<p><b>SFCDisable</b> (REG_DWORD)</p>
+
+<p>0 = enabled (default). <br>
+1 = disabled, prompt at boot to re-enable (debugger required).<br>
+2 = disabled at next boot only, no prompt to re-enable (debugger required).</p>
+
+<p><b>SFCScan</b> (REG_DWORD)</p>
+
+<p>0 = do not scan protected files at boot (default). <br>
+1 = scan protected files at every boot. <br>
+2 = scan protected files once.</p>
+
+<p><b>SFCQuota</b> (REG_DWORD)</p>
+
+<p>n = size (in megabytes) of dllcache quota.<br>
+FFFFFFFF = cache-protected system files on the local hard drive. </p>
+
+<p><b>SFCShowProgress</b> (REG_DWORD)</p>
+
+<p>0 = System File Checker progress meter is not displayed.<br>
+1 = System File Checker progress meter is displayed (default).</p>
+
+<p><b>SFCDllCacheDir</b> (REG_EXPAND_SZ)</p>
+
+<p>Path = local location of dllcache directory (default is
+%Systemroot%\system32\dllcache).</p>
+
+
+</font>
+</body>
+</html>

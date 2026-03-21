@@ -1,0 +1,31 @@
+#MAJORCOMP=kanalyze
+#MINORCOMP=dll
+
+TARGETNAME=viewcmd
+TARGETPATH=obj
+TARGETTYPE=DYNLINK
+
+SOURCES=
+i386_SOURCES=viewcmd.c       \
+        vcmddll.c       \
+        util.c          \
+	msg.mc		\
+        viewcmd.rc
+
+PRECOMPILED_INCLUDE=precomp.h
+PRECOMPILED_PCH=precomp.pch
+PRECOMPILED_OBJ=precomp.obj
+
+
+DLLENTRY=_DllMainCRTStartup
+USE_CRTDLL=1
+DLLBASE=0x1000000
+
+
+C_DEFINES=-DUNICODE -D_UNICODE
+INCLUDES=..;..\..\..\..\inc;..\..\..\inc
+
+TARGETLIBS=$(SDK_LIB_PATH)\kernel32.lib   \
+           $(SDK_LIB_PATH)\user32.lib     \
+           $(SDK_LIB_PATH)\shell32.lib
+

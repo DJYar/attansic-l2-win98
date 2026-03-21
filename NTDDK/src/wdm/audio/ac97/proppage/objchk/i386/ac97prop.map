@@ -1,0 +1,99 @@
+ ac97prop
+
+ Timestamp is 69a4cfae (Mon Mar 02 01:45:50 2026)
+
+ Preferred load address is 00400000
+
+ Start         Length     Name                   Class
+ 0001:00000000 0000005cH .idata$5                CODE
+ 0001:0000005c 000006e6H .rdata                  CODE
+ 0001:00000742 00000952H .text                   CODE
+ 0001:00001094 00000050H .idata$2                CODE
+ 0001:000010e4 00000014H .idata$3                CODE
+ 0001:000010f8 0000005cH .idata$4                CODE
+ 0001:00001154 000001b8H .idata$6                CODE
+ 0001:00001310 00000066H .edata                  CODE
+ 0002:00000000 00000020H .data                   DATA
+ 0002:00000020 00000004H .bss                    DATA
+ 0003:00000000 000000a0H .rsrc$01                DATA
+ 0003:000000a0 000009a8H .rsrc$02                DATA
+
+  Address         Publics by Value              Rva+Base     Lib:Object
+
+ 0001:00000000       __imp__CreatePropertySheetPageW@4 00401000     comctl32:COMCTL32.dll
+ 0001:00000004       __imp__DestroyPropertySheetPage@4 00401004     comctl32:COMCTL32.dll
+ 0001:00000008       \177COMCTL32_NULL_THUNK_DATA 00401008     comctl32:COMCTL32.dll
+ 0001:0000000c       __imp__LocalAlloc@8        0040100c     kernel32:KERNEL32.dll
+ 0001:00000010       __imp__LocalFree@4         00401010     kernel32:KERNEL32.dll
+ 0001:00000014       __imp__CloseHandle@4       00401014     kernel32:KERNEL32.dll
+ 0001:00000018       __imp__DeviceIoControl@32  00401018     kernel32:KERNEL32.dll
+ 0001:0000001c       __imp__GetTickCount@0      0040101c     kernel32:KERNEL32.dll
+ 0001:00000020       __imp__CreateFileW@28      00401020     kernel32:KERNEL32.dll
+ 0001:00000024       __imp__GetLastError@0      00401024     kernel32:KERNEL32.dll
+ 0001:00000028       \177KERNEL32_NULL_THUNK_DATA 00401028     kernel32:KERNEL32.dll
+ 0001:0000002c       __imp__SetupDiDestroyDeviceInfoList@4 0040102c     setupapi:SETUPAPI.dll
+ 0001:00000030       __imp__SetupDiGetClassDevsW@16 00401030     setupapi:SETUPAPI.dll
+ 0001:00000034       __imp__SetupDiGetDeviceInstanceIdW@20 00401034     setupapi:SETUPAPI.dll
+ 0001:00000038       __imp__SetupDiEnumDeviceInterfaces@20 00401038     setupapi:SETUPAPI.dll
+ 0001:0000003c       __imp__SetupDiGetDeviceInterfaceDetailW@24 0040103c     setupapi:SETUPAPI.dll
+ 0001:00000040       \177SETUPAPI_NULL_THUNK_DATA 00401040     setupapi:SETUPAPI.dll
+ 0001:00000044       __imp__SetWindowTextW@8    00401044     user32:USER32.dll
+ 0001:00000048       __imp__GetDlgItem@8        00401048     user32:USER32.dll
+ 0001:0000004c       __imp__SetCursor@4         0040104c     user32:USER32.dll
+ 0001:00000050       __imp__LoadCursorW@8       00401050     user32:USER32.dll
+ 0001:00000054       __imp__EnableWindow@8      00401054     user32:USER32.dll
+ 0001:00000058       \177USER32_NULL_THUNK_DATA 00401058     user32:USER32.dll
+ 0001:000000b4       ??_C@_1BA@JDJI@?$AAU?$AAn?$AAk?$AAn?$AAo?$AAw?$AAn?$AA?$AA@ 004010b4     ac97prop.obj
+ 0001:000000c4       ??_C@_1DO@HPPM@?$AAR?$AAo?$AAc?$AAk?$AAw?$AAe?$AAl?$AAl?$AA?5?$AA3?$AAD?$AA?5?$AAS?$AAt?$AAe?$AAr?$AAe?$AAo?$AA?5?$AAE@ 004010c4     ac97prop.obj
+ 0001:00000104       ??_C@_1DA@LBEN@?$AAS?$AAi?$AAg?$AAm?$AAa?$AAT?$AAe?$AAl?$AA?5?$AA3?$AAD?$AA?5?$AAE?$AAn?$AAh?$AAa?$AAn?$AAc?$AAe?$AAm@ 00401104     ac97prop.obj
+ 0001:00000134       ??_C@_1EC@OHPA@?$AAD?$AAe?$AAl?$AAt?$AAa?$AA?5?$AAI?$AAn?$AAt?$AAe?$AAg?$AAr?$AAa?$AAt?$AAi?$AAo?$AAn?$AA?5?$AA3?$AAD@ 00401134     ac97prop.obj
+ 0001:00000178       ??_C@_1FA@FFCD@?$AAW?$AAo?$AAl?$AAf?$AAs?$AAo?$AAn?$AA?5?$AAM?$AAi?$AAc?$AAr?$AAo?$AAe?$AAl?$AAe?$AAc?$AAt?$AAr?$AAo@ 00401178     ac97prop.obj
+ 0001:000001c8       ??_C@_1DM@DABN@?$AAS?$AAa?$AAm?$AAs?$AAu?$AAn?$AAg?$AA?5?$AA3?$AAD?$AA?5?$AAS?$AAt?$AAe?$AAr?$AAe?$AAo?$AA?5?$AAE?$AAn@ 004011c8     ac97prop.obj
+ 0001:00000204       ??_C@_1DM@LJBL@?$AAR?$AAe?$AAa?$AAl?$AAt?$AAe?$AAk?$AA?5?$AA3?$AAD?$AA?5?$AAS?$AAt?$AAe?$AAr?$AAe?$AAo?$AA?5?$AAE?$AAn@ 00401204     ac97prop.obj
+ 0001:00000240       ??_C@_1DM@MEHO@?$AAT?$AAr?$AAi?$AAT?$AAe?$AAc?$AAh?$AA?5?$AA3?$AAD?$AA?5?$AAS?$AAt?$AAe?$AAr?$AAe?$AAo?$AA?5?$AAE?$AAn@ 00401240     ac97prop.obj
+ 0001:0000027c       ??_C@_1EM@HON@?$AAV?$AAL?$AAS?$AAI?$AA?5?$AAT?$AAe?$AAc?$AAh?$AAn?$AAo?$AAl?$AAo?$AAg?$AAy?$AA?5?$AA3?$AAD?$AA?5?$AAS@ 0040127c     ac97prop.obj
+ 0001:000002c8       ??_C@_1EO@KGOP@?$AAT?$AAe?$AAx?$AAa?$AAs?$AA?5?$AAI?$AAn?$AAs?$AAt?$AAr?$AAu?$AAm?$AAe?$AAn?$AAt?$AA?5?$AA3?$AAD?$AA?5@ 004012c8     ac97prop.obj
+ 0001:00000318       ??_C@_1DC@FNJI@?$AAP?$AAh?$AAi?$AAl?$AAi?$AAp?$AAs?$AA?5?$AAI?$AAn?$AAc?$AAr?$AAe?$AAd?$AAi?$AAb?$AAl?$AAe?$AA?5?$AAS@ 00401318     ac97prop.obj
+ 0001:0000034c       ??_C@_1DK@MFEG@?$AAN?$AAv?$AAi?$AAd?$AAe?$AAa?$AA?5?$AA3?$AAD?$AA?5?$AAS?$AAt?$AAe?$AAr?$AAe?$AAo?$AA?5?$AAE?$AAn?$AAh@ 0040134c     ac97prop.obj
+ 0001:00000388       ??_C@_1DE@OOKM@?$AAH?$AAa?$AAr?$AAm?$AAa?$AAn?$AA?5?$AAI?$AAn?$AAt?$AAe?$AAr?$AAn?$AAa?$AAt?$AAi?$AAo?$AAn?$AAa?$AAl@ 00401388     ac97prop.obj
+ 0001:000003bc       ??_C@_1EI@LJFL@?$AAE?$AAS?$AAS?$AA?5?$AAT?$AAe?$AAc?$AAh?$AAn?$AAo?$AAl?$AAo?$AAg?$AAy?$AA?5?$AA?$CI?$AAs?$AAt?$AAe?$AAr@ 004013bc     ac97prop.obj
+ 0001:00000404       ??_C@_1DK@KNNI@?$AAB?$AAi?$AAn?$AAa?$AAu?$AAr?$AAa?$AA?5?$AA3?$AAD?$AA?5?$AAA?$AAu?$AAd?$AAi?$AAo?$AA?5?$AAE?$AAn?$AAh@ 00401404     ac97prop.obj
+ 0001:00000440       ??_C@_1CM@MONN@?$AAA?$AAz?$AAt?$AAe?$AAc?$AAh?$AA?5?$AA3?$AAD?$AA?5?$AAE?$AAn?$AAh?$AAa?$AAn?$AAc?$AAe?$AAm?$AAe?$AAn@ 00401440     ac97prop.obj
+ 0001:0000046c       ??_C@_1DE@FECP@?$AAA?$AAu?$AAr?$AAe?$AAa?$AAl?$AA?5?$AAS?$AAt?$AAe?$AAr?$AAe?$AAo?$AA?5?$AAE?$AAn?$AAh?$AAa?$AAn?$AAc@ 0040146c     ac97prop.obj
+ 0001:000004a0       ??_C@_1BK@BHAC@?$AAA?$AAK?$AAM?$AA?5?$AA3?$AAD?$AA?5?$AAA?$AAu?$AAd?$AAi?$AAo?$AA?$AA@ 004014a0     ac97prop.obj
+ 0001:000004bc       ??_C@_1EI@OAJF@?$AAP?$AAl?$AAa?$AAt?$AAf?$AAo?$AAr?$AAm?$AA?5?$AAT?$AAe?$AAc?$AAh?$AA?5?$AA3?$AAD?$AA?5?$AAS?$AAt?$AAe@ 004014bc     ac97prop.obj
+ 0001:00000504       ??_C@_1DE@LACJ@?$AAS?$AAR?$AAS?$AA?5?$AA3?$AAD?$AA?5?$AAS?$AAt?$AAe?$AAr?$AAe?$AAo?$AA?5?$AAE?$AAn?$AAh?$AAa?$AAn?$AAc@ 00401504     ac97prop.obj
+ 0001:00000538       ??_C@_1EE@JEHH@?$AAS?$AAp?$AAa?$AAt?$AAi?$AAa?$AAl?$AAi?$AAz?$AAe?$AAr?$AA?5?$AA3?$AAD?$AA?5?$AAS?$AAt?$AAe?$AAr?$AAe@ 00401538     ac97prop.obj
+ 0001:0000057c       ??_C@_1CA@CAM@?$AAQ?$AAs?$AAo?$AAu?$AAn?$AAd?$AA?5?$AAQ?$AAX?$AAp?$AAa?$AAn?$AAd?$AAe?$AAr?$AA?$AA@ 0040157c     ac97prop.obj
+ 0001:0000059c       ??_C@_1EG@IHOB@?$AAC?$AAr?$AAy?$AAs?$AAt?$AAa?$AAl?$AA?5?$AAS?$AAe?$AAm?$AAi?$AA?5?$AA3?$AAD?$AA?5?$AAS?$AAt?$AAe?$AAr@ 0040159c     ac97prop.obj
+ 0001:000005e4       ??_C@_1DE@KLGL@?$AAB?$AAB?$AAE?$AA?5?$AA3?$AAD?$AA?5?$AAS?$AAt?$AAe?$AAr?$AAe?$AAo?$AA?5?$AAE?$AAn?$AAh?$AAa?$AAn?$AAc@ 004015e4     ac97prop.obj
+ 0001:00000618       ??_C@_1CA@OFJH@?$AAY?$AAa?$AAm?$AAa?$AAh?$AAa?$AA?5?$AAY?$AAm?$AAe?$AAr?$AAs?$AAi?$AAo?$AAn?$AA?$AA@ 00401618     ac97prop.obj
+ 0001:00000638       ??_C@_1EI@IF@?$AAN?$AAa?$AAt?$AAi?$AAo?$AAn?$AAa?$AAl?$AA?5?$AAS?$AAe?$AAm?$AAi?$AA?5?$AA3?$AAD?$AA?5?$AAS?$AAt?$AAe@ 00401638     ac97prop.obj
+ 0001:00000680       ??_C@_1DI@JIJE@?$AAC?$AAr?$AAe?$AAa?$AAt?$AAi?$AAv?$AAe?$AA?5?$AAS?$AAt?$AAe?$AAr?$AAe?$AAo?$AA?5?$AAE?$AAn?$AAh?$AAa@ 00401680     ac97prop.obj
+ 0001:000006b8       ??_C@_1DG@GJNK@?$AAA?$AAn?$AAa?$AAl?$AAo?$AAg?$AA?5?$AAD?$AAe?$AAv?$AAi?$AAc?$AAe?$AAs?$AA?5?$AAP?$AAh?$AAa?$AAt?$AA?5@ 004016b8     ac97prop.obj
+ 0001:000006f0       ??_C@_1DC@KPHO@?$AAN?$AAo?$AA?5?$AA3?$AAD?$AA?5?$AAS?$AAt?$AAe?$AAr?$AAe?$AAo?$AA?5?$AAE?$AAn?$AAh?$AAa?$AAn?$AAc?$AAe@ 004016f0     ac97prop.obj
+ 0001:00000724       ??_C@_15CFAK@?$AA2?$AA0?$AA?$AA@ 00401724     ac97prop.obj
+ 0001:0000072c       ??_C@_17IEHO@?$AAN?$AA?1?$AAA?$AA?$AA@ 0040172c     ac97prop.obj
+ 0001:00000734       ??_C@_15FFNA@?$AA1?$AA8?$AA?$AA@ 00401734     ac97prop.obj
+ 0001:0000073c       ??_C@_15CBAK@?$AAN?$AAo?$AA?$AA@ 0040173c     ac97prop.obj
+ 0001:00000742       _DllMain@12                00401742 f   ac97prop.obj
+ 0001:00000754       ?SetDlgControls@@YGXPAUHWND__@@PAUtAC97Features@@@Z 00401754 f   ac97prop.obj
+ 0001:00000d45       ?AC97PropPage_OnInitDialog@@YGHPAUHWND__@@0J@Z 00401d45 f   ac97prop.obj
+ 0001:00000d86       ?AC97DlgProc@@YGHPAUHWND__@@IIJ@Z 00401d86 f   ac97prop.obj
+ 0001:00000da8       ?AC97ShowSet@@YGXPAU_SP_DEVICE_INTERFACE_DETAIL_DATA_W@@@Z 00401da8 f   ac97prop.obj
+ 0001:00000e21       ?GetAC97Features@@YGHPAU_SP_DEVICE_INTERFACE_DETAIL_DATA_W@@PAUtAC97Features@@@Z 00401e21 f   ac97prop.obj
+ 0001:00000e99       ?GetDeviceInterfaceDetail@@YGHPAU_SP_PROPSHEETPAGE_REQUEST@@PAPAU_SP_DEVICE_INTERFACE_DETAIL_DATA_W@@@Z 00401e99 f   ac97prop.obj
+ 0001:00000fd5       ?AC97PropPageProvider@@YGHPAU_SP_PROPSHEETPAGE_REQUEST@@P6GHPAU_PSP@@J@ZJ@Z 00401fd5 f   ac97prop.obj
+ 0001:00001094       __IMPORT_DESCRIPTOR_SETUPAPI 00402094     setupapi:SETUPAPI.dll
+ 0001:000010a8       __IMPORT_DESCRIPTOR_KERNEL32 004020a8     kernel32:KERNEL32.dll
+ 0001:000010bc       __IMPORT_DESCRIPTOR_COMCTL32 004020bc     comctl32:COMCTL32.dll
+ 0001:000010d0       __IMPORT_DESCRIPTOR_USER32 004020d0     user32:USER32.dll
+ 0001:000010e4       __NULL_IMPORT_DESCRIPTOR   004020e4     setupapi:SETUPAPI.dll
+ 0002:00000000       __GUID_2aa7a0b1_9f78_4606_b882_66b70f022637 00403000     ac97prop.obj
+ 0002:00000010       __GUID_dda54a40_1e4c_11d1_a050_405705c10000 00403010     ac97prop.obj
+ 0002:00000020       ?ghInstance@@3PAUHINSTANCE__@@A 00403020     ac97prop.obj
+
+ entry point at        0001:00000742
+
+ Static symbols
+

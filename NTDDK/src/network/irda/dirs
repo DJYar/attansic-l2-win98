@@ -1,0 +1,4 @@
+DIRS= \
+     miniport \
+     dll \
+     exe

@@ -1,0 +1,4 @@
+DIRS= \
+     fdc \
+     fdc.2 \
+     flpydisk

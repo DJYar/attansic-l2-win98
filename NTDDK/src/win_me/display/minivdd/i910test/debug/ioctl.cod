@@ -1,0 +1,511 @@
+	TITLE	..\ioctl.c
+	.386P
+include listing.inc
+if @Version gt 510
+.model FLAT
+else
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+CONST	SEGMENT DWORD USE32 PUBLIC 'CONST'
+CONST	ENDS
+_BSS	SEGMENT DWORD USE32 PUBLIC 'BSS'
+_BSS	ENDS
+$$SYMBOLS	SEGMENT BYTE USE32 'DEBSYM'
+$$SYMBOLS	ENDS
+$$TYPES	SEGMENT BYTE USE32 'DEBTYP'
+$$TYPES	ENDS
+_TLS	SEGMENT DWORD USE32 PUBLIC 'TLS'
+_TLS	ENDS
+;	COMDAT ??_C@_0BP@FCD@ioctl?3?5open?1close?5code?$DN0x?$CF08lx?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0BO@CBFI@ioctl?3?5GET_PCI_INFO?5found?$DN?$CFlu?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0DB@BCHM@ioctl?3?5READ_MMIO32?5failed?5off?$DN0x@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0CL@DAEI@ioctl?3?5READ_MMIO32?5off?$DN0x?$CF08lx?5v@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0DH@LBND@ioctl?3?5WRITE_MMIO32?5off?$DN0x?$CF08lx?5@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0BM@HOBJ@ioctl?3?5MASK_INTERRUPTS?5stub?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0CA@GGOL@ioctl?3?5unsupported?5code?$DN0x?$CF08lx?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+_LTEXT	SEGMENT PARA USE32 PUBLIC 'LCODE'
+_LTEXT	ENDS
+;	COMDAT _I910_SetBytesReturned@8
+_LTEXT	SEGMENT PARA USE32 PUBLIC 'LCODE'
+_LTEXT	ENDS
+;	COMDAT _I910_DeviceIoControl@16
+_LTEXT	SEGMENT PARA USE32 PUBLIC 'LCODE'
+_LTEXT	ENDS
+FLAT	GROUP _DATA, CONST, _BSS
+	ASSUME	CS: FLAT, DS: FLAT, SS: FLAT
+endif
+PUBLIC	_I910_DeviceIoControl@16
+PUBLIC	??_C@_0BP@FCD@ioctl?3?5open?1close?5code?$DN0x?$CF08lx?$AA@ ; `string'
+PUBLIC	??_C@_0BO@CBFI@ioctl?3?5GET_PCI_INFO?5found?$DN?$CFlu?$AA@ ; `string'
+PUBLIC	??_C@_0DB@BCHM@ioctl?3?5READ_MMIO32?5failed?5off?$DN0x@ ; `string'
+PUBLIC	??_C@_0CL@DAEI@ioctl?3?5READ_MMIO32?5off?$DN0x?$CF08lx?5v@ ; `string'
+PUBLIC	??_C@_0DH@LBND@ioctl?3?5WRITE_MMIO32?5off?$DN0x?$CF08lx?5@ ; `string'
+PUBLIC	??_C@_0BM@HOBJ@ioctl?3?5MASK_INTERRUPTS?5stub?$AA@ ; `string'
+PUBLIC	??_C@_0CA@GGOL@ioctl?3?5unsupported?5code?$DN0x?$CF08lx?$AA@ ; `string'
+EXTRN	_g_i910:BYTE
+EXTRN	_I910_ReadMmio32@12:NEAR
+EXTRN	_I910_WriteMmio32@12:NEAR
+EXTRN	_I910_Log:NEAR
+EXTRN	_UNREFERENCED_PARAMETER@4:NEAR
+;	COMDAT ??_C@_0BP@FCD@ioctl?3?5open?1close?5code?$DN0x?$CF08lx?$AA@
+; File ..\ioctl.c
+_DATA	SEGMENT
+??_C@_0BP@FCD@ioctl?3?5open?1close?5code?$DN0x?$CF08lx?$AA@ DB 'ioctl: op'
+	DB	'en/close code=0x%08lx', 00H			; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0BO@CBFI@ioctl?3?5GET_PCI_INFO?5found?$DN?$CFlu?$AA@
+_DATA	SEGMENT
+??_C@_0BO@CBFI@ioctl?3?5GET_PCI_INFO?5found?$DN?$CFlu?$AA@ DB 'ioctl: GET'
+	DB	'_PCI_INFO found=%lu', 00H			; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0DB@BCHM@ioctl?3?5READ_MMIO32?5failed?5off?$DN0x@
+_DATA	SEGMENT
+??_C@_0DB@BCHM@ioctl?3?5READ_MMIO32?5failed?5off?$DN0x@ DB 'ioctl: READ_M'
+	DB	'MIO32 failed off=0x%08lx status=%lu', 00H	; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0CL@DAEI@ioctl?3?5READ_MMIO32?5off?$DN0x?$CF08lx?5v@
+_DATA	SEGMENT
+??_C@_0CL@DAEI@ioctl?3?5READ_MMIO32?5off?$DN0x?$CF08lx?5v@ DB 'ioctl: REA'
+	DB	'D_MMIO32 off=0x%08lx val=0x%08lx', 00H	; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0DH@LBND@ioctl?3?5WRITE_MMIO32?5off?$DN0x?$CF08lx?5@
+_DATA	SEGMENT
+??_C@_0DH@LBND@ioctl?3?5WRITE_MMIO32?5off?$DN0x?$CF08lx?5@ DB 'ioctl: WRI'
+	DB	'TE_MMIO32 off=0x%08lx val=0x%08lx status=%lu', 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0BM@HOBJ@ioctl?3?5MASK_INTERRUPTS?5stub?$AA@
+_DATA	SEGMENT
+??_C@_0BM@HOBJ@ioctl?3?5MASK_INTERRUPTS?5stub?$AA@ DB 'ioctl: MASK_INTERR'
+	DB	'UPTS stub', 00H				; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0CA@GGOL@ioctl?3?5unsupported?5code?$DN0x?$CF08lx?$AA@
+_DATA	SEGMENT
+??_C@_0CA@GGOL@ioctl?3?5unsupported?5code?$DN0x?$CF08lx?$AA@ DB 'ioctl: u'
+	DB	'nsupported code=0x%08lx', 00H		; `string'
+_DATA	ENDS
+;	COMDAT _I910_DeviceIoControl@16
+_LTEXT	SEGMENT
+_service$ = 8
+_ddb$ = 12
+_hDevice$ = 16
+_dio$ = 20
+_code$ = -4
+_in$1174 = -16
+_out$1175 = -12
+_value$1176 = -8
+_status$1177 = -20
+_in$1189 = -24
+_status$1190 = -28
+_I910_DeviceIoControl@16 PROC NEAR			; COMDAT
+
+; 18   : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+  00003	83 ec 20	 sub	 esp, 32			; 00000020H
+  00006	56		 push	 esi
+  00007	57		 push	 edi
+
+; 19   :     DWORD code;
+; 20   : 
+; 21   :     UNREFERENCED_PARAMETER(service);
+
+  00008	8b 45 08	 mov	 eax, DWORD PTR _service$[ebp]
+  0000b	50		 push	 eax
+  0000c	e8 00 00 00 00	 call	 _UNREFERENCED_PARAMETER@4
+
+; 22   :     UNREFERENCED_PARAMETER(ddb);
+
+  00011	8b 4d 0c	 mov	 ecx, DWORD PTR _ddb$[ebp]
+  00014	51		 push	 ecx
+  00015	e8 00 00 00 00	 call	 _UNREFERENCED_PARAMETER@4
+
+; 23   :     UNREFERENCED_PARAMETER(hDevice);
+
+  0001a	8b 55 10	 mov	 edx, DWORD PTR _hDevice$[ebp]
+  0001d	52		 push	 edx
+  0001e	e8 00 00 00 00	 call	 _UNREFERENCED_PARAMETER@4
+
+; 24   : 
+; 25   :     if (!dio)
+
+  00023	83 7d 14 00	 cmp	 DWORD PTR _dio$[ebp], 0
+  00027	75 0a		 jne	 SHORT $L1158
+
+; 27   :         return ERROR_INVALID_PARAMETER;
+
+  00029	b8 57 00 00 00	 mov	 eax, 87			; 00000057H
+  0002e	e9 e5 01 00 00	 jmp	 $L1163
+$L1158:
+
+; 29   : 
+; 30   :     code = dio->dwIoControlCode;
+
+  00033	8b 45 14	 mov	 eax, DWORD PTR _dio$[ebp]
+  00036	8b 48 0c	 mov	 ecx, DWORD PTR [eax+12]
+  00039	89 4d fc	 mov	 DWORD PTR _code$[ebp], ecx
+
+; 31   : 
+; 32   :     if (code == DIOC_OPEN || code == DIOC_CLOSEHANDLE)
+
+  0003c	83 7d fc 00	 cmp	 DWORD PTR _code$[ebp], 0
+  00040	74 06		 je	 SHORT $L1160
+  00042	83 7d fc ff	 cmp	 DWORD PTR _code$[ebp], -1
+  00046	75 18		 jne	 SHORT $L1159
+$L1160:
+
+; 34   :         I910_Log("ioctl: open/close code=0x%08lx", code);
+
+  00048	8b 55 fc	 mov	 edx, DWORD PTR _code$[ebp]
+  0004b	52		 push	 edx
+  0004c	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0BP@FCD@ioctl?3?5open?1close?5code?$DN0x?$CF08lx?$AA@ ; `string'
+  00051	e8 00 00 00 00	 call	 _I910_Log
+  00056	83 c4 08	 add	 esp, 8
+
+; 35   :         return NO_ERROR;
+
+  00059	33 c0		 xor	 eax, eax
+  0005b	e9 b8 01 00 00	 jmp	 $L1163
+$L1159:
+
+; 37   : 
+; 38   :     switch (code)
+; 39   :     {
+
+  00060	8b 45 fc	 mov	 eax, DWORD PTR _code$[ebp]
+  00063	89 45 e0	 mov	 DWORD PTR -32+[ebp], eax
+  00066	8b 4d e0	 mov	 ecx, DWORD PTR -32+[ebp]
+  00069	81 c1 fc df ef
+	7f		 add	 ecx, 2146426876		; 7fefdffcH
+  0006f	89 4d e0	 mov	 DWORD PTR -32+[ebp], ecx
+  00072	83 7d e0 0c	 cmp	 DWORD PTR -32+[ebp], 12	; 0000000cH
+  00076	0f 87 86 01 00
+	00		 ja	 $L1198
+  0007c	8b 45 e0	 mov	 eax, DWORD PTR -32+[ebp]
+  0007f	33 d2		 xor	 edx, edx
+  00081	8a 90 00 00 00
+	00		 mov	 dl, BYTE PTR $L1212[eax]
+  00087	ff 24 95 00 00
+	00 00		 jmp	 DWORD PTR $L1213[edx*4]
+$L1166:
+
+; 40   :     case IOCTL_I910_GET_PCI_INFO:
+; 41   :         if (dio->cbOutBuffer < sizeof(I910_PCI_INFO) || !dio->lpvOutBuffer)
+
+  0008e	8b 4d 14	 mov	 ecx, DWORD PTR _dio$[ebp]
+  00091	83 79 1c 30	 cmp	 DWORD PTR [ecx+28], 48	; 00000030H
+  00095	72 09		 jb	 SHORT $L1169
+  00097	8b 55 14	 mov	 edx, DWORD PTR _dio$[ebp]
+  0009a	83 7a 18 00	 cmp	 DWORD PTR [edx+24], 0
+  0009e	75 0a		 jne	 SHORT $L1168
+$L1169:
+
+; 43   :             return ERROR_INSUFFICIENT_BUFFER;
+
+  000a0	b8 7a 00 00 00	 mov	 eax, 122		; 0000007aH
+  000a5	e9 6e 01 00 00	 jmp	 $L1163
+$L1168:
+
+; 45   :         *((PI910_PCI_INFO)dio->lpvOutBuffer) = g_i910.pci;
+
+  000aa	8b 45 14	 mov	 eax, DWORD PTR _dio$[ebp]
+  000ad	8b 78 18	 mov	 edi, DWORD PTR [eax+24]
+  000b0	b9 0c 00 00 00	 mov	 ecx, 12			; 0000000cH
+  000b5	be 00 00 00 00	 mov	 esi, OFFSET FLAT:_g_i910
+  000ba	f3 a5		 rep movsd
+
+; 46   :         I910_SetBytesReturned(dio, sizeof(I910_PCI_INFO));
+
+  000bc	6a 30		 push	 48			; 00000030H
+  000be	8b 4d 14	 mov	 ecx, DWORD PTR _dio$[ebp]
+  000c1	51		 push	 ecx
+  000c2	e8 00 00 00 00	 call	 _I910_SetBytesReturned@8
+
+; 47   :         I910_Log("ioctl: GET_PCI_INFO found=%lu", g_i910.pci.found);
+
+  000c7	8b 15 2c 00 00
+	00		 mov	 edx, DWORD PTR _g_i910+44
+  000cd	52		 push	 edx
+  000ce	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0BO@CBFI@ioctl?3?5GET_PCI_INFO?5found?$DN?$CFlu?$AA@ ; `string'
+  000d3	e8 00 00 00 00	 call	 _I910_Log
+  000d8	83 c4 08	 add	 esp, 8
+
+; 48   :         return NO_ERROR;
+
+  000db	33 c0		 xor	 eax, eax
+  000dd	e9 36 01 00 00	 jmp	 $L1163
+$L1173:
+
+; 52   :         PI910_MMIO_READ_INPUT in;
+; 53   :         PI910_MMIO_READ_OUTPUT out;
+; 54   :         DWORD value;
+; 55   :         DWORD status;
+; 56   : 
+; 57   :         if (dio->cbInBuffer < sizeof(I910_MMIO_READ_INPUT) ||
+; 58   :             dio->cbOutBuffer < sizeof(I910_MMIO_READ_OUTPUT) ||
+; 59   :             !dio->lpvInBuffer || !dio->lpvOutBuffer)
+
+  000e2	8b 45 14	 mov	 eax, DWORD PTR _dio$[ebp]
+  000e5	83 78 14 04	 cmp	 DWORD PTR [eax+20], 4
+  000e9	72 1b		 jb	 SHORT $L1181
+  000eb	8b 4d 14	 mov	 ecx, DWORD PTR _dio$[ebp]
+  000ee	83 79 1c 04	 cmp	 DWORD PTR [ecx+28], 4
+  000f2	72 12		 jb	 SHORT $L1181
+  000f4	8b 55 14	 mov	 edx, DWORD PTR _dio$[ebp]
+  000f7	83 7a 10 00	 cmp	 DWORD PTR [edx+16], 0
+  000fb	74 09		 je	 SHORT $L1181
+  000fd	8b 45 14	 mov	 eax, DWORD PTR _dio$[ebp]
+  00100	83 78 18 00	 cmp	 DWORD PTR [eax+24], 0
+  00104	75 0a		 jne	 SHORT $L1180
+$L1181:
+
+; 61   :             return ERROR_INSUFFICIENT_BUFFER;
+
+  00106	b8 7a 00 00 00	 mov	 eax, 122		; 0000007aH
+  0010b	e9 08 01 00 00	 jmp	 $L1163
+$L1180:
+
+; 63   : 
+; 64   :         in = (PI910_MMIO_READ_INPUT)dio->lpvInBuffer;
+
+  00110	8b 4d 14	 mov	 ecx, DWORD PTR _dio$[ebp]
+  00113	8b 51 10	 mov	 edx, DWORD PTR [ecx+16]
+  00116	89 55 f0	 mov	 DWORD PTR _in$1174[ebp], edx
+
+; 65   :         out = (PI910_MMIO_READ_OUTPUT)dio->lpvOutBuffer;
+
+  00119	8b 45 14	 mov	 eax, DWORD PTR _dio$[ebp]
+  0011c	8b 48 18	 mov	 ecx, DWORD PTR [eax+24]
+  0011f	89 4d f4	 mov	 DWORD PTR _out$1175[ebp], ecx
+
+; 66   : 
+; 67   :         status = I910_ReadMmio32(&g_i910, in->offset, &value);
+
+  00122	8d 55 f8	 lea	 edx, DWORD PTR _value$1176[ebp]
+  00125	52		 push	 edx
+  00126	8b 45 f0	 mov	 eax, DWORD PTR _in$1174[ebp]
+  00129	8b 08		 mov	 ecx, DWORD PTR [eax]
+  0012b	51		 push	 ecx
+  0012c	68 00 00 00 00	 push	 OFFSET FLAT:_g_i910
+  00131	e8 00 00 00 00	 call	 _I910_ReadMmio32@12
+  00136	89 45 ec	 mov	 DWORD PTR _status$1177[ebp], eax
+
+; 68   :         if (status != NO_ERROR)
+
+  00139	83 7d ec 00	 cmp	 DWORD PTR _status$1177[ebp], 0
+  0013d	74 1f		 je	 SHORT $L1184
+
+; 70   :             I910_Log("ioctl: READ_MMIO32 failed off=0x%08lx status=%lu", in->offset, status);
+
+  0013f	8b 55 ec	 mov	 edx, DWORD PTR _status$1177[ebp]
+  00142	52		 push	 edx
+  00143	8b 45 f0	 mov	 eax, DWORD PTR _in$1174[ebp]
+  00146	8b 08		 mov	 ecx, DWORD PTR [eax]
+  00148	51		 push	 ecx
+  00149	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0DB@BCHM@ioctl?3?5READ_MMIO32?5failed?5off?$DN0x@ ; `string'
+  0014e	e8 00 00 00 00	 call	 _I910_Log
+  00153	83 c4 0c	 add	 esp, 12			; 0000000cH
+
+; 71   :             return status;
+
+  00156	8b 45 ec	 mov	 eax, DWORD PTR _status$1177[ebp]
+  00159	e9 ba 00 00 00	 jmp	 $L1163
+$L1184:
+
+; 73   : 
+; 74   :         out->value = value;
+
+  0015e	8b 55 f4	 mov	 edx, DWORD PTR _out$1175[ebp]
+  00161	8b 45 f8	 mov	 eax, DWORD PTR _value$1176[ebp]
+  00164	89 02		 mov	 DWORD PTR [edx], eax
+
+; 75   :         I910_SetBytesReturned(dio, sizeof(I910_MMIO_READ_OUTPUT));
+
+  00166	6a 04		 push	 4
+  00168	8b 4d 14	 mov	 ecx, DWORD PTR _dio$[ebp]
+  0016b	51		 push	 ecx
+  0016c	e8 00 00 00 00	 call	 _I910_SetBytesReturned@8
+
+; 76   :         I910_Log("ioctl: READ_MMIO32 off=0x%08lx val=0x%08lx", in->offset, value);
+
+  00171	8b 55 f8	 mov	 edx, DWORD PTR _value$1176[ebp]
+  00174	52		 push	 edx
+  00175	8b 45 f0	 mov	 eax, DWORD PTR _in$1174[ebp]
+  00178	8b 08		 mov	 ecx, DWORD PTR [eax]
+  0017a	51		 push	 ecx
+  0017b	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0CL@DAEI@ioctl?3?5READ_MMIO32?5off?$DN0x?$CF08lx?5v@ ; `string'
+  00180	e8 00 00 00 00	 call	 _I910_Log
+  00185	83 c4 0c	 add	 esp, 12			; 0000000cH
+
+; 77   :         return NO_ERROR;
+
+  00188	33 c0		 xor	 eax, eax
+  0018a	e9 89 00 00 00	 jmp	 $L1163
+$L1188:
+
+; 82   :         PI910_MMIO_WRITE_INPUT in;
+; 83   :         DWORD status;
+; 84   : 
+; 85   :         if (dio->cbInBuffer < sizeof(I910_MMIO_WRITE_INPUT) || !dio->lpvInBuffer)
+
+  0018f	8b 55 14	 mov	 edx, DWORD PTR _dio$[ebp]
+  00192	83 7a 14 08	 cmp	 DWORD PTR [edx+20], 8
+  00196	72 09		 jb	 SHORT $L1193
+  00198	8b 45 14	 mov	 eax, DWORD PTR _dio$[ebp]
+  0019b	83 78 10 00	 cmp	 DWORD PTR [eax+16], 0
+  0019f	75 07		 jne	 SHORT $L1192
+$L1193:
+
+; 87   :             return ERROR_INSUFFICIENT_BUFFER;
+
+  001a1	b8 7a 00 00 00	 mov	 eax, 122		; 0000007aH
+  001a6	eb 70		 jmp	 SHORT $L1163
+$L1192:
+
+; 89   : 
+; 90   :         in = (PI910_MMIO_WRITE_INPUT)dio->lpvInBuffer;
+
+  001a8	8b 4d 14	 mov	 ecx, DWORD PTR _dio$[ebp]
+  001ab	8b 51 10	 mov	 edx, DWORD PTR [ecx+16]
+  001ae	89 55 e8	 mov	 DWORD PTR _in$1189[ebp], edx
+
+; 91   :         status = I910_WriteMmio32(&g_i910, in->offset, in->value);
+
+  001b1	8b 45 e8	 mov	 eax, DWORD PTR _in$1189[ebp]
+  001b4	8b 48 04	 mov	 ecx, DWORD PTR [eax+4]
+  001b7	51		 push	 ecx
+  001b8	8b 55 e8	 mov	 edx, DWORD PTR _in$1189[ebp]
+  001bb	8b 02		 mov	 eax, DWORD PTR [edx]
+  001bd	50		 push	 eax
+  001be	68 00 00 00 00	 push	 OFFSET FLAT:_g_i910
+  001c3	e8 00 00 00 00	 call	 _I910_WriteMmio32@12
+  001c8	89 45 e4	 mov	 DWORD PTR _status$1190[ebp], eax
+
+; 92   :         I910_Log("ioctl: WRITE_MMIO32 off=0x%08lx val=0x%08lx status=%lu", in->offset, in->value, status);
+
+  001cb	8b 4d e4	 mov	 ecx, DWORD PTR _status$1190[ebp]
+  001ce	51		 push	 ecx
+  001cf	8b 55 e8	 mov	 edx, DWORD PTR _in$1189[ebp]
+  001d2	8b 42 04	 mov	 eax, DWORD PTR [edx+4]
+  001d5	50		 push	 eax
+  001d6	8b 4d e8	 mov	 ecx, DWORD PTR _in$1189[ebp]
+  001d9	8b 11		 mov	 edx, DWORD PTR [ecx]
+  001db	52		 push	 edx
+  001dc	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0DH@LBND@ioctl?3?5WRITE_MMIO32?5off?$DN0x?$CF08lx?5@ ; `string'
+  001e1	e8 00 00 00 00	 call	 _I910_Log
+  001e6	83 c4 10	 add	 esp, 16			; 00000010H
+
+; 93   :         return status;
+
+  001e9	8b 45 e4	 mov	 eax, DWORD PTR _status$1190[ebp]
+  001ec	eb 2a		 jmp	 SHORT $L1163
+$L1196:
+
+; 95   : 
+; 96   :     case IOCTL_I910_MASK_INTERRUPTS:
+; 97   :         I910_Log("ioctl: MASK_INTERRUPTS stub");
+
+  001ee	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0BM@HOBJ@ioctl?3?5MASK_INTERRUPTS?5stub?$AA@ ; `string'
+  001f3	e8 00 00 00 00	 call	 _I910_Log
+  001f8	83 c4 04	 add	 esp, 4
+
+; 98   :         return ERROR_CALL_NOT_IMPLEMENTED;
+
+  001fb	b8 78 00 00 00	 mov	 eax, 120		; 00000078H
+  00200	eb 16		 jmp	 SHORT $L1163
+$L1198:
+
+; 99   : 
+; 100  :     default:
+; 101  :         I910_Log("ioctl: unsupported code=0x%08lx", code);
+
+  00202	8b 45 fc	 mov	 eax, DWORD PTR _code$[ebp]
+  00205	50		 push	 eax
+  00206	68 00 00 00 00	 push	 OFFSET FLAT:??_C@_0CA@GGOL@ioctl?3?5unsupported?5code?$DN0x?$CF08lx?$AA@ ; `string'
+  0020b	e8 00 00 00 00	 call	 _I910_Log
+  00210	83 c4 08	 add	 esp, 8
+
+; 102  :         return ERROR_NOT_SUPPORTED;
+
+  00213	b8 32 00 00 00	 mov	 eax, 50			; 00000032H
+$L1163:
+
+; 104  : }
+
+  00218	5f		 pop	 edi
+  00219	5e		 pop	 esi
+  0021a	8b e5		 mov	 esp, ebp
+  0021c	5d		 pop	 ebp
+  0021d	c2 10 00	 ret	 16			; 00000010H
+$L1213:
+  00220	00 00 00 00	 DD	 $L1166
+  00224	00 00 00 00	 DD	 $L1173
+  00228	00 00 00 00	 DD	 $L1188
+  0022c	00 00 00 00	 DD	 $L1196
+  00230	00 00 00 00	 DD	 $L1198
+$L1212:
+  00234	00		 DB	 0
+  00235	04		 DB	 4
+  00236	04		 DB	 4
+  00237	04		 DB	 4
+  00238	01		 DB	 1
+  00239	04		 DB	 4
+  0023a	04		 DB	 4
+  0023b	04		 DB	 4
+  0023c	02		 DB	 2
+  0023d	04		 DB	 4
+  0023e	04		 DB	 4
+  0023f	04		 DB	 4
+  00240	03		 DB	 3
+_I910_DeviceIoControl@16 ENDP
+_LTEXT	ENDS
+;	COMDAT _I910_SetBytesReturned@8
+_LTEXT	SEGMENT
+_dio$ = 8
+_size$ = 12
+_I910_SetBytesReturned@8 PROC NEAR			; COMDAT
+
+; 9    : {
+
+  00000	55		 push	 ebp
+  00001	8b ec		 mov	 ebp, esp
+
+; 10   :     if (dio && dio->lpcbBytesReturned)
+
+  00003	83 7d 08 00	 cmp	 DWORD PTR _dio$[ebp], 0
+  00007	74 14		 je	 SHORT $L1145
+  00009	8b 45 08	 mov	 eax, DWORD PTR _dio$[ebp]
+  0000c	83 78 20 00	 cmp	 DWORD PTR [eax+32], 0
+  00010	74 0b		 je	 SHORT $L1145
+
+; 12   :         *((DWORD *)dio->lpcbBytesReturned) = size;
+
+  00012	8b 4d 08	 mov	 ecx, DWORD PTR _dio$[ebp]
+  00015	8b 51 20	 mov	 edx, DWORD PTR [ecx+32]
+  00018	8b 45 0c	 mov	 eax, DWORD PTR _size$[ebp]
+  0001b	89 02		 mov	 DWORD PTR [edx], eax
+$L1145:
+
+; 14   : }
+
+  0001d	5d		 pop	 ebp
+  0001e	c2 08 00	 ret	 8
+_I910_SetBytesReturned@8 ENDP
+_LTEXT	ENDS
+END

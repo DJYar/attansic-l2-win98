@@ -1,0 +1,8 @@
+DIRS= \
+     class \
+     fdc \
+     filters \
+     changers \
+     miniport \
+     tape \
+     miniide

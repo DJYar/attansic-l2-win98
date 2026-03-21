@@ -1,0 +1,8 @@
+Vidcap32.exe is a Video for Windows (VfW) application that uses the VfW 1.1
+interfaces to control a video source. Using this binary the VfW to WDM mapper
+will be used to control a WDM Video capture minidriver. Vidcap32 is
+more fully described in the platform SDK which contains the VfW 1.1 SDK.
+
+For a DirectShow (ActiveMovie) application that use the WDM driver directly,
+without the use of the VFW to WDM mapper, see the AMCAP tool.  AMCAP
+is described in the amcap.doc located in this directory.

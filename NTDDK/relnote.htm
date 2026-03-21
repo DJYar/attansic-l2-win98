@@ -1,0 +1,404 @@
+
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<TITLE>Windows&nbsp;2000 DDK Release Notes</TITLE>
+</HEAD>
+<BODY link="#0000ff" vlink="#800080" bgcolor="#ffffff">
+<!---------------------------Title----------------------------------->
+<FONT FACE="Verdana, Arial, Helvetica" SIZE=2>
+<B><FONT FACE="Verdana" SIZE=+2> Late-Breaking News for the Microsoft&reg; Windows&reg;&nbsp;2000 DDK</FONT></B>
+
+<!----------------------Driver Verifier--------------------------------->
+<P><B><FONT face="Verdana, Arial, Helvetica" size="+1">Driver Verifier</FONT></B>
+<P>
+<UL><FONT face="Verdana, Arial, Helvetica" size="2">Included&nbsp;in this release of Microsoft&reg; Windows&reg;&nbsp;2000 is the Driver Verifier.  This facility, 
+built into Windows&nbsp;2000, allows developers and users to perform extra testing and validation on a driver or set of drivers.
+<P>A shortcut that opens the configuration utility for the Driver Verifier is included in the DDK.  This shortcut can be found at <B><I>Programs\Development Kits\Windows 2000 DDK</I></B>. Driver Verifier can be found at <I>&lt;DDKroot&gt;\Tools\verifier.exe.</I>
+<P>All drivers <b>must</b> be tested using the Driver Verifier. If a driver behaves incorrectly, the Driver Verifier will crash the system immediately. In this way, the Driver Verifier prevents the driver bug from being masked by further processing. The result is a faster, easier debugging process.
+<P>For more information on the Driver Verifier, please see the <I>Driver Writer's Guide</I> in the DDK documentation.</FONT>
+<P></P>
+</UL>
+<!-------------------WFP--------------------------------------------->
+<B><FONT face="Verdana, Arial, Helvetica" size="+1">Windows File Protection</FONT></B>
+<UL>
+<P><FONT face="Verdana, Arial, Helvetica" size="2">Windows File Protection (WFP) protects system files.  Windows&nbsp;2000 will not allow protected system files to be overwritten by another file with the same name.  However, the system <b>will</b> allow files that are not named the same as a protected file to be installed.
+</FONT></P><FONT face="Verdana, Arial, Helvetica" size="2">
+<P>Further information on WFP is available in <A href="wfp.htm"><I>wfp.htm</I></A>, located on the root of the CD or the root 
+  of the DDK installation.</P>
+</FONT>
+</UL>
+<!--------------------------Driver Signing---------------------------->
+<B><FONT face="Verdana, Arial, Helvetica" size="+1">Driver Signing</FONT></B>
+<UL>
+<P><FONT face="Verdana, Arial, Helvetica" size="2">Microsoft now provides digital signatures for most publicly distributed drivers.  Please see the file <a href="drvrsign.htm"><i>drvrsign.htm</i></a> for more information on this initiative.
+</FONT>
+</UL>
+<!----------------------Installation Issues---------------------------->
+<P><B><FONT face="Verdana, Arial, Helvetica" size="+1">Installation Issues</FONT></B>
+<UL>
+<P><B><FONT face="Verdana, Arial, Helvetica"><H4><I>Dirs</I> Files</H4></FONT></B>
+<P><FONT face="Verdana, Arial, Helvetica" size="2"><I>Dirs</I> files are created dynamically when a Build Environment window is opened. The program VCCheck will recursively walk the directory tree and if it finds a <B><I>makefile</I></B> in a directory the corresponding <I>dirs</I> will be created. If <I>dirs</I> files already exist in the directory tree they will be deleted. To recreate the <I>dirs</I> file without opening another Build Environment window execute VCCheck with the drive\path where you want the <I>dirs</I> to be created (example: VCCheck /p D:\ntddk /d, will start <I>dirs</I> creation at the d:\ntddk 
+  directory).</FONT></P><FONT face="Verdana, Arial, Helvetica" size="2">
+<P>If OPTIONAL_DIRS directives must be preserved, it is suggested that the \ntddk\bin\setenv.bat and/or the \ntddk\bin\setenv64.bat file 
+  be modified to prevent automatic <I>dirs</I> creation. 
+  Open the \ntddk\bin\setenv(64).bat and search for the second occurrence of 
+  VCCheck and comment out the line. When the build window is opened the 
+  automatic <I>dirs</I> creation will not occur and any changes made to the existing 
+  <I>dirs</I> file will be preserved.</P></FONT>
+<P>
+<!--------------------Icons not Updated--------------------------->
+<P><B><FONT face="Arial,Times New Roman"><H4>Icons Not Updated</H4></FONT></B>
+<P><FONT face="Verdana, Arial, Helvetica" size="2">Previous versions of the Windows 2000 DDK placed program icons in the Development Kits folder under the profile of the login used to install the DDK.  This version of the DDK places program icons under the <B>All Users</B> profile.  We recommend uninstalling all previous versions of the Windows 2000 DDK prior to installing this DDK.  If this version of the DDK is installed on a system without uninstalling previous versions, the icons from the previous version will remain on the system and can override the current DDK icons on the <b>Start</b> menu.
+<P>To allow the current icons to be seen, log on as the user who originally installed the previous version of the DDK.  Right-click on the <b>Start</b> menu, and pick <B>Explore</B>.  Double-click on Programs.  The folder Development Kits should be seen. Rename this folder and close the Explorer window.  The <b>Start</b> menu should now contain both the current DDK icons and the previous kit icons.</FONT></P>
+</UL>
+<!-------------------------Compiling and Linking---------------------->
+<P><B><FONT size="+1" face="Verdana, Arial, Helvetica">Compiling and Linking</FONT></B>
+<UL>
+<P><B><FONT face="Verdana, Arial, Helvetica"><H4>Tested Platforms and Compilers</H4></FONT></B>
+<P><FONT face="Verdana, Arial, Helvetica" size="2">We have tested both Microsoft Visual C++&reg; 5.0 (SP3) and Microsoft Visual C++&reg; 6.0 (SP2) on the following platforms: Windows&reg;&nbsp;98 (x86), and Windows 2000 (x86).</FONT>
+<P><B><FONT face="Verdana, Arial, Helvetica"><H4>Compiler Notes</H4></FONT></B>
+<P><FONT face="Verdana, Arial, Helvetica" size="2"><B>Visual C++ 6.0</B> requires Visual C++ 6.0 Service Pack 2 (or greater), available from <A href="http://msdn.microsoft.com/visualc/downloads/updates.asp">
+http://msdn.microsoft.com/visualc/downloads/updates.asp</A>.</FONT>
+<P><FONT face="Verdana, Arial, Helvetica" size="2"><B>Visual C++ 5.0</B> requires Visual C++ 5.0 Service Pack 3 (or greater), available from <A href="http://msdn.microsoft.com/visualc/downloads/updates.asp">
+http://msdn.microsoft.com/visualc/downloads/updates.asp</A>.</FONT>
+<P>
+<P><B><FONT face="Verdana, Arial, Helvetica"><H4>Included ATL Headers</H4></FONT></B>
+<P><FONT face="Verdana, Arial, Helvetica" size="2">The version of ATL that ships with this Windows 2000 DDK is not the same as the Visual C++ version and should only be used for driver development. General purpose ATL source code is available with your normal Visual C++ installation.
+</FONT></P>
+
+<P><B><FONT face="Verdana, Arial, Helvetica"><H4>Build Error Messages</H4></FONT></B>
+<P><FONT face="Verdana, Arial, Helvetica" size="2">During the initialization of BUILD, the following message might be displayed:
+</FONT>
+<BLOCKQUOTE><FONT face="Courier New, Times New Roman, Times Roman" size="2">invalid include statement: 
+importlib(STDTYPE_TLB)</FONT></BLOCKQUOTE>
+<P><FONT face="Verdana, Arial, Helvetica" size="2">To prevent this message from displaying in the future, edit the <I>xxxx</I>.odl file specified in the warning message. Use a text editor to open the file and
+search for &quot;importlib.&quot; When found, add quotes around the name inside the parentheses. For example:
+</FONT>
+<BLOCKQUOTE><FONT face="Courier New, Times New Roman, Times Roman" size="2">importlib(&quot;STDTYPE_TLB&quot;)</FONT></BLOCKQUOTE>
+<P><FONT face="Verdana, Arial, Helvetica" size="2">Then save your changes.</FONT></P>
+</UL>
+<!----------------------Debugging--------------------------------------->
+<P><B><FONT face="Verdana, Arial, Helvetica" size="+1">Debugging</FONT></B>
+<UL>
+<P><FONT face="Verdana, Arial, Helvetica" size="2">For more information on WinDBG and the KD debuggers included in the Windows&reg;&nbsp;2000 DDK, 
+and on debugging,
+please see the <i>debuggers.txt</i> file in the directory where the debugger is installed. See also the information on debugging found in the <I>Driver Writer's Guide</I> in the DDK documentation.  
+You can also find more information on debugging at <A href="http://www.microsoft.com/hwdev/driver/ntdebugging.htm">http://www.microsoft.com/hwdev/driver/ntdebugging.htm</A>.</FONT></P>
+</UL>
+<!-------------------------WDM 1.0------------------------------------>
+<P><B><FONT face="Verdana, Arial, Helvetica" size="+1">WDM 1.0</FONT></B>
+<P>
+<UL><FONT face="Verdana, Arial, Helvetica" size="2">Windows&reg; 98 defined a unified driver model for Windows 98 and Windows&nbsp;2000 operating systems by standardizing requirements and reducing the amount of code that needed to be written. Programmers who are already familiar with Windows NT&reg; 4.0 drivers will recognize most of the features of WDM drivers. However, the enclosed documentation and samples should be studied in order to understand the subtleties of WDM. WDM drivers will not run on operating systems earlier than Windows 98 or Windows&nbsp;2000.
+<P>By conforming to WDM, drivers can be binary-compatible across Windows 98, Windows 98 Second Edition, and Windows&nbsp;2000 on x86-based computers.
+<P>However, subsequent operating systems will contain features not available in preceding versions. WDM is designed to be forward-compatible but not backward-compatible. That is, drivers will be compatible with the same or higher-numbered WDM versions. Such WDM drivers will not be able to take advantage of new operating system services, but they will still load and run. Newer drivers running in a lower-version environment will most likely fail while loading.
+<P>WDM driver writers should carefully consider feature-set inclusions. For example, does the driver need to run on different platforms? Will the hardware be widely available, or is it highly specialized and thus limited in distribution?
+<P>Additionally, not all hardware meets the requirements of WDM. Video drivers do not support the WDM model and must be written separately, as do certain drivers utilizing VxDs under Windows 98 and some network drivers. Virtual hardware (emulation) and nonstandard buses are not supported in a WDM class.
+<P>A multi-operating system driver is required to conform 
+  to the lowest WDM version of any operating system supported by the driver. For cross-operating 
+  system compatibility, thoroughly test drivers on all versions of Windows 98 and 
+  Windows&nbsp;2000, because operating system differences can produce slightly 
+  different driver behavior. Differences are most apparent between 
+  single-processor and multiprocessor platforms.</FONT></P></UL>
+<P>
+<!---------------------------WDM Audio Drivers---------------------->
+<P><B><FONT face="Verdana, Arial, Helvetica" size="+1">WDM Audio Drivers</FONT></B>
+<UL>
+<P><FONT face="Verdana, Arial, Helvetica" size="2">
+This Windows&reg;&nbsp;2000 DDK should be used for all WDM audio driver development. As of this release, this DDK supports both the Windows 2000 and Windows 98 SE platforms. The sample code shown here will work interchangeably on either operating system with the INF files provided. Please rebuild your driver with this DDK to take advantage of recent changes and fixes. This DDK does not support nor do we recommend the development of WDM audio drivers for the original Windows 98 release.
+<P>We have added a WDM driver sample which supports the AC97 architecture. It uses the WavePCI miniport, and should work with any AC97 codec connected to an Intel motherboard with integrated AC97 controller, like the Intel 810 Chipset.</FONT></P>
+</UL>
+<!-------------------------------Sample Issues-------------------------->
+<P><B><FONT face="Verdana, Arial, Helvetica" size="+1">Sample Issues</FONT></B>
+<UL>
+<P><B><FONT face="Verdana, Arial, Helvetica"><H4>WDM NDIS Drivers</H4></FONT></B>
+<FONT face="Verdana, Arial, Helvetica" size="2">If you are creating a driver that uses both NDIS and WDM, you will need to define the environment variable NDIS_WDM and then include <i>ndis.h</i>. When this is done, <i>ndis.h</i> will include <i>wdm.h</i> correctly.
+</FONT>
+
+<P><B><FONT face="Verdana, Arial, Helvetica"><H4>New IDE Driver Stack</H4></FONT></B>
+<P><FONT face="Verdana, Arial, Helvetica" size="2">Microsoft&reg; has changed the driver model for IDE devices for Windows 2000.  Unlike a scsiport 
+miniport in Windows NT 4.0, the ATA/ATAPI driver stack in Windows 2000 implements full scsiport 
+interface.  The new driver model isolates non-standard PCI IDE controller hardware interface into 
+a PCI IDE minidriver.  To learn more about how to write your own pci ide mini driver, see the PCI 
+IDE minidriver documentation in the Windows 2000 DDK.</FONT>
+
+<b><font face="Verdana, Arial, Helvetica"><h4>Signed Sample Installation</h4></font></b>
+<font face="Verdana, Arial, Helvetica" size="2">
+The samples moufiltr and kbdfiltr include INFs that demonstrate the proper use of the 'CatalogFile=' directive.  The catalog files (CAT) included in these samples are not true catalog files, therefore installation of the input samples moufiltr and kbfiltr does not work.  
+To temporarily fix, please edit moufiltr.inf and kbfiltr.inf.  
+From the version section of each INF, remove the line that begins with 'CatalogFile='.  
+Prior to distributing your drivers that use the 'CatalogFile=' INF directive, you will need to obtain a true catalog file from WHQL.  Please see <a href="drvrsign.htm"><i>drvrsign.htm</i></a> for more information on catalog files and driver signing.</font>
+<b><font face="Verdana, Arial, Helvetica"><h4>Win9x WDM Symbol Generation</h4></font></b>
+<font face="Verdana, Arial, Helvetica" size="2">
+Many of the WDM samples in this DDK can also be used on Windows 98 and Windows 98 SE.
+To create symbols in the SYM format needed by the Win9x debuggers (not included in this DDK) place the keyword 'MAP_SYM=1' in the <i>sources</i> file for the sample.</font>
+<b><font face="Verdana, Arial, Helvetica"><h4>IME Warnings Under the Japanese System Locale</h4></font></b>
+<font face="Verdana, Arial, Helvetica" size="2">
+
+When the system locale has been set to Japanese, the following three warnings occur: 
+<PRE>
+<font face="Courier New, Times New Roman, Times Roman" size="2">cht\chajei\..\ime.rc(37) : warning RC4093: unescaped newline in character constant in inactive code
+cht\phon\..\ime.rc(37) : warning RC4093: unescaped newline in character constant in inactive code
+cht\quick\..\ime.rc(37) : warning RC4093: unescaped newline in character constant in inactive code
+</font></PRE>
+These warnings appear in both the free and checked builds.  These warnings do not cause any problems in the resulting drivers.
+
+
+</FONT>
+
+<b><font face="Verdana, Arial, Helvetica"><h4>Plotter Sample Will Not Compile Under Some System Locales</h4></font></b>
+<font face="Verdana, Arial, Helvetica" size="2">
+
+When the system locale has been set to Korean, Chinese (Taiwan) or Chinese (PRC), the plotter sample, located in src\print\msplot\plotter, will fail to compile, giving errors in <i>brush.c</i>.
+<P>Change the code on line 640 from
+<PRE><font face="Courier New, Times New Roman, Times Roman" size="2">Buf[Size++] = (BYTE)((bData &amp; Mask) ? '?' : '?');
+</font></PRE>
+to this:
+<PRE><font face="Courier New, Times New Roman, Times Roman" size="2">Buf[Size++] = (BYTE)((bData &amp; Mask) ? 0xDB : 0xB0);
+</font></PRE>
+<b><font face="Verdana, Arial, Helvetica"><h4>WDM Video Capture Drivers</h4></font></b>
+<font face="Verdana, Arial, Helvetica" size="2">
+The <b>Testcap</b> sample WDM video capture driver takes several minutes to load in the <b>AMCap</b> sample program on checked builds due to performance issues in <i>Quartz.dll</i>.   The problem does not occur in free builds.  Two workarounds are possible: (1) replace <i>Quartz.dll</i> with the free version.  (2) Modify AMCap to hold a reference to the SystemDeviceEnumerator while the graph is being constructed. (See code sample below.)</font>
+
+<PRE><font face="Courier New, Times New Roman, Times Roman" size="2"> 
+	ICreateDevEnum *pCreateDevEnumTmp;
+	CoCreateInstance(CLSID_SystemDeviceEnum, NULL, CLSCTX_INPROC_SERVER,
+					 IID_ICreateDevEnum, (void**)&amp;pCreateDevEnumTmp);
+	IEnumMoniker *pEmTmp = 0;
+	if(pCreateDevEnumTmp)
+	{
+		pCreateDevEnumTmp->CreateClassEnumerator(
+			CLSID_VideoInputDeviceCategory,
+			&amp;pEmTmp, 0);
+	}
+	...
+	// Release both pCreateDevEnumTmp and pEmTmp after the graph is built.
+</font></PRE>
+<b><font face="Verdana, Arial, Helvetica"><h4>Scanners &amp; Cameras</h4></font></b>
+<font face="Verdana, Arial, Helvetica" size="2">When compiling drivers that include <i>usbscan.h</i>, be sure to specify that the structures defined in <i>usbscan.h</i> are packed on 8 byte boundaries. One way to accomplish this for Microsoft compilers is to insert "<font face="Courier New">#pragma pack(8)</font>" or "<font face="Courier New">#pragma pack(push,8)</font>" at the beginning of <i>usbscan.h</i>.</font>
+
+<b><font face="Verdana, Arial, Helvetica"><h4>KAnalyze</h4></font></b>
+<font face="Verdana, Arial, Helvetica" size="2">The sample will not build properly under IA64 due to a missing header file. This will not affect 32 bit compilation.</font>
+
+<b><font face="Verdana, Arial, Helvetica"><h4>DvdTs</h4></font></b>
+<font face="Verdana, Arial, Helvetica" size="2">The DVD sample has some minor problems, menus do not always display properly, highlights are visible over the still movie image, distorted video when doing speed changes and jumping locations. The affected functions are Stop/Pause/Play, FF/RW/Half Speed, Jump to chapter - forward and back, Title and Chapter search.</font>
+
+<b><font face="Verdana, Arial, Helvetica"><h4>Toaster</h4></font></b>
+<font face="Verdana, Arial, Helvetica" size="2">The src\general\toaster\exe\notify sample has a minor error that prevents a successful build under VC 5. 
+The file %ntddk%\src\general\toaster\exe\notify\notify.c needs to be updated with the following information:<P>
+<P>Change:<P><B>_inline Display(PWCHAR Format, PWCHAR Str); <P></B>to: <P><B>_inline VOID Display(PWCHAR Format, PWCHAR Str);</B><P>This will be fixed in the next release of the DDK.</font>
+
+<b><font face="Verdana, Arial, Helvetica"><h4>KeWaitForSingleObject</h4></font></b>
+<font face="Verdana, Arial, Helvetica" size="2">A number of samples in the DDK are using an obsolete value in the 
+KeWaitForSingleObject function. The obsolete value is <B>Suspend</B> for the KWAIT_REASON parameter. The proper values for  
+KWAIT_REASON are <B>Executive</B> or <B>UserRequest</B>. Please refer to the DDK documentation for additional information on KeWaitForSingleObject.
+<P>Affected samples:<PRE><font face="Courier New, Times New Roman, Times Roman" size="2">%basedir%\src\input\kbdclass
+%basedir%\src\input\mouclass
+%basedir%\src\kernel\parclass
+%basedir%\src\kernel\parport
+%basedir%\src\kernel\serenum
+%basedir%\src\network\mdis\e100bex
+%basedir%\src\smartcrd\bulltlp3
+%basedir%\src\storage\class\cdrom
+%basedir%\src\storage\class\disk
+%basedir%\src\storage\fdc\3mode\fdc
+%basedir%\src\storage\fdc\3mode\fdc.2
+%basedir%\src\storage\fdc\3mode\flpydisk
+%basedir%\src\storage\fdc\fdc
+%basedir%\src\storage\flpydisk
+%basedir%\src\storage\filters\cdaudio
+%basedir%\src\wdm\acpi\ec
+%basedir%\src\wdm\hid\gameenum
+%basedir%\src\wdm\hid\hidgame
+%basedir%\src\wdm\scancam\scsiscan
+%basedir%\src\wdm\usb\bulkusb
+%basedir%\src\wdm\usb\isousb
+%basedir%\src\wdm\videocap\atiwdm
+</PRE></FONT>
+
+This will be fixed in next release of the DDK.
+</font>
+
+<b><font face="Verdana, Arial, Helvetica"><h4>Windows 2000 Post-RC1 Behavior Change in IoGetRelatedDeviceObject</h4></font></b>
+<font face="Verdana, Arial, Helvetica" size="2">A bug in <B>IoGetRelatedDeviceObject</B> was discovered in Windows 2000 RC1 and fixed in RC2. This bug caused IoGetRelatedDeviceObject to behave incorrectly in some cases where the file object represented the underlying storage device and was not known to the file system.</font>
+<P>Fixing the bug required a minor change in the behavior of IoGetRelatedDeviceObject. Unfortunately, the change impacts a small number of drivers (primarily file system filter drivers) that called IoGetRelatedDeviceObject directly or indirectly and relied on the incorrect behavior. </P>
+<P>When called on a file object that represents the underlying storage device, IoGetRelatedDeviceObject now always returns the highest-level device object in the storage device stack. To obtain the highest-level device object in the file system driver stack, drivers must call IoGetRelatedDeviceObject on a file object that represents the file system's driver stack, and the file system must currently be mounted. (Otherwise, the storage device stack is traversed instead of the file system stack.)</P>
+<P>To ensure that the file system is mounted on the storage device, the driver must have specified an appropriate access mask, such as FILE_READ_DATA or FILE_WRITE_ATTRIBUTES, when opening the file. Specifying FILE_READ_ATTRIBUTES does not cause the file system to be mounted. This requirement also applies to drivers that call IoGetDeviceObjectPointer. Such drivers should pass the appropriate access mask value in that routine's DesiredAccess parameter.</P>
+<P>Drivers that call IoAttachDevice are also affected by this change. IoAttachDevice opens the file with FILE_READ_ATTRIBUTES and then calls IoGetRelatedDeviceObject. This does not cause a file system to be mounted. Thus a successful call to IoAttachDevice returns the device object of the storage driver, not that of the file system driver.</P>
+
+<b><font face="Verdana, Arial, Helvetica"><h4>Updated Windows NT 4.0 Samples</h4></font></b>
+<font face="Verdana, Arial, Helvetica" size="2">
+While this DDK does not support driver creation for Windows NT 4.0, Product Support Services (PSS) has updated many of the samples included in the Windows NT 4.0 DDK.  These samples can be downloaded from <a href="http://support.microsoft.com/support/ddk/ntddk/NTsamples/default.asp">http://support.microsoft.com/support/ddk/ntddk/NTsamples/default.asp</a>. In particular, samples under the general directory demonstrate some of the NT core concepts such as IOCTLs, event synchronization, event logging,  memory mapping, IRP cancellation, and queuing techniques. These samples may be useful for developers unfamiliar with Windows NT 4.0 driver development. 
+
+<b><font face="Verdana, Arial, Helvetica"><h4>Some VDD Samples Require 16-bit Build Tools</h4></font></b>
+<font face="Verdana, Arial, Helvetica" size="2">The %basedir%\src\vdd\dosioctl\dosapp and %basedir%\src\vdd\dosioctl\dosioctl are 16-bit samples and require a 16-bit version of MASM and a suitable linker.</font>
+
+<b><font face="Verdana, Arial, Helvetica"><h4>VDD Sample is a Legacy Driver</h4></font></b>
+<font face="Verdana, Arial, Helvetica" size="2">The %basedir%\src\vdd\dosioctl\krnldrvr driver does not support Power Management or Plug and Play.</font>
+
+<b><font face="Verdana, Arial, Helvetica"><h4>WmiCli Sample Requires MFC to be Installed</h4></font></b>
+<font face="Verdana, Arial, Helvetica" size="2">To build the %basedir%\src\general\wmicli sample requires that MFC be installed for the sample to build properly.</font>
+
+</font>
+
+
+</FONT>
+</UL>
+<!---------------------Tool Issues------------------------------------->
+<P><B><FONT size="+1" face="Verdana, Arial, Helvetica">Tool Issues</FONT></B>
+<UL>
+<B><FONT face="Verdana, Arial, Helvetica"><H4>Grapher</H4></FONT></B>
+<FONT face="Verdana, Arial, Helvetica" size="2">The Grapher tool will not run without a supported sound card installed.</FONT>
+<B><FONT face="Verdana, Arial, Helvetica"><H4>SCSIINF</H4></FONT></B>
+<FONT face="Verdana, Arial, Helvetica" size="2">The SCSIINF tool does not run correctly on Windows NT 4.0.</FONT>
+<P><B><FONT face="Verdana, Arial, Helvetica"><H4>GenINF</H4></FONT></B>
+<FONT face="Verdana, Arial, Helvetica" size="2">GenINF is a GUI-based tool that guides the user through the process of creating Windows&reg;&nbsp;2000 device driver 
+information (INF) files.
+<P>The tool does not create fully valid INF files. However, the skeleton INF files it generates should help developers complete their device driver INF files. Users should review all INF files created by GenINF carefully and modify them as required. Users should expect to add additional INF directives, especially any directives that are device-class-specific or that contain device-class-specific information.
+<P>GenINF is located in the &lt;<I>DDKRoot</I>&gt;\Tools subdirectory. Because it is GUI-based, it can be executed from within the Windows&nbsp;2000 User Interface, or from the Command Prompt. GenINF takes no arguments.
+<P>Please check the GenINF release notes for details on usage and limitations.
+</FONT>
+<P><B><FONT face="Verdana, Arial, Helvetica"><H4>ChkINF</H4></FONT></B>
+<FONT face="Verdana, Arial, Helvetica" size="2">
+ChkINF is a Perl script that checks the structure and syntax of Windows 2000 device driver INF files. Results are presented in HTML format, and include a list of the errors and warnings detected in each INF file, with each error and warning shown next to the errant INF file entry. ChkINF includes support for virtually all INF 
+sections and directives that apply to all classes of devices.
+<P>ChkINF is located in the &lt;<I>DDKRoot</I>&gt;\Tools\Chkinf subdirectory, and should be executed from the Command Prompt. Because ChkINF is a Perl script, in order to use the tool, you will need to obtain a Perl interpreter. ChkINF requires 
+a Perl interpreter that is Version 5.003_07 or greater. ChkINF should work with any version of Perl 5.0 or greater, but has not been tested with any versions before 5.003_07.
+<P>Please check the release notes in &lt;<I>DDKRoot</I>&gt\Tools\Chkinf\Chkinf.htm for details on usage and limitations.
+</UL>
+<!-----------------DDK Build Envir Chngs------------------------------>
+<P><B><FONT size="+1" face="Verdana, Arial, Helvetica">Windows&reg;&nbsp;2000 DDK Build Environment Changes</FONT></B>
+<UL>
+<P><FONT face="Verdana, Arial, Helvetica" size="2">The Windows&nbsp;2000 DDK includes an environment for building drivers that closely matches the internal build environment used to build Windows&nbsp;2000 drivers at Microsoft&reg;. This environment comes in two types: free and checked.
+<P>The free environment is similar to the Microsoft Visual Studio&reg; concept of retail builds, which are optimized for release. The checked environment has no optimization and often has extra tests in the code to catch errors. All drivers should first be written and tested in the checked environment, and then retested in the free environment after they seem to be complete.
+<P>The Build tool (<i>Build.exe</i>), which is part of both environments, acts as a front end to a standard compilation tool such as Nmake.&nbsp; Build and the makefiles included in the DDK are customized for creating Windows&nbsp;2000 drivers. Most drivers do not need to specify their own custom makefile, because a simple makefile that includes the <i>makefile.def</i> in the DDK will suffice. However, to properly set up driver code to compile using Build, you must create a <I>sources</I> file 
+that specifies values for the environment variables that drive Build's actions. The DDK documents how to create this file plus the
+related <I>dirs</I> file.
+<P>In past versions of Microsoft DDKs, the objects compiled through the build process often ended up in arbitrary locations. The location was defined by the environment variable TARGETPATH. Usually, the location was set to either $(BASEDIR)\lib\<I>&lt;platform&gt;</I>\Free|Checked
+or to Obj\<I>&lt;platform&gt;</I>, where &lt;<I>platform</I>&gt;
+could be either I386 or Alpha. The former is confusing to inexperienced users. The latter allowed
+the user's checked files to be overwritten by the free ones, and vice
+versa.
+<P>Previously, the common TARGETPATH setting was TARGETPATH=$(BASEDIR)\lib,
+which is now explicitly disallowed by the code in <i>makefile.def</i>.
+<P>The version of Build included in the Windows&nbsp;2000
+DDK still uses TARGETPATH to place objects created by Build. If
+TARGETPATH is set to point to a particular directory, the objects created will
+be placed in that directory. The default for TARGETPATH is OBJ, which 
+is treated by Build as a special token. If TARGETPATH
+is set to OBJ, the objects will be
+placed in Obj$(BUILD_ALT_DIR)\<I>&lt;platform&gt;</I>.
+<P>If the environment variable BUILD_ALT_DIR is undefined, the
+default is Obj\&lt;<I>platform</I>&gt;. In
+the Windows&nbsp;2000 DDK, the free environment sets BUILD_ALT_DIR to FRE,
+and the checked environment sets the variable to CHK.
+The result is that free build objects are placed in Objfre\&lt;<I>platform</I>&gt; and 
+checked builds are placed in Objchk\&lt;<I>platform</I>&gt;.
+This allows both a free and checked version to co-exist and be built from the
+same source. Use the variable <B>$(O)</B>
+[capital O, not zero] as an easy way to refer to this directory in sources files.</P>
+<P>BUILD_ALT_DIR is also appended to the build logs created by
+the <B>build -e</B> command. In the DDK
+environments, this causes the names of the log files to change as follows.</P></FONT>
+<P><FONT face="Verdana, Arial, Helvetica" size="2">
+	<TABLE border="0" cellspacing="0" cellpadding="0" style="BORDER-COLLAPSE: collapse; MARGIN-LEFT: 0.4pt; mso-table-layout-alt: fixed; mso-padding-alt: 0in 0in 0in 0in">
+		<TR>
+			<TD width="197" valign="top" style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: medium none; BORDER-RIGHT: medium none; BORDER-TOP: medium none; PADDING-BOTTOM: 0in; PADDING-LEFT: 0in; PADDING-RIGHT: 0in; PADDING-TOP: 0in; WIDTH: 2.05in">
+<P class="Thf">Default Name</P>
+			</TD>
+			<TD width="197" valign="top" style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: medium none; BORDER-RIGHT: medium none; BORDER-TOP: medium none; PADDING-BOTTOM: 0in; PADDING-LEFT: 0in; PADDING-RIGHT: 0in; PADDING-TOP: 0in; WIDTH: 2.05in">
+<P class="Thf">Free Build Name</P>
+			</TD>
+			<TD width="206" valign="top" style="BORDER-BOTTOM: windowtext 0.5pt solid; BORDER-LEFT: medium none; BORDER-RIGHT: medium none; BORDER-TOP: medium none; PADDING-BOTTOM: 0in; PADDING-LEFT: 0in; PADDING-RIGHT: 0in; PADDING-TOP: 0in; WIDTH: 2.15in">
+<P class="Thf">Checked Build Name</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD width="197" valign="top" style="PADDING-BOTTOM: 0in; PADDING-LEFT: 0in; PADDING-RIGHT: 0in; PADDING-TOP: 0in; WIDTH: 2.05in">
+<P class="Tpf">Build.log
+				</P>
+			</TD>
+			<TD width="197" valign="top" style="PADDING-BOTTOM: 0in; PADDING-LEFT: 0in; PADDING-RIGHT: 0in; PADDING-TOP: 0in; WIDTH: 2.05in">
+<P class="Tpf">Buildfre.log
+				</P>
+			</TD>
+			<TD width="206" valign="top" style="PADDING-BOTTOM: 0in; PADDING-LEFT: 0in; PADDING-RIGHT: 0in; PADDING-TOP: 0in; WIDTH: 2.15in">
+<P class="Tpf">Buildchk.log
+				</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD width="197" valign="top" style="PADDING-BOTTOM: 0in; PADDING-LEFT: 0in; PADDING-RIGHT: 0in; PADDING-TOP: 0in; WIDTH: 2.05in">
+<P class="Tpf">Build.err
+				</P>
+			</TD>
+			<TD width="197" valign="top" style="PADDING-BOTTOM: 0in; PADDING-LEFT: 0in; PADDING-RIGHT: 0in; PADDING-TOP: 0in; WIDTH: 2.05in">
+<P class="Tpf">Buildfre.err
+				</P>
+			</TD>
+			<TD width="206" valign="top" style="PADDING-BOTTOM: 0in; PADDING-LEFT: 0in; PADDING-RIGHT: 0in; PADDING-TOP: 0in; WIDTH: 2.15in">
+<P class="Tpf">Buildchk.err
+				</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD width="197" valign="top" style="PADDING-BOTTOM: 0in; PADDING-LEFT: 0in; PADDING-RIGHT: 0in; PADDING-TOP: 0in; WIDTH: 2.05in">
+<P class="Tpf">Build.wrn
+				</P>
+			</TD>
+			<TD width="197" valign="top" style="PADDING-BOTTOM: 0in; PADDING-LEFT: 0in; PADDING-RIGHT: 0in; PADDING-TOP: 0in; WIDTH: 2.05in">
+<P class="Tpf">Buildfre.wrn
+				</P>
+			</TD>
+			<TD width="206" valign="top" style="PADDING-BOTTOM: 0in; PADDING-LEFT: 0in; PADDING-RIGHT: 0in; PADDING-TOP: 0in; WIDTH: 2.15in">
+<P class="Tpf">Buildchk.wrn
+				</P>
+			</TD>
+		</TR>
+	</TABLE></FONT>
+<P><FONT face="Verdana, Arial, Helvetica" size="2">The DDK environment also emulates this same behavior for the
+libraries included in the DDK. Instead of a single Lib\<I>&lt;platform&gt;</I> 
+directory containing only the free versions of the
+libraries, there are now two directories: Libfre and Libchk. This allows the DDK
+to include both the free and checked versions of the libraries. The DDK
+environment is created using a batch file, <i>setenv.bat</i>, which sets the variables
+CRT_LIB_PATH, DDK_LIB_DEST, DDK_LIB_PATH, SDK_LIB_DEST, and SDK_LIB_PATH
+correctly for the free or checked environment.
+<P>The variable TARGETPATHLIB allows you to specify a different
+location than TARGETPATH for .lib and .exp files created for DLLs. When you are
+building a DLL, you create the DLL itself. You also create an import library
+that other images can use to reference functions exported by your DLL. Setting
+TARGETPATH independently from TARGETPATHLIB allows the binary to be kept in the
+current directory, while the .lib and .exp files can be shared with other
+components. TARGETPATHLIB has no effect on binaries that are not DLLs.
+<P>The location of header files has also been changed in the
+current DDK. Most headers remain in the $(BASEDIR)\inc directory. However, the
+DDK-specific headers are now in $(BASEDIR)\inc\ddk, and the WDM-specific headers are
+now in $(BASEDIR)\inc\ddk\wdm. You may need to adjust INCLUDES directives in sources
+files.</P>
+<P>The following environment variables&nbsp; included in <i>sources</i>
+files in the past&nbsp; are now disallowed:</P>
+	<UL>
+		<LI>EXEPROFILEINPUT&nbsp; use NTPROFILEINPUT instead.
+<P></P>
+		<LI>MAJORCOMP
+<P></P>
+		<LI>MINORCOMP
+<P></P>
+		<LI>PNP_POWER&nbsp; </LI></UL></FONT>
+<p>These are unneeded, so please remove them from your <i>sources</i> file.</p>
+
+	
+</UL><B><FONT face="Verdana, Arial, Helvetica" size="+1">Feedback</FONT></B>
+<UL><FONT face="Verdana, Arial, Helvetica" size="2">If you find inaccuracies with the DDK, are looking for something not documented in the DDK, or otherwise want to provide feedback, please visit our Windows&reg;&nbsp;2000 DDK Web site at <A href="http://www.microsoft.com/ddk/">http://www.microsoft.com/ddk/</A>. The feedback link on this page comes directly to the teams which provide input for these documents. It's your DDK, if you have an issue with it, please let us know.</FONT>
+</UL>
+<P align="center"><A href="relnote.htm#top"><FONT face="Verdana" size="2">Top of page</FONT></A>
+<P>
+<TABLE cellspacing="0" border="0" width="624">
+	<TR>
+		<td height="2" valign="middle" bgcolor="Aqua"><P></P></td>
+	</TR>
+</TABLE><FONT face="MS Sans Serif" size="1">
+<P>Copyright &copy; Microsoft Corporation 2000</FONT></P>
+</BODY>
+</HTML>

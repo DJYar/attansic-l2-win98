@@ -1,0 +1,6 @@
+LIBRARY VIEWCMD
+DESCRIPTION 'VIEWCMD Director Plug-In for Kernel Memory Space Analyzer"
+
+EXPORTS
+    KanalyzeRegisterPlugIns
+

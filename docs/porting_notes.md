@@ -139,9 +139,36 @@ BAR/MMIO selection policy is intentionally conservative:
 - map that physical range and store:
   - `Adapter->Registers`
   - `Adapter->MemoryLength`
-  - `Adapter->IoBase` (low 32 bits of the selected physical start)
+  - `Adapter->MmioPhysicalBaseLow` (low 32 bits of the selected physical start)
 
 Assumption for this phase: the first memory resource assigned to the miniport is
 the primary device MMIO BAR used for basic register access. If no such memory
 resource is present, initialization now fails cleanly rather than pretending
 success.
+
+
+## Reset sequence safety
+
+`L2HwReset` now performs a bounded reset handshake instead of writing reset and
+returning immediately. The sequence is:
+
+1. write soft reset bit in master control register
+2. poll with a fixed iteration cap and sleep interval
+3. require both conditions before success:
+   - soft reset bit has self-cleared
+   - idle status register reads zero
+
+If timeout is reached, initialization fails cleanly.
+
+
+## Permanent MAC validation rules
+
+MAC read still comes from station address registers (`REG_MAC_STA_ADDR` and
+`REG_MAC_STA_ADDR + 4`) consistent with Linux `atl2` fallback behavior for this
+step. After decoding byte order, initialization rejects MAC addresses that are:
+
+- all zero
+- all `FF`
+- multicast (LSB of first octet set)
+
+Invalid MAC data causes hardware initialization failure.

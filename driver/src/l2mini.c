@@ -76,7 +76,7 @@ L2MiniportInitialize(
     adapter->LinkSpeed = 100000;
     adapter->MaximumFrameSize = 1500;
     adapter->Registers = NULL;
-    adapter->IoBase = 0;
+    adapter->MmioPhysicalBaseLow = 0;
     adapter->MemoryLength = 0;
     adapter->HardwareReady = FALSE;
 

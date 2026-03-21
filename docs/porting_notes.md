@@ -97,9 +97,9 @@ Added `driver/include/l2hw.h` and `driver/src/l2hw.c` with conservative helpers:
 - `L2ReadPermanentMac`
 - `L2HwInitialize`
 
-`L2MiniportInitialize` now calls `L2HwInitialize`, but MMIO mapping/resource
-discovery is still intentionally stubbed. If no mapped registers are present,
-initialization remains safe and leaves `HardwareReady = FALSE`.
+`L2MiniportInitialize` now performs real resource discovery and MMIO mapping
+before calling `L2HwInitialize`. If MMIO cannot be discovered/mapped,
+initialization fails cleanly.
 
 Minimal register constants were imported from Linux reference material for only
 reset/control and station-address reads:
@@ -109,13 +109,39 @@ reset/control and station-address reads:
 
 ### Still stubbed in phase 2
 
-- PCI resource discovery and BAR mapping
 - PHY initialization
 - interrupts
 - TX/RX datapath
 
 ### Next bring-up step
 
-Implement conservative PCI resource discovery and MMIO mapping (BAR selection,
-length tracking, and cleanup), then drive `L2HwInitialize` against real mapped
-registers.
+With MMIO discovery/mapping in place, the next step is conservative register
+validation and staged enablement of non-datapath hardware blocks (still without
+PHY/interrupts/TX/RX implementation).
+
+
+## Phase-2 PCI resource discovery and MMIO mapping
+
+`MiniportInitialize` now follows an e100bex-style resource pattern by querying
+assigned adapter resources and selecting a `CmResourceTypeMemory` descriptor as
+the MMIO BAR candidate.
+
+New NDIS resource APIs used:
+
+- `NdisMQueryAdapterResources`
+- `NdisMMapIoSpace`
+- `NdisMUnmapIoSpace`
+
+BAR/MMIO selection policy is intentionally conservative:
+
+- iterate assigned resource descriptors in order
+- select the first memory resource (`CmResourceTypeMemory`) with non-zero length
+- map that physical range and store:
+  - `Adapter->Registers`
+  - `Adapter->MemoryLength`
+  - `Adapter->IoBase` (low 32 bits of the selected physical start)
+
+Assumption for this phase: the first memory resource assigned to the miniport is
+the primary device MMIO BAR used for basic register access. If no such memory
+resource is present, initialization now fails cleanly rather than pretending
+success.

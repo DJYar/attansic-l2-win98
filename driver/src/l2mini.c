@@ -43,8 +43,6 @@ L2MiniportInitialize(
     UINT i;
     PL2_ADAPTER adapter;
 
-    UNREFERENCED_PARAMETER(WrapperConfigurationContext);
-
     *OpenErrorStatus = NDIS_STATUS_SUCCESS;
 
     for (i = 0; i < MediumArraySize; ++i) {
@@ -90,7 +88,13 @@ L2MiniportInitialize(
         NdisInterfacePci
         );
 
+    if (L2MapHardwareResources(adapter, WrapperConfigurationContext) != NDIS_STATUS_SUCCESS) {
+        NdisFreeMemory(adapter, sizeof(*adapter), 0);
+        return NDIS_STATUS_FAILURE;
+    }
+
     if (L2HwInitialize(adapter) != NDIS_STATUS_SUCCESS) {
+        L2HwShutdown(adapter);
         NdisFreeMemory(adapter, sizeof(*adapter), 0);
         return NDIS_STATUS_FAILURE;
     }
@@ -106,6 +110,7 @@ L2MiniportHalt(
     PL2_ADAPTER adapter = (PL2_ADAPTER)MiniportAdapterContext;
 
     if (adapter != NULL) {
+        L2HwShutdown(adapter);
         NdisFreeMemory(adapter, sizeof(*adapter), 0);
     }
 }

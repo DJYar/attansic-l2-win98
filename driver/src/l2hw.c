@@ -1,6 +1,8 @@
 #include "l2ndis.h"
 #include "l2hw.h"
 
+#define L2_RESOURCE_DESC_CAPACITY 16
+
 ULONG
 L2ReadReg32(
     IN PL2_ADAPTER Adapter,
@@ -32,12 +34,108 @@ L2WriteReg32(
 }
 
 NDIS_STATUS
+L2MapHardwareResources(
+    IN PL2_ADAPTER Adapter,
+    IN NDIS_HANDLE WrapperConfigurationContext
+    )
+{
+    UCHAR resourceBuffer[
+        sizeof(NDIS_RESOURCE_LIST) +
+        (L2_RESOURCE_DESC_CAPACITY * sizeof(CM_PARTIAL_RESOURCE_DESCRIPTOR))
+    ];
+    PNDIS_RESOURCE_LIST resourceList = (PNDIS_RESOURCE_LIST)resourceBuffer;
+    PCM_PARTIAL_RESOURCE_DESCRIPTOR partial;
+    PHYSICAL_ADDRESS selectedAddress;
+    UINT bufferSize = sizeof(resourceBuffer);
+    NDIS_STATUS status;
+    UINT i;
+    ULONG selectedLength = 0;
+
+    if ((Adapter == NULL) || (WrapperConfigurationContext == NULL)) {
+        return NDIS_STATUS_INVALID_DATA;
+    }
+
+    NdisZeroMemory(&selectedAddress, sizeof(selectedAddress));
+
+    NdisMQueryAdapterResources(
+        &status,
+        WrapperConfigurationContext,
+        resourceList,
+        &bufferSize
+        );
+
+    if (status != NDIS_STATUS_SUCCESS) {
+        return status;
+    }
+
+    for (i = 0, partial = resourceList->PartialDescriptors;
+         i < resourceList->Count;
+         ++i, ++partial) {
+
+        if ((partial->Type == CmResourceTypeMemory) &&
+            (partial->u.Memory.Length > 0)) {
+
+            selectedAddress = partial->u.Memory.Start;
+            selectedLength = partial->u.Memory.Length;
+            break;
+        }
+    }
+
+    if (selectedLength == 0) {
+        return NDIS_STATUS_RESOURCE_CONFLICT;
+    }
+
+    Adapter->IoBase = selectedAddress.LowPart;
+    Adapter->MemoryLength = selectedLength;
+
+    status = NdisMMapIoSpace(
+        (PVOID *)&Adapter->Registers,
+        Adapter->AdapterHandle,
+        selectedAddress,
+        selectedLength
+        );
+
+    if ((status != NDIS_STATUS_SUCCESS) || (Adapter->Registers == NULL)) {
+        Adapter->Registers = NULL;
+        Adapter->MemoryLength = 0;
+        Adapter->IoBase = 0;
+        return status;
+    }
+
+    return NDIS_STATUS_SUCCESS;
+}
+
+VOID
+L2HwShutdown(
+    IN PL2_ADAPTER Adapter
+    )
+{
+    if (Adapter == NULL) {
+        return;
+    }
+
+    if (Adapter->Registers != NULL) {
+        NdisMUnmapIoSpace(
+            Adapter->AdapterHandle,
+            Adapter->Registers,
+            Adapter->MemoryLength
+            );
+
+        Adapter->Registers = NULL;
+    }
+
+    Adapter->MemoryLength = 0;
+    Adapter->IoBase = 0;
+    Adapter->HardwareReady = FALSE;
+}
+
+NDIS_STATUS
 L2HwReset(
     IN PL2_ADAPTER Adapter
     )
 {
     if ((Adapter == NULL) || (Adapter->Registers == NULL)) {
-        return NDIS_STATUS_SUCCESS;
+        return NDIS_STATUS_ADAPTER_NOT_FOUND;
     }
 
     L2WriteReg32(Adapter, L2_REG_MASTER_CTRL, L2_MASTER_CTRL_SOFT_RST);
@@ -63,8 +161,7 @@ L2ReadPermanentMac(
     }
 
     if (Adapter->Registers == NULL) {
-        NdisMoveMemory(Address, Adapter->PermanentAddress, L2_ETH_ADDR_LENGTH);
-        return NDIS_STATUS_SUCCESS;
+        return NDIS_STATUS_ADAPTER_NOT_FOUND;
     }
 
     macLow = L2ReadReg32(Adapter, L2_REG_MAC_STA_ADDR);
@@ -86,19 +183,19 @@ L2HwInitialize(
     )
 {
     NDIS_STATUS status;
+    ULONG sanityReg;
 
     if (Adapter == NULL) {
         return NDIS_STATUS_INVALID_DATA;
     }
 
-    /*
-     * TODO(phase-3): discover PCI resources and map MMIO BAR before touching
-     * device registers. Until then, keep this safe and non-fatal.
-     */
     if (Adapter->Registers == NULL) {
         Adapter->HardwareReady = FALSE;
-        return NDIS_STATUS_SUCCESS;
+        return NDIS_STATUS_ADAPTER_NOT_FOUND;
     }
+
+    sanityReg = L2ReadReg32(Adapter, L2_REG_MASTER_CTRL);
+    UNREFERENCED_PARAMETER(sanityReg);
 
     status = L2HwReset(Adapter);
     if (status != NDIS_STATUS_SUCCESS) {

@@ -1,4 +1,5 @@
 #include "l2ndis.h"
+#include "l2hw.h"
 
 #define L2_ETH_HEADER_SIZE 14
 #define L2_DRIVER_VERSION 0x0500
@@ -76,6 +77,10 @@ L2MiniportInitialize(
 
     adapter->LinkSpeed = 100000;
     adapter->MaximumFrameSize = 1500;
+    adapter->Registers = NULL;
+    adapter->IoBase = 0;
+    adapter->MemoryLength = 0;
+    adapter->HardwareReady = FALSE;
 
     NdisMSetAttributesEx(
         MiniportAdapterHandle,
@@ -84,6 +89,11 @@ L2MiniportInitialize(
         0,
         NdisInterfacePci
         );
+
+    if (L2HwInitialize(adapter) != NDIS_STATUS_SUCCESS) {
+        NdisFreeMemory(adapter, sizeof(*adapter), 0);
+        return NDIS_STATUS_FAILURE;
+    }
 
     return NDIS_STATUS_SUCCESS;
 }
@@ -114,7 +124,7 @@ L2MiniportQueryInformation(
     NDIS_STATUS status = NDIS_STATUS_SUCCESS;
     PVOID moveSource = NULL;
     ULONG moveBytes = 0;
-    NDIS_HARDWARE_STATUS hardwareStatus = NdisHardwareStatusReady;
+    NDIS_HARDWARE_STATUS hardwareStatus = NdisHardwareStatusNotReady;
     NDIS_MEDIUM medium = NdisMedium802_3;
     NDIS_MEDIA_STATE mediaState = NdisMediaStateDisconnected;
     ULONG genericUlong = 0;
@@ -134,6 +144,9 @@ L2MiniportQueryInformation(
         break;
 
     case OID_GEN_HARDWARE_STATUS:
+        if (adapter->HardwareReady) {
+            hardwareStatus = NdisHardwareStatusReady;
+        }
         moveSource = &hardwareStatus;
         moveBytes = sizeof(hardwareStatus);
         break;

@@ -10,4 +10,5 @@ INCLUDES=..\include
 
 SOURCES= \
     l2main.c \
-    l2mini.c
+    l2mini.c \
+    l2hw.c

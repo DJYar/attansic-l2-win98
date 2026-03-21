@@ -85,3 +85,37 @@ Following the `e100bex` pattern, the build now explicitly defines:
 
 `BINARY_COMPATIBLE` is still kept as before. These defines ensure `ndis.h`
 exposes NDIS 5 miniport declarations rather than a more generic NDIS surface.
+
+
+## Phase-2 hardware bring-up scaffolding
+
+Added `driver/include/l2hw.h` and `driver/src/l2hw.c` with conservative helpers:
+
+- `L2ReadReg32`
+- `L2WriteReg32`
+- `L2HwReset`
+- `L2ReadPermanentMac`
+- `L2HwInitialize`
+
+`L2MiniportInitialize` now calls `L2HwInitialize`, but MMIO mapping/resource
+discovery is still intentionally stubbed. If no mapped registers are present,
+initialization remains safe and leaves `HardwareReady = FALSE`.
+
+Minimal register constants were imported from Linux reference material for only
+reset/control and station-address reads:
+
+- master control register (`0x1400`) and soft reset bit (`0x1`)
+- MAC station-address base register (`0x1488`, plus `+4` for upper bytes)
+
+### Still stubbed in phase 2
+
+- PCI resource discovery and BAR mapping
+- PHY initialization
+- interrupts
+- TX/RX datapath
+
+### Next bring-up step
+
+Implement conservative PCI resource discovery and MMIO mapping (BAR selection,
+length tracking, and cleanup), then drive `L2HwInitialize` against real mapped
+registers.

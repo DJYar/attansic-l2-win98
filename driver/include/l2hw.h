@@ -1,0 +1,44 @@
+#ifndef _L2HW_H_
+#define _L2HW_H_
+
+#include <ndis.h>
+
+typedef struct _L2_ADAPTER L2_ADAPTER;
+typedef struct _L2_ADAPTER *PL2_ADAPTER;
+
+/* Minimal register offsets/constants imported for phase-2 scaffolding. */
+#define L2_REG_MASTER_CTRL      0x1400
+#define L2_MASTER_CTRL_SOFT_RST 0x00000001
+#define L2_REG_MAC_STA_ADDR     0x1488
+
+ULONG
+L2ReadReg32(
+    IN PL2_ADAPTER Adapter,
+    IN ULONG RegisterOffset
+    );
+
+VOID
+L2WriteReg32(
+    IN PL2_ADAPTER Adapter,
+    IN ULONG RegisterOffset,
+    IN ULONG Value
+    );
+
+NDIS_STATUS
+L2HwReset(
+    IN PL2_ADAPTER Adapter
+    );
+
+NDIS_STATUS
+L2ReadPermanentMac(
+    IN PL2_ADAPTER Adapter,
+    OUT PUCHAR Address,
+    IN ULONG AddressLength
+    );
+
+NDIS_STATUS
+L2HwInitialize(
+    IN PL2_ADAPTER Adapter
+    );
+
+#endif /* _L2HW_H_ */

@@ -8,6 +8,10 @@
 typedef struct _L2_ADAPTER {
     NDIS_HANDLE AdapterHandle;
     BOOLEAN MediaConnected;
+    PUCHAR Registers;
+    ULONG IoBase;
+    ULONG MemoryLength;
+    BOOLEAN HardwareReady;
     UCHAR PermanentAddress[L2_ETH_ADDR_LENGTH];
     UCHAR CurrentAddress[L2_ETH_ADDR_LENGTH];
     ULONG LinkSpeed;

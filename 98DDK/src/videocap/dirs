@@ -1,0 +1,11 @@
+DIRS= \
+     atishare \
+     atitunep \
+     atitvsnd \
+     atixbar \
+     bt829 \
+     bt848 \
+     sonydcam \
+     testcap \
+     usbcamd \
+     usbintel

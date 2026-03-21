@@ -1,0 +1,5 @@
+DIRS= \
+     fsd \
+     port \
+     wnaspi32 \
+     vsd

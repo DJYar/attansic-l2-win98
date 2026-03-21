@@ -1,0 +1,8 @@
+DIRS= \
+     ati \
+     cirrus \
+     s3 \
+     s3v \
+     tseng \
+     video7 \
+     xga

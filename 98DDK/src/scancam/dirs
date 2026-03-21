@@ -1,0 +1,6 @@
+DIRS= \
+     app \
+     sampcpl \
+     scsiscan \
+     setupext \
+     dll

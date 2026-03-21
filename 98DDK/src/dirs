@@ -1,0 +1,22 @@
+DIRS= \
+     pcimp \
+     hid \
+     ime \
+     scancam \
+     usb \
+     videocap \
+     general \
+     base \
+     block \
+     comm \
+     cplx \
+     input \
+     keyb \
+     mouse \
+     net \
+     pc98 \
+     plugplay \
+     printer \
+     smartcrd \
+     bpc \
+     display

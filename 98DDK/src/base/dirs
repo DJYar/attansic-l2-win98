@@ -1,0 +1,13 @@
+DIRS= \
+     asyncw32 \
+     cvxd32 \
+     eatpages \
+     generic \
+     vdialog \
+     vdmad \
+     vfintd \
+     vmirqd \
+     vpostd \
+     vwfd \
+     vxdres \
+     vxdwraps

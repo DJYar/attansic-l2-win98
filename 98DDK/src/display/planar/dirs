@@ -1,0 +1,4 @@
+DIRS= \
+     rc_high \
+     svga \
+     vga

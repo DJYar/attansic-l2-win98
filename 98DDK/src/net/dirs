@@ -1,0 +1,6 @@
+DIRS= \
+     ipnew \
+     myndi \
+     npcode \
+     smmhook \
+     ndis3

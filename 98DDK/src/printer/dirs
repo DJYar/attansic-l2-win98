@@ -1,0 +1,21 @@
+DIRS= \
+     bitmap \
+     canon10v \
+     cbitmap \
+     epagemsj \
+     epson24 \
+     epson24c \
+     epson9 \
+     escpage \
+     generic \
+     hp4pjms \
+     hpdskjet \
+     hppcl \
+     hppcl5ms \
+     ks \
+     paintjet \
+     pcl5sc \
+     pcpr201 \
+     star24sc \
+     tty \
+     spooler

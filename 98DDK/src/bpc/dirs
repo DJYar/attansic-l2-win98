@@ -1,0 +1,7 @@
+DIRS= \
+     ccbeacon \
+     ccdump \
+     generic \
+     ipstat \
+     scan \
+     scope

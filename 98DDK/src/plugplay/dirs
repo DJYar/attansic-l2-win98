@@ -1,0 +1,7 @@
+DIRS= \
+     custom \
+     examenum \
+     generic \
+     mtd \
+     socket \
+     ss

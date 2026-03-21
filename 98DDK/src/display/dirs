@@ -1,0 +1,4 @@
+DIRS= \
+     mini \
+     planar \
+     vdd

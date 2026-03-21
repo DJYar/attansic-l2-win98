@@ -1,0 +1,4 @@
+DIRS= \
+     ser8251 \
+     vcd \
+     vpd

@@ -10,7 +10,7 @@ This header provides NDIS miniport types, OID constants, and API declarations.
 
 ## Required build macros
 
-The `driver/sources` file defines:
+The `driver/src/sources` file defines:
 
 - `NDIS50`
 - `BINARY_COMPATIBLE`
@@ -70,3 +70,18 @@ value is `100000`, which corresponds to 10,000,000 bps (10 Mbps).
 A named constant (`g_L2PlaceholderMac`) is used for the phase-1 locally
 administered placeholder MAC address (`02-00-00-00-00-01`) to keep intent
 explicit until hardware MAC retrieval is implemented.
+
+
+## Miniport build defines required for `ndis.h`
+
+Build errors around `NDIS_MINIPORT_CHARACTERISTICS`, `NdisMInitializeWrapper`,
+`NdisMRegisterMiniport`, and `NdisMSetAttributesEx` were caused by missing
+miniport-specific preprocessor defines in the build `sources` file.
+
+Following the `e100bex` pattern, the build now explicitly defines:
+
+- `NDIS_MINIPORT_DRIVER=1`
+- `NDIS50_MINIPORT=1`
+
+`BINARY_COMPATIBLE` is still kept as before. These defines ensure `ndis.h`
+exposes NDIS 5 miniport declarations rather than a more generic NDIS surface.

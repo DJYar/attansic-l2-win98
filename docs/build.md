@@ -17,7 +17,7 @@ NTDDK\bin\setenv.bat NTDDK checked W2K
 Change to the driver directory and run:
 
 ```bat
-cd \path\to\repo\driver
+cd \path\to\repo\driver\src
 build
 ```
 

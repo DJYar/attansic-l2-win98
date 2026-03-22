@@ -25,6 +25,9 @@ typedef struct _L2_ADAPTER {
     ULONG CurrentPacketFilter;
     ULONG CurrentLookahead;
     ULONG MaximumLookahead;
+    ULONG SanityRegisterOffset;
+    ULONG SanityRegisterValue;
+    BOOLEAN SanityReadSucceeded;
 } L2_ADAPTER, *PL2_ADAPTER;
 
 extern NDIS_HANDLE g_NdisWrapperHandle;

@@ -96,6 +96,9 @@ L2MiniportInitialize(
     adapter->CurrentPacketFilter = 0;
     adapter->MaximumLookahead = adapter->MaximumFrameSize;
     adapter->CurrentLookahead = adapter->MaximumLookahead;
+    adapter->SanityRegisterOffset = 0;
+    adapter->SanityRegisterValue = 0;
+    adapter->SanityReadSucceeded = FALSE;
 
     NdisMSetAttributesEx(
         MiniportAdapterHandle,
@@ -116,6 +119,9 @@ L2MiniportInitialize(
         NdisFreeMemory(adapter, sizeof(*adapter), 0);
         return NDIS_STATUS_FAILURE;
     }
+
+    /* Exactly one read-only sanity access after successful MMIO mapping. */
+    L2PerformMmioSanityRead(adapter);
 #endif
 #else
     UNREFERENCED_PARAMETER(WrapperConfigurationContext);

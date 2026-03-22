@@ -224,12 +224,29 @@ Recorded fields now include:
 - `MmioMappingSucceeded`
 - `MmioPhysicalBaseLow` / `MmioPhysicalBaseHigh`
 
-This phase still keeps hardware inactive:
+This phase still keeps hardware inactive except for a single controlled
+read-only sanity probe:
 
-- no register reads
+- exactly one read-only register access (`REG_IDLE_STATUS`)
 - no register writes
 - no reset
 - no PHY
 - no interrupts
 
 `HardwareReady` remains `FALSE` by design.
+
+
+## First read-only MMIO sanity check
+
+After successful MMIO mapping, the driver now performs exactly one read-only
+sanity access from `REG_IDLE_STATUS` (`0x1410`) and records:
+
+- `SanityRegisterOffset`
+- `SanityRegisterValue`
+- `SanityReadSucceeded`
+
+Why this register: Linux `atl2` labels it as a block idle-status register,
+which is a conservative status-style candidate and avoids reset/control,
+PHY/MDIO, and interrupt-control registers for the first read-only probe.
+
+All register writes remain disabled.

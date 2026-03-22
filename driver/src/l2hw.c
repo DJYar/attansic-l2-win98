@@ -15,6 +15,10 @@ L2IsSafeReadRegister(
      * Ultra-safe bring-up mode: no MMIO validation reads are performed.
      * Return FALSE for all offsets until read safety is proven per-register.
      */
+    if (RegisterOffset == L2_REG_IDLE_STATUS) {
+        return TRUE;
+    }
+
     return FALSE;
 }
 
@@ -249,6 +253,35 @@ L2MapHardwareResources(
 }
 
 VOID
+L2PerformMmioSanityRead(
+    IN PL2_ADAPTER Adapter
+    )
+{
+    ULONG value = 0;
+
+    if (Adapter == NULL) {
+        return;
+    }
+
+    Adapter->SanityRegisterOffset = L2_REG_IDLE_STATUS;
+    Adapter->SanityRegisterValue = 0;
+    Adapter->SanityReadSucceeded = FALSE;
+
+    if ((Adapter->Registers == NULL) ||
+        !L2IsSafeReadRegister(Adapter->SanityRegisterOffset)) {
+        return;
+    }
+
+    NdisReadRegisterUlong(
+        (PULONG)(Adapter->Registers + Adapter->SanityRegisterOffset),
+        &value
+        );
+
+    Adapter->SanityRegisterValue = value;
+    Adapter->SanityReadSucceeded = TRUE;
+}
+
+VOID
 L2HwShutdown(
     IN PL2_ADAPTER Adapter
     )
@@ -271,6 +304,9 @@ L2HwShutdown(
     Adapter->MmioPhysicalBaseLow = 0;
     Adapter->MmioPhysicalBaseHigh = 0;
     Adapter->MmioMappingSucceeded = FALSE;
+    Adapter->SanityRegisterOffset = 0;
+    Adapter->SanityRegisterValue = 0;
+    Adapter->SanityReadSucceeded = FALSE;
     Adapter->HardwareReady = FALSE;
 }
 

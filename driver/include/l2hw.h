@@ -43,6 +43,11 @@ L2MapHardwareResources(
     );
 
 VOID
+L2PerformMmioSanityRead(
+    IN PL2_ADAPTER Adapter
+    );
+
+VOID
 L2HwShutdown(
     IN PL2_ADAPTER Adapter
     );

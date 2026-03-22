@@ -19,9 +19,13 @@ DriverEntry(
     NdisZeroMemory(&miniChars, sizeof(miniChars));
     miniChars.MajorNdisVersion = 5;
     miniChars.MinorNdisVersion = 0;
+    miniChars.CheckForHangHandler = L2MiniportCheckForHang;
     miniChars.InitializeHandler = L2MiniportInitialize;
     miniChars.HaltHandler = L2MiniportHalt;
     miniChars.QueryInformationHandler = L2MiniportQueryInformation;
+    miniChars.ResetHandler = L2MiniportReset;
+    miniChars.SendHandler = L2MiniportSend;
+    miniChars.ReturnPacketHandler = L2MiniportReturnPacket;
     miniChars.SetInformationHandler = L2MiniportSetInformation;
 
     status = NdisMRegisterMiniport(g_NdisWrapperHandle, &miniChars, sizeof(miniChars));

@@ -97,9 +97,9 @@ Added `driver/include/l2hw.h` and `driver/src/l2hw.c` with conservative helpers:
 - `L2ReadPermanentMac`
 - `L2HwInitialize`
 
-`L2MiniportInitialize` now performs real resource discovery and MMIO mapping
-before calling `L2HwInitialize`. If MMIO cannot be discovered/mapped,
-initialization fails cleanly.
+`L2MapHardwareResources` and `L2HwInitialize` remain in-tree for later phases,
+but the current `L2MiniportInitialize` path intentionally does not call them to
+keep startup hardware-free and reduce Win98 hang risk.
 
 Minimal register constants were imported from Linux reference material for only
 reset/control and station-address reads:
@@ -120,41 +120,12 @@ introduction of tightly scoped read-only register validation before any MMIO
 writes are re-enabled.
 
 
-## Phase-2 PCI resource discovery and MMIO mapping
-
-`MiniportInitialize` now follows an e100bex-style resource pattern by querying
-assigned adapter resources and selecting a `CmResourceTypeMemory` descriptor as
-the MMIO BAR candidate.
-
-New NDIS resource APIs used:
-
-- `NdisMQueryAdapterResources`
-- `NdisMMapIoSpace`
-- `NdisMUnmapIoSpace`
-
-BAR/MMIO selection policy is intentionally conservative:
-
-- iterate assigned resource descriptors in order
-- select the first memory resource (`CmResourceTypeMemory`) with non-zero length
-- map that physical range and store:
-  - `Adapter->Registers`
-  - `Adapter->MemoryLength`
-  - `Adapter->MmioPhysicalBaseLow` (low 32 bits of the selected physical start)
-
-Assumption for this phase: the first memory resource assigned to the miniport is
-the primary device MMIO BAR used for basic register access. If no such memory
-resource is present, initialization now fails cleanly rather than pretending
-success.
-
-
 ## Ultra-safe bring-up mode (Win98/ME hang mitigation)
 
 Due to observed system hangs during `MiniportInitialize`, the current phase is
-restricted to **MMIO mapping only**. The driver now does:
-
-- PCI resource discovery (`NdisMQueryAdapterResources`)
-- MMIO BAR selection and mapping (`NdisMMapIoSpace`)
-- resource diagnostics capture in adapter fields
+restricted to **hardware-free successful initialization**. The driver now avoids
+PCI resource discovery/MMIO mapping during `MiniportInitialize` and keeps only
+software-state setup.
 
 And explicitly does **not** do:
 
@@ -164,16 +135,27 @@ And explicitly does **not** do:
 - interrupt enablement
 - hardware-state polling loops
 
-`L2HwInitialize` now returns success only when MMIO mapping succeeds, but keeps
-`HardwareReady = FALSE` so OID hardware status remains not-ready until a later,
-validated bring-up phase.
+`HardwareReady` remains `FALSE` in this revision, so OID hardware status stays
+`NdisHardwareStatusNotReady` until a later validated bring-up phase.
 
-Additional diagnostics retained in adapter context:
+MMIO/resource diagnostic fields remain in adapter context for future phases, but
+are not populated by the hardware-free initialization path in this revision.
 
-- `MmioPhysicalBaseLow` / `MmioPhysicalBaseHigh`
-- `MemoryLength`
-- `MmioMappingSucceeded`
-- `ResourceCount`
-- `SelectedResourceIndex`
-- `SelectedResourceType`
-- `SelectedResourceLength`
+
+## Miniport handler contract alignment (e100bex-style)
+
+To better match the base NDIS 5 miniport contract used by `e100bex`, the
+registration table now includes conservative diagnostic stubs for handlers that
+are commonly present when initialization succeeds:
+
+- `CheckForHangHandler`
+- `ResetHandler`
+- `SendHandler` (serialized miniport style)
+- `ReturnPacketHandler`
+
+Current mode remains **serialized** (`NdisMSetAttributesEx` flags = `0`, no
+`NDIS_ATTRIBUTE_DESERIALIZE`), which is consistent with using `SendHandler`
+instead of `SendPacketsHandler` for this minimal bring-up phase.
+
+All newly added handlers are hardware-free stubs and do not touch MMIO,
+interrupts, PHY, or datapath setup.

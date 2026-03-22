@@ -47,6 +47,31 @@ L2MiniportInitialize(
     IN NDIS_HANDLE WrapperConfigurationContext
     );
 
+
+BOOLEAN
+L2MiniportCheckForHang(
+    IN NDIS_HANDLE MiniportAdapterContext
+    );
+
+NDIS_STATUS
+L2MiniportReset(
+    OUT PBOOLEAN AddressingReset,
+    IN NDIS_HANDLE MiniportAdapterContext
+    );
+
+NDIS_STATUS
+L2MiniportSend(
+    IN NDIS_HANDLE MiniportAdapterContext,
+    IN PNDIS_PACKET Packet,
+    IN UINT Flags
+    );
+
+VOID
+L2MiniportReturnPacket(
+    IN NDIS_HANDLE MiniportAdapterContext,
+    IN PNDIS_PACKET Packet
+    );
+
 NDIS_STATUS
 L2MiniportQueryInformation(
     IN NDIS_HANDLE MiniportAdapterContext,

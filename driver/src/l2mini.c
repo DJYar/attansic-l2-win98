@@ -1,5 +1,4 @@
 #include "l2ndis.h"
-#include "l2hw.h"
 
 #define L2_ETH_HEADER_SIZE 14
 #define L2_DRIVER_VERSION 0x0500
@@ -94,18 +93,60 @@ L2MiniportInitialize(
         NdisInterfacePci
         );
 
-    if (L2MapHardwareResources(adapter, WrapperConfigurationContext) != NDIS_STATUS_SUCCESS) {
-        NdisFreeMemory(adapter, sizeof(*adapter), 0);
-        return NDIS_STATUS_FAILURE;
-    }
-
-    if (L2HwInitialize(adapter) != NDIS_STATUS_SUCCESS) {
-        L2HwShutdown(adapter);
-        NdisFreeMemory(adapter, sizeof(*adapter), 0);
-        return NDIS_STATUS_FAILURE;
-    }
+    UNREFERENCED_PARAMETER(WrapperConfigurationContext);
 
     return NDIS_STATUS_SUCCESS;
+}
+
+BOOLEAN
+L2MiniportCheckForHang(
+    IN NDIS_HANDLE MiniportAdapterContext
+    )
+{
+    UNREFERENCED_PARAMETER(MiniportAdapterContext);
+
+    /* Diagnostic bring-up stub: no hardware monitoring in this phase. */
+    return FALSE;
+}
+
+NDIS_STATUS
+L2MiniportReset(
+    OUT PBOOLEAN AddressingReset,
+    IN NDIS_HANDLE MiniportAdapterContext
+    )
+{
+    UNREFERENCED_PARAMETER(MiniportAdapterContext);
+
+    /* Diagnostic bring-up stub: no hardware reset is performed. */
+    *AddressingReset = FALSE;
+    return NDIS_STATUS_SUCCESS;
+}
+
+NDIS_STATUS
+L2MiniportSend(
+    IN NDIS_HANDLE MiniportAdapterContext,
+    IN PNDIS_PACKET Packet,
+    IN UINT Flags
+    )
+{
+    UNREFERENCED_PARAMETER(MiniportAdapterContext);
+    UNREFERENCED_PARAMETER(Packet);
+    UNREFERENCED_PARAMETER(Flags);
+
+    /* Diagnostic bring-up stub: TX path not implemented yet. */
+    return NDIS_STATUS_NOT_ACCEPTED;
+}
+
+VOID
+L2MiniportReturnPacket(
+    IN NDIS_HANDLE MiniportAdapterContext,
+    IN PNDIS_PACKET Packet
+    )
+{
+    UNREFERENCED_PARAMETER(MiniportAdapterContext);
+    UNREFERENCED_PARAMETER(Packet);
+
+    /* Diagnostic bring-up stub: receive indication path not implemented. */
 }
 
 VOID
@@ -116,7 +157,6 @@ L2MiniportHalt(
     PL2_ADAPTER adapter = (PL2_ADAPTER)MiniportAdapterContext;
 
     if (adapter != NULL) {
-        L2HwShutdown(adapter);
         NdisFreeMemory(adapter, sizeof(*adapter), 0);
     }
 }

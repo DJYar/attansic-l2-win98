@@ -96,8 +96,13 @@ L2MiniportInitialize(
     adapter->CurrentPacketFilter = 0;
     adapter->MaximumLookahead = adapter->MaximumFrameSize;
     adapter->CurrentLookahead = adapter->MaximumLookahead;
-    adapter->SanityRegisterOffset = 0;
-    adapter->SanityRegisterValue = 0;
+    adapter->SanityReadOffsets[0] = 0;
+    adapter->SanityReadOffsets[1] = 0;
+    adapter->SanityReadOffsets[2] = 0;
+    adapter->SanityReadValues[0] = 0;
+    adapter->SanityReadValues[1] = 0;
+    adapter->SanityReadValues[2] = 0;
+    adapter->SanityReadSuccessCount = 0;
     adapter->SanityReadSucceeded = FALSE;
 
     NdisMSetAttributesEx(

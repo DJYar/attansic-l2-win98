@@ -15,7 +15,9 @@ L2IsSafeReadRegister(
      * Ultra-safe bring-up mode: no MMIO validation reads are performed.
      * Return FALSE for all offsets until read safety is proven per-register.
      */
-    if (RegisterOffset == L2_REG_IDLE_STATUS) {
+    if ((RegisterOffset == L2_REG_IDLE_STATUS) ||
+        (RegisterOffset == L2_REG_STS_RX_PAUSE) ||
+        (RegisterOffset == L2_REG_STS_RXD_OV)) {
         return TRUE;
     }
 
@@ -257,28 +259,58 @@ L2PerformMmioSanityRead(
     IN PL2_ADAPTER Adapter
     )
 {
-    ULONG value = 0;
+    ULONG offsets[3] = {
+        L2_REG_IDLE_STATUS,
+        L2_REG_STS_RX_PAUSE,
+        L2_REG_STS_RXD_OV
+    };
+    ULONG values[3] = {0, 0, 0};
+    ULONG readCount = 0;
+    ULONG allOnesCount = 0;
+    UINT i;
 
     if (Adapter == NULL) {
         return;
     }
 
-    Adapter->SanityRegisterOffset = L2_REG_IDLE_STATUS;
-    Adapter->SanityRegisterValue = 0;
+    Adapter->SanityReadOffsets[0] = offsets[0];
+    Adapter->SanityReadOffsets[1] = offsets[1];
+    Adapter->SanityReadOffsets[2] = offsets[2];
+    Adapter->SanityReadValues[0] = 0;
+    Adapter->SanityReadValues[1] = 0;
+    Adapter->SanityReadValues[2] = 0;
+    Adapter->SanityReadSuccessCount = 0;
     Adapter->SanityReadSucceeded = FALSE;
 
-    if ((Adapter->Registers == NULL) ||
-        !L2IsSafeReadRegister(Adapter->SanityRegisterOffset)) {
+    if (Adapter->Registers == NULL) {
         return;
     }
 
-    NdisReadRegisterUlong(
-        (PULONG)(Adapter->Registers + Adapter->SanityRegisterOffset),
-        &value
-        );
+    for (i = 0; i < 3; ++i) {
+        if (!L2IsSafeReadRegister(offsets[i])) {
+            continue;
+        }
 
-    Adapter->SanityRegisterValue = value;
-    Adapter->SanityReadSucceeded = TRUE;
+        NdisReadRegisterUlong((PULONG)(Adapter->Registers + offsets[i]), &values[i]);
+        ++readCount;
+
+        if (values[i] == 0xFFFFFFFF) {
+            ++allOnesCount;
+        }
+    }
+
+    Adapter->SanityReadValues[0] = values[0];
+    Adapter->SanityReadValues[1] = values[1];
+    Adapter->SanityReadValues[2] = values[2];
+
+    if ((readCount > 0) && (allOnesCount == readCount)) {
+        Adapter->SanityReadSuccessCount = 0;
+        Adapter->SanityReadSucceeded = FALSE;
+        return;
+    }
+
+    Adapter->SanityReadSuccessCount = readCount;
+    Adapter->SanityReadSucceeded = (readCount > 0) ? TRUE : FALSE;
 }
 
 VOID
@@ -304,8 +336,13 @@ L2HwShutdown(
     Adapter->MmioPhysicalBaseLow = 0;
     Adapter->MmioPhysicalBaseHigh = 0;
     Adapter->MmioMappingSucceeded = FALSE;
-    Adapter->SanityRegisterOffset = 0;
-    Adapter->SanityRegisterValue = 0;
+    Adapter->SanityReadOffsets[0] = 0;
+    Adapter->SanityReadOffsets[1] = 0;
+    Adapter->SanityReadOffsets[2] = 0;
+    Adapter->SanityReadValues[0] = 0;
+    Adapter->SanityReadValues[1] = 0;
+    Adapter->SanityReadValues[2] = 0;
+    Adapter->SanityReadSuccessCount = 0;
     Adapter->SanityReadSucceeded = FALSE;
     Adapter->HardwareReady = FALSE;
 }

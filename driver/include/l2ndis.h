@@ -25,8 +25,9 @@ typedef struct _L2_ADAPTER {
     ULONG CurrentPacketFilter;
     ULONG CurrentLookahead;
     ULONG MaximumLookahead;
-    ULONG SanityRegisterOffset;
-    ULONG SanityRegisterValue;
+    ULONG SanityReadOffsets[3];
+    ULONG SanityReadValues[3];
+    ULONG SanityReadSuccessCount;
     BOOLEAN SanityReadSucceeded;
 } L2_ADAPTER, *PL2_ADAPTER;
 

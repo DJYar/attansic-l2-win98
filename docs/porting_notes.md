@@ -238,15 +238,24 @@ read-only sanity probe:
 
 ## First read-only MMIO sanity check
 
-After successful MMIO mapping, the driver now performs exactly one read-only
-sanity access from `REG_IDLE_STATUS` (`0x1410`) and records:
+After successful MMIO mapping, the driver now performs a small fixed set of
+read-only sanity accesses and records:
 
-- `SanityRegisterOffset`
-- `SanityRegisterValue`
+- `SanityReadOffsets[3]`
+- `SanityReadValues[3]`
+- `SanityReadSuccessCount`
 - `SanityReadSucceeded`
 
-Why this register: Linux `atl2` labels it as a block idle-status register,
-which is a conservative status-style candidate and avoids reset/control,
-PHY/MDIO, and interrupt-control registers for the first read-only probe.
+Chosen conservative read candidates from Linux `atl2` register groups:
+
+- `REG_IDLE_STATUS` (`0x1410`) — block idle/status register
+- `REG_STS_RX_PAUSE` (`0x1700`) — RX statistics counter
+- `REG_STS_RXD_OV` (`0x1704`) — RX descriptor overflow statistics
+
+These are status/counter style reads and avoid reset/control, PHY/MDIO,
+and interrupt acknowledge paths.
+
+Validation rule: if all performed sanity reads return `0xFFFFFFFF`, the
+sanity check is treated as failed (`SanityReadSucceeded = FALSE`).
 
 All register writes remain disabled.

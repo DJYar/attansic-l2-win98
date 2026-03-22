@@ -77,6 +77,12 @@ L2MiniportInitialize(
     adapter->MaximumFrameSize = 1500;
     adapter->Registers = NULL;
     adapter->MmioPhysicalBaseLow = 0;
+    adapter->MmioPhysicalBaseHigh = 0;
+    adapter->MmioMappingSucceeded = FALSE;
+    adapter->ResourceCount = 0;
+    adapter->SelectedResourceIndex = 0xFFFFFFFF;
+    adapter->SelectedResourceType = 0;
+    adapter->SelectedResourceLength = 0;
     adapter->MemoryLength = 0;
     adapter->HardwareReady = FALSE;
 

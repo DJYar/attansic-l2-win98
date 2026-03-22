@@ -115,9 +115,9 @@ reset/control and station-address reads:
 
 ### Next bring-up step
 
-With MMIO discovery/mapping in place, the next step is conservative register
-validation and staged enablement of non-datapath hardware blocks (still without
-PHY/interrupts/TX/RX implementation).
+After proving startup stability in ultra-safe mode, the next step is staged
+introduction of tightly scoped read-only register validation before any MMIO
+writes are re-enabled.
 
 
 ## Phase-2 PCI resource discovery and MMIO mapping
@@ -147,28 +147,33 @@ resource is present, initialization now fails cleanly rather than pretending
 success.
 
 
-## Reset sequence safety
+## Ultra-safe bring-up mode (Win98/ME hang mitigation)
 
-`L2HwReset` now performs a bounded reset handshake instead of writing reset and
-returning immediately. The sequence is:
+Due to observed system hangs during `MiniportInitialize`, the current phase is
+restricted to **MMIO mapping only**. The driver now does:
 
-1. write soft reset bit in master control register
-2. poll with a fixed iteration cap and sleep interval
-3. require both conditions before success:
-   - soft reset bit has self-cleared
-   - idle status register reads zero
+- PCI resource discovery (`NdisMQueryAdapterResources`)
+- MMIO BAR selection and mapping (`NdisMMapIoSpace`)
+- resource diagnostics capture in adapter fields
 
-If timeout is reached, initialization fails cleanly.
+And explicitly does **not** do:
 
+- any MMIO register writes
+- hardware reset sequencing
+- PHY access
+- interrupt enablement
+- hardware-state polling loops
 
-## Permanent MAC validation rules
+`L2HwInitialize` now returns success only when MMIO mapping succeeds, but keeps
+`HardwareReady = FALSE` so OID hardware status remains not-ready until a later,
+validated bring-up phase.
 
-MAC read still comes from station address registers (`REG_MAC_STA_ADDR` and
-`REG_MAC_STA_ADDR + 4`) consistent with Linux `atl2` fallback behavior for this
-step. After decoding byte order, initialization rejects MAC addresses that are:
+Additional diagnostics retained in adapter context:
 
-- all zero
-- all `FF`
-- multicast (LSB of first octet set)
-
-Invalid MAC data causes hardware initialization failure.
+- `MmioPhysicalBaseLow` / `MmioPhysicalBaseHigh`
+- `MemoryLength`
+- `MmioMappingSucceeded`
+- `ResourceCount`
+- `SelectedResourceIndex`
+- `SelectedResourceType`
+- `SelectedResourceLength`

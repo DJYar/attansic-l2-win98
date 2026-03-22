@@ -10,6 +10,12 @@ typedef struct _L2_ADAPTER {
     BOOLEAN MediaConnected;
     PUCHAR Registers;
     ULONG MmioPhysicalBaseLow;
+    ULONG MmioPhysicalBaseHigh;
+    BOOLEAN MmioMappingSucceeded;
+    ULONG ResourceCount;
+    ULONG SelectedResourceIndex;
+    ULONG SelectedResourceType;
+    ULONG SelectedResourceLength;
     ULONG MemoryLength;
     BOOLEAN HardwareReady;
     UCHAR PermanentAddress[L2_ETH_ADDR_LENGTH];

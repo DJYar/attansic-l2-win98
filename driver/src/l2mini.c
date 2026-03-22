@@ -96,6 +96,13 @@ L2MiniportInitialize(
     adapter->CurrentPacketFilter = 0;
     adapter->MaximumLookahead = adapter->MaximumFrameSize;
     adapter->CurrentLookahead = adapter->MaximumLookahead;
+    adapter->PermanentMac[0] = 0;
+    adapter->PermanentMac[1] = 0;
+    adapter->PermanentMac[2] = 0;
+    adapter->PermanentMac[3] = 0;
+    adapter->PermanentMac[4] = 0;
+    adapter->PermanentMac[5] = 0;
+    adapter->MacReadSucceeded = FALSE;
     adapter->SanityReadOffsets[0] = 0;
     adapter->SanityReadOffsets[1] = 0;
     adapter->SanityReadOffsets[2] = 0;
@@ -125,8 +132,14 @@ L2MiniportInitialize(
         return NDIS_STATUS_FAILURE;
     }
 
-    /* Exactly one read-only sanity access after successful MMIO mapping. */
+    /* Fixed-set read-only sanity accesses after successful MMIO mapping. */
     L2PerformMmioSanityRead(adapter);
+
+    /*
+     * Conservative phase step: read-only MAC extraction from station-address
+     * registers. This does not alter OID-reported placeholder addresses yet.
+     */
+    (VOID)L2ReadPermanentMac(adapter, adapter->PermanentMac, sizeof(adapter->PermanentMac));
 #endif
 #else
     UNREFERENCED_PARAMETER(WrapperConfigurationContext);

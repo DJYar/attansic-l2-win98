@@ -68,8 +68,11 @@ value is `100000`, which corresponds to 10,000,000 bps (10 Mbps).
 ## Placeholder MAC
 
 A named constant (`g_L2PlaceholderMac`) is used for the phase-1 locally
-administered placeholder MAC address (`02-00-00-00-00-01`) to keep intent
-explicit until hardware MAC retrieval is implemented.
+administered placeholder MAC address (`02-00-00-00-00-01`) for OID responses.
+
+Read-only hardware MAC extraction is now implemented separately for diagnostics
+and validation, but OID responses intentionally continue using the placeholder
+until a later enablement phase.
 
 
 ## Miniport build defines required for `ndis.h`
@@ -224,10 +227,11 @@ Recorded fields now include:
 - `MmioMappingSucceeded`
 - `MmioPhysicalBaseLow` / `MmioPhysicalBaseHigh`
 
-This phase still keeps hardware inactive except for a single controlled
-read-only sanity probe:
+This phase still keeps hardware inactive except for tightly scoped controlled
+read-only probes:
 
-- exactly one read-only register access (`REG_IDLE_STATUS`)
+- fixed-set sanity register reads
+- station-address register reads for MAC extraction
 - no register writes
 - no reset
 - no PHY
@@ -259,3 +263,47 @@ Validation rule: if all performed sanity reads return `0xFFFFFFFF`, the
 sanity check is treated as failed (`SanityReadSucceeded = FALSE`).
 
 All register writes remain disabled.
+
+
+## Read-only MAC extraction
+
+After successful MMIO mapping and sanity reads, the driver performs read-only
+MAC extraction from Linux `atl2` station-address registers:
+
+- `REG_MAC_STA_ADDR` (`0x1488`) for MAC bytes 0..3
+- `REG_MAC_STA_ADDR + 4` (`0x148C`) for MAC bytes 4..5
+
+Safety rationale:
+
+- read-only accesses only
+- no register writes
+- no reset sequencing
+- no enabling/control bits
+- no PHY/MDIO access
+- no interrupt enable/ack writes
+
+Validation rule:
+
+- if extracted MAC is all `00` or all `FF`, it is invalid and
+  `MacReadSucceeded = FALSE`
+- otherwise `MacReadSucceeded = TRUE`
+
+The extracted MAC is stored in `PermanentMac[6]` for diagnostics only in this
+phase. OID permanent/current address reporting remains on the placeholder MAC.
+
+
+## Initialization debug output (DebugView)
+
+Initialization-only debug lines are emitted through `DBGPRINT` so bring-up can
+be observed in DebugView on Windows 98 without changing hardware behavior:
+
+- MMIO mapping:
+  - `[L2] MMIO mapped: phys=%08X:%08X len=%u virt=%p`
+- each sanity read:
+  - `[L2] SANITY read: reg=0x%X val=0x%08X`
+- MAC extraction:
+  - `[L2] MAC: %02X:%02X:%02X:%02X:%02X:%02X`
+  - `[L2] MAC INVALID` (when all `00` or all `FF`)
+
+This output is limited to a few lines during initialization and uses no dynamic
+allocation, delay loops, or additional hardware writes.

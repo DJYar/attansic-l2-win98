@@ -25,6 +25,8 @@ typedef struct _L2_ADAPTER {
     ULONG CurrentPacketFilter;
     ULONG CurrentLookahead;
     ULONG MaximumLookahead;
+    UCHAR PermanentMac[L2_ETH_ADDR_LENGTH];
+    BOOLEAN MacReadSucceeded;
     ULONG SanityReadOffsets[3];
     ULONG SanityReadValues[3];
     ULONG SanityReadSuccessCount;

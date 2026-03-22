@@ -1,5 +1,6 @@
 #include "l2ndis.h"
 #include "l2hw.h"
+#include "debug.h"
 
 #define L2_RESOURCE_DESC_CAPACITY 16
 #define L2_INVALID_RESOURCE_INDEX 0xFFFFFFFF
@@ -17,7 +18,9 @@ L2IsSafeReadRegister(
      */
     if ((RegisterOffset == L2_REG_IDLE_STATUS) ||
         (RegisterOffset == L2_REG_STS_RX_PAUSE) ||
-        (RegisterOffset == L2_REG_STS_RXD_OV)) {
+        (RegisterOffset == L2_REG_STS_RXD_OV) ||
+        (RegisterOffset == L2_REG_MAC_STA_ADDR) ||
+        (RegisterOffset == L2_REG_MAC_STA_ADDR_HI)) {
         return TRUE;
     }
 
@@ -163,6 +166,11 @@ L2MapDiscoveredMmio(
 
     Adapter->MemoryLength = Adapter->SelectedResourceLength;
     Adapter->MmioMappingSucceeded = TRUE;
+    DBGPRINT(("[L2] MMIO mapped: phys=%08X:%08X len=%lu virt=%p\n",
+              Adapter->MmioPhysicalBaseHigh,
+              Adapter->MmioPhysicalBaseLow,
+              Adapter->MemoryLength,
+              Adapter->Registers));
     return NDIS_STATUS_SUCCESS;
 }
 NDIS_STATUS
@@ -292,6 +300,7 @@ L2PerformMmioSanityRead(
         }
 
         NdisReadRegisterUlong((PULONG)(Adapter->Registers + offsets[i]), &values[i]);
+        DBGPRINT(("[L2] SANITY read: reg=0x%X val=0x%08X\n", offsets[i], values[i]));
         ++readCount;
 
         if (values[i] == 0xFFFFFFFF) {
@@ -336,6 +345,13 @@ L2HwShutdown(
     Adapter->MmioPhysicalBaseLow = 0;
     Adapter->MmioPhysicalBaseHigh = 0;
     Adapter->MmioMappingSucceeded = FALSE;
+    Adapter->PermanentMac[0] = 0;
+    Adapter->PermanentMac[1] = 0;
+    Adapter->PermanentMac[2] = 0;
+    Adapter->PermanentMac[3] = 0;
+    Adapter->PermanentMac[4] = 0;
+    Adapter->PermanentMac[5] = 0;
+    Adapter->MacReadSucceeded = FALSE;
     Adapter->SanityReadOffsets[0] = 0;
     Adapter->SanityReadOffsets[1] = 0;
     Adapter->SanityReadOffsets[2] = 0;
@@ -365,7 +381,16 @@ L2ReadPermanentMac(
     IN ULONG AddressLength
     )
 {
-    UNREFERENCED_PARAMETER(Adapter);
+    ULONG macLow = 0;
+    ULONG macHigh = 0;
+    UCHAR mac[L2_ETH_ADDR_LENGTH];
+    BOOLEAN allZero = TRUE;
+    BOOLEAN allOnes = TRUE;
+    UINT i;
+
+    if (Adapter == NULL) {
+        return NDIS_STATUS_INVALID_DATA;
+    }
 
     if (Address == NULL) {
         return NDIS_STATUS_INVALID_DATA;
@@ -375,11 +400,64 @@ L2ReadPermanentMac(
         return NDIS_STATUS_BUFFER_TOO_SHORT;
     }
 
+    Adapter->PermanentMac[0] = 0;
+    Adapter->PermanentMac[1] = 0;
+    Adapter->PermanentMac[2] = 0;
+    Adapter->PermanentMac[3] = 0;
+    Adapter->PermanentMac[4] = 0;
+    Adapter->PermanentMac[5] = 0;
+    Adapter->MacReadSucceeded = FALSE;
+
+    if ((Adapter->Registers == NULL) ||
+        !L2IsSafeReadRegister(L2_REG_MAC_STA_ADDR) ||
+        !L2IsSafeReadRegister(L2_REG_MAC_STA_ADDR_HI)) {
+        return NDIS_STATUS_ADAPTER_NOT_FOUND;
+    }
+
+    NdisReadRegisterUlong((PULONG)(Adapter->Registers + L2_REG_MAC_STA_ADDR), &macLow);
+    NdisReadRegisterUlong((PULONG)(Adapter->Registers + L2_REG_MAC_STA_ADDR_HI), &macHigh);
+
     /*
-     * Ultra-safe bring-up mode: avoid permanent MAC reads from hardware
-     * registers until register-level safety is proven.
+     * Linux atl2 uses REG_MAC_STA_ADDR (0x1488) and +4 for upper bytes.
+     * Read-only extraction only; no writes/reset/enable/PHY access.
      */
-    return NDIS_STATUS_NOT_SUPPORTED;
+    mac[0] = (UCHAR)(macLow & 0xFF);
+    mac[1] = (UCHAR)((macLow >> 8) & 0xFF);
+    mac[2] = (UCHAR)((macLow >> 16) & 0xFF);
+    mac[3] = (UCHAR)((macLow >> 24) & 0xFF);
+    mac[4] = (UCHAR)(macHigh & 0xFF);
+    mac[5] = (UCHAR)((macHigh >> 8) & 0xFF);
+
+    for (i = 0; i < L2_ETH_ADDR_LENGTH; ++i) {
+        if (mac[i] != 0x00) {
+            allZero = FALSE;
+        }
+
+        if (mac[i] != 0xFF) {
+            allOnes = FALSE;
+        }
+    }
+
+    Adapter->PermanentMac[0] = mac[0];
+    Adapter->PermanentMac[1] = mac[1];
+    Adapter->PermanentMac[2] = mac[2];
+    Adapter->PermanentMac[3] = mac[3];
+    Adapter->PermanentMac[4] = mac[4];
+    Adapter->PermanentMac[5] = mac[5];
+
+    DBGPRINT(("[L2] MAC: %02X:%02X:%02X:%02X:%02X:%02X\n",
+              mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]));
+
+    if (allZero || allOnes) {
+        DBGPRINT(("[L2] MAC INVALID\n"));
+        NdisZeroMemory(Address, AddressLength);
+        Adapter->MacReadSucceeded = FALSE;
+        return NDIS_STATUS_FAILURE;
+    }
+
+    NdisMoveMemory(Address, mac, L2_ETH_ADDR_LENGTH);
+    Adapter->MacReadSucceeded = TRUE;
+    return NDIS_STATUS_SUCCESS;
 }
 
 NDIS_STATUS

@@ -1,11 +1,8 @@
 #include "l2ndis.h"
+#include "l2hw.h"
 
 #define L2_ETH_HEADER_SIZE 14
 #define L2_DRIVER_VERSION 0x0500
-
-#ifndef L2_INIT_RETURN_FAILURE
-#define L2_INIT_RETURN_FAILURE 0
-#endif
 
 static const UCHAR g_L2PlaceholderMac[L2_ETH_ADDR_LENGTH] = {
     0x02, 0x00, 0x00, 0x00, 0x00, 0x01
@@ -108,14 +105,16 @@ L2MiniportInitialize(
         NdisInterfacePci
         );
 
-    UNREFERENCED_PARAMETER(WrapperConfigurationContext);
-
-#if L2_INIT_RETURN_FAILURE
-    NdisFreeMemory(adapter, sizeof(*adapter), 0);
-    return NDIS_STATUS_FAILURE;
+#if L2_ENABLE_RESOURCE_DISCOVERY
+    if (L2DiscoverAdapterResources(adapter, WrapperConfigurationContext) != NDIS_STATUS_SUCCESS) {
+        NdisFreeMemory(adapter, sizeof(*adapter), 0);
+        return NDIS_STATUS_FAILURE;
+    }
 #else
-    return NDIS_STATUS_SUCCESS;
+    UNREFERENCED_PARAMETER(WrapperConfigurationContext);
 #endif
+
+    return NDIS_STATUS_SUCCESS;
 }
 
 BOOLEAN

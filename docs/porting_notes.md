@@ -123,9 +123,8 @@ writes are re-enabled.
 ## Ultra-safe bring-up mode (Win98/ME hang mitigation)
 
 Due to observed system hangs during `MiniportInitialize`, the current phase is
-restricted to **hardware-free successful initialization**. The driver now avoids
-PCI resource discovery/MMIO mapping during `MiniportInitialize` and keeps only
-software-state setup.
+restricted to **hardware-free successful initialization**. The driver keeps hardware inactive and performs only software setup plus
+optional resource discovery metadata collection during `MiniportInitialize`.
 
 And explicitly does **not** do:
 
@@ -178,9 +177,33 @@ adds serialized diagnostic stubs for:
 `ReturnPacketHandler` was removed for this conservative serialized path to keep
 only the minimal set required for the current no-receive/no-indication phase.
 
-An A/B compile-time switch controls init completion behavior:
+The driver now always follows the stable success-return path after
+`NdisMSetAttributesEx` (no failure-injection switch).
 
-- `L2_INIT_RETURN_FAILURE=1` => fail immediately after `NdisMSetAttributesEx`
-- `L2_INIT_RETURN_FAILURE=0` => return success with hardware-free adapter state
 
-This supports controlled Win98 contract testing without enabling hardware.
+## Resource-discovery-only phase (no MMIO mapping)
+
+A compile-time switch controls conservative resource discovery:
+
+- `L2_ENABLE_RESOURCE_DISCOVERY=1` (current default in `driver/src/sources`)
+
+When enabled, `MiniportInitialize` calls `NdisMQueryAdapterResources` and
+records resource metadata only:
+
+- `ResourceCount`
+- `SelectedResourceIndex`
+- `SelectedResourceType`
+- `SelectedResourceLength`
+- `MmioPhysicalBaseLow`
+- `MmioPhysicalBaseHigh`
+
+In this phase the driver still does **not**:
+
+- map MMIO (`NdisMMapIoSpace`)
+- read/write registers
+- reset hardware
+- touch PHY
+- enable interrupts
+
+If resource discovery fails or no usable memory resource is found, initialization
+fails conservatively.

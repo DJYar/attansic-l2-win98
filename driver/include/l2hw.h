@@ -26,6 +26,12 @@ L2WriteReg32(
     );
 
 NDIS_STATUS
+L2DiscoverAdapterResources(
+    IN PL2_ADAPTER Adapter,
+    IN NDIS_HANDLE WrapperConfigurationContext
+    );
+
+NDIS_STATUS
 L2MapHardwareResources(
     IN PL2_ADAPTER Adapter,
     IN NDIS_HANDLE WrapperConfigurationContext

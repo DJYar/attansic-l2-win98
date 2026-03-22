@@ -53,6 +53,69 @@ L2WriteReg32(
 }
 
 NDIS_STATUS
+L2DiscoverAdapterResources(
+    IN PL2_ADAPTER Adapter,
+    IN NDIS_HANDLE WrapperConfigurationContext
+    )
+{
+    UCHAR resourceBuffer[
+        sizeof(NDIS_RESOURCE_LIST) +
+        (L2_RESOURCE_DESC_CAPACITY * sizeof(CM_PARTIAL_RESOURCE_DESCRIPTOR))
+    ];
+    PNDIS_RESOURCE_LIST resourceList = (PNDIS_RESOURCE_LIST)resourceBuffer;
+    PCM_PARTIAL_RESOURCE_DESCRIPTOR partial;
+    UINT bufferSize = sizeof(resourceBuffer);
+    NDIS_STATUS status;
+    UINT i;
+
+    if ((Adapter == NULL) || (WrapperConfigurationContext == NULL)) {
+        return NDIS_STATUS_INVALID_DATA;
+    }
+
+    Adapter->MmioPhysicalBaseLow = 0;
+    Adapter->MmioPhysicalBaseHigh = 0;
+    Adapter->MmioMappingSucceeded = FALSE;
+    Adapter->ResourceCount = 0;
+    Adapter->SelectedResourceIndex = L2_INVALID_RESOURCE_INDEX;
+    Adapter->SelectedResourceType = 0;
+    Adapter->SelectedResourceLength = 0;
+
+    NdisMQueryAdapterResources(
+        &status,
+        WrapperConfigurationContext,
+        resourceList,
+        &bufferSize
+        );
+
+    if (status != NDIS_STATUS_SUCCESS) {
+        return status;
+    }
+
+    Adapter->ResourceCount = resourceList->Count;
+
+    for (i = 0, partial = resourceList->PartialDescriptors;
+         i < resourceList->Count;
+         ++i, ++partial) {
+
+        if ((partial->Type == CmResourceTypeMemory) &&
+            (partial->u.Memory.Length > 0)) {
+            Adapter->SelectedResourceIndex = i;
+            Adapter->SelectedResourceType = partial->Type;
+            Adapter->SelectedResourceLength = partial->u.Memory.Length;
+            Adapter->MmioPhysicalBaseLow = partial->u.Memory.Start.LowPart;
+            Adapter->MmioPhysicalBaseHigh = partial->u.Memory.Start.HighPart;
+            break;
+        }
+    }
+
+    if (Adapter->SelectedResourceIndex == L2_INVALID_RESOURCE_INDEX) {
+        return NDIS_STATUS_RESOURCE_CONFLICT;
+    }
+
+    return NDIS_STATUS_SUCCESS;
+}
+
+NDIS_STATUS
 L2MapHardwareResources(
     IN PL2_ADAPTER Adapter,
     IN NDIS_HANDLE WrapperConfigurationContext

@@ -110,6 +110,13 @@ L2MiniportInitialize(
         NdisFreeMemory(adapter, sizeof(*adapter), 0);
         return NDIS_STATUS_FAILURE;
     }
+
+#if L2_ENABLE_MMIO_MAPPING
+    if (L2MapDiscoveredMmio(adapter) != NDIS_STATUS_SUCCESS) {
+        NdisFreeMemory(adapter, sizeof(*adapter), 0);
+        return NDIS_STATUS_FAILURE;
+    }
+#endif
 #else
     UNREFERENCED_PARAMETER(WrapperConfigurationContext);
 #endif
@@ -165,6 +172,7 @@ L2MiniportHalt(
     PL2_ADAPTER adapter = (PL2_ADAPTER)MiniportAdapterContext;
 
     if (adapter != NULL) {
+        L2HwShutdown(adapter);
         NdisFreeMemory(adapter, sizeof(*adapter), 0);
     }
 }

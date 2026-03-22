@@ -181,11 +181,12 @@ The driver now always follows the stable success-return path after
 `NdisMSetAttributesEx` (no failure-injection switch).
 
 
-## Resource-discovery-only phase (no MMIO mapping)
+## Resource-discovery phase (with optional mapping-only MMIO)
 
 A compile-time switch controls conservative resource discovery:
 
 - `L2_ENABLE_RESOURCE_DISCOVERY=1` (current default in `driver/src/sources`)
+- `L2_ENABLE_MMIO_MAPPING=1` (enables mapping-only MMIO after discovery)
 
 When enabled, `MiniportInitialize` calls `NdisMQueryAdapterResources` and
 records resource metadata only:
@@ -199,7 +200,6 @@ records resource metadata only:
 
 In this phase the driver still does **not**:
 
-- map MMIO (`NdisMMapIoSpace`)
 - read/write registers
 - reset hardware
 - touch PHY
@@ -207,3 +207,29 @@ In this phase the driver still does **not**:
 
 If resource discovery fails or no usable memory resource is found, initialization
 fails conservatively.
+
+
+## Mapping-only MMIO phase
+
+Resource discovery is now followed by **MMIO mapping only** in
+`MiniportInitialize`:
+
+- `NdisMQueryAdapterResources` (discover)
+- `NdisMMapIoSpace` (map selected memory resource)
+
+Recorded fields now include:
+
+- `Registers`
+- `MemoryLength`
+- `MmioMappingSucceeded`
+- `MmioPhysicalBaseLow` / `MmioPhysicalBaseHigh`
+
+This phase still keeps hardware inactive:
+
+- no register reads
+- no register writes
+- no reset
+- no PHY
+- no interrupts
+
+`HardwareReady` remains `FALSE` by design.

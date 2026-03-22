@@ -115,6 +115,50 @@ L2DiscoverAdapterResources(
     return NDIS_STATUS_SUCCESS;
 }
 
+
+NDIS_STATUS
+L2MapDiscoveredMmio(
+    IN PL2_ADAPTER Adapter
+    )
+{
+    PHYSICAL_ADDRESS physicalBase;
+    NDIS_STATUS status;
+
+    if (Adapter == NULL) {
+        return NDIS_STATUS_INVALID_DATA;
+    }
+
+    Adapter->Registers = NULL;
+    Adapter->MemoryLength = 0;
+    Adapter->MmioMappingSucceeded = FALSE;
+
+    if ((Adapter->SelectedResourceIndex == L2_INVALID_RESOURCE_INDEX) ||
+        (Adapter->SelectedResourceType != CmResourceTypeMemory) ||
+        (Adapter->SelectedResourceLength == 0)) {
+        return NDIS_STATUS_RESOURCE_CONFLICT;
+    }
+
+    physicalBase.LowPart = Adapter->MmioPhysicalBaseLow;
+    physicalBase.HighPart = Adapter->MmioPhysicalBaseHigh;
+
+    status = NdisMMapIoSpace(
+        (PVOID *)&Adapter->Registers,
+        Adapter->AdapterHandle,
+        physicalBase,
+        Adapter->SelectedResourceLength
+        );
+
+    if ((status != NDIS_STATUS_SUCCESS) || (Adapter->Registers == NULL)) {
+        Adapter->Registers = NULL;
+        Adapter->MemoryLength = 0;
+        Adapter->MmioMappingSucceeded = FALSE;
+        return status;
+    }
+
+    Adapter->MemoryLength = Adapter->SelectedResourceLength;
+    Adapter->MmioMappingSucceeded = TRUE;
+    return NDIS_STATUS_SUCCESS;
+}
 NDIS_STATUS
 L2MapHardwareResources(
     IN PL2_ADAPTER Adapter,

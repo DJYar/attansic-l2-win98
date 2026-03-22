@@ -32,6 +32,11 @@ L2DiscoverAdapterResources(
     );
 
 NDIS_STATUS
+L2MapDiscoveredMmio(
+    IN PL2_ADAPTER Adapter
+    );
+
+NDIS_STATUS
 L2MapHardwareResources(
     IN PL2_ADAPTER Adapter,
     IN NDIS_HANDLE WrapperConfigurationContext

@@ -3,6 +3,10 @@
 #define L2_ETH_HEADER_SIZE 14
 #define L2_DRIVER_VERSION 0x0500
 
+#ifndef L2_INIT_RETURN_FAILURE
+#define L2_INIT_RETURN_FAILURE 0
+#endif
+
 static const UCHAR g_L2PlaceholderMac[L2_ETH_ADDR_LENGTH] = {
     0x02, 0x00, 0x00, 0x00, 0x00, 0x01
 };
@@ -25,6 +29,14 @@ static const NDIS_OID g_L2SupportedOids[] = {
     OID_GEN_VENDOR_ID,
     OID_GEN_VENDOR_DESCRIPTION,
     OID_GEN_DRIVER_VERSION,
+    OID_GEN_CURRENT_LOOKAHEAD,
+    OID_GEN_MAXIMUM_LOOKAHEAD,
+    OID_GEN_MAC_OPTIONS,
+    OID_GEN_TRANSMIT_BUFFER_SPACE,
+    OID_GEN_RECEIVE_BUFFER_SPACE,
+    OID_GEN_MAXIMUM_SEND_PACKETS,
+    OID_802_3_MAXIMUM_LIST_SIZE,
+    OID_GEN_CURRENT_PACKET_FILTER,
     OID_802_3_CURRENT_ADDRESS,
     OID_802_3_PERMANENT_ADDRESS
 };
@@ -84,6 +96,9 @@ L2MiniportInitialize(
     adapter->SelectedResourceLength = 0;
     adapter->MemoryLength = 0;
     adapter->HardwareReady = FALSE;
+    adapter->CurrentPacketFilter = 0;
+    adapter->MaximumLookahead = adapter->MaximumFrameSize;
+    adapter->CurrentLookahead = adapter->MaximumLookahead;
 
     NdisMSetAttributesEx(
         MiniportAdapterHandle,
@@ -95,7 +110,12 @@ L2MiniportInitialize(
 
     UNREFERENCED_PARAMETER(WrapperConfigurationContext);
 
+#if L2_INIT_RETURN_FAILURE
+    NdisFreeMemory(adapter, sizeof(*adapter), 0);
+    return NDIS_STATUS_FAILURE;
+#else
     return NDIS_STATUS_SUCCESS;
+#endif
 }
 
 BOOLEAN
@@ -137,17 +157,6 @@ L2MiniportSend(
     return NDIS_STATUS_NOT_ACCEPTED;
 }
 
-VOID
-L2MiniportReturnPacket(
-    IN NDIS_HANDLE MiniportAdapterContext,
-    IN PNDIS_PACKET Packet
-    )
-{
-    UNREFERENCED_PARAMETER(MiniportAdapterContext);
-    UNREFERENCED_PARAMETER(Packet);
-
-    /* Diagnostic bring-up stub: receive indication path not implemented. */
-}
 
 VOID
 L2MiniportHalt(
@@ -216,6 +225,37 @@ L2MiniportQueryInformation(
         moveBytes = sizeof(mediaState);
         break;
 
+    case OID_GEN_CURRENT_LOOKAHEAD:
+        moveSource = &adapter->CurrentLookahead;
+        moveBytes = sizeof(adapter->CurrentLookahead);
+        break;
+
+    case OID_GEN_MAXIMUM_LOOKAHEAD:
+        moveSource = &adapter->MaximumLookahead;
+        moveBytes = sizeof(adapter->MaximumLookahead);
+        break;
+
+    case OID_GEN_MAC_OPTIONS:
+        genericUlong = NDIS_MAC_OPTION_TRANSFERS_NOT_PEND |
+                       NDIS_MAC_OPTION_COPY_LOOKAHEAD_DATA |
+                       NDIS_MAC_OPTION_NO_LOOPBACK;
+        moveSource = &genericUlong;
+        moveBytes = sizeof(genericUlong);
+        break;
+
+    case OID_GEN_TRANSMIT_BUFFER_SPACE:
+    case OID_GEN_RECEIVE_BUFFER_SPACE:
+        genericUlong = adapter->MaximumFrameSize;
+        moveSource = &genericUlong;
+        moveBytes = sizeof(genericUlong);
+        break;
+
+    case OID_GEN_MAXIMUM_SEND_PACKETS:
+        genericUlong = 1;
+        moveSource = &genericUlong;
+        moveBytes = sizeof(genericUlong);
+        break;
+
     case OID_GEN_LINK_SPEED:
         moveSource = &adapter->LinkSpeed;
         moveBytes = sizeof(adapter->LinkSpeed);
@@ -246,6 +286,12 @@ L2MiniportQueryInformation(
         genericUshort = L2_DRIVER_VERSION;
         moveSource = &genericUshort;
         moveBytes = sizeof(genericUshort);
+        break;
+
+    case OID_802_3_MAXIMUM_LIST_SIZE:
+        genericUlong = 1;
+        moveSource = &genericUlong;
+        moveBytes = sizeof(genericUlong);
         break;
 
     case OID_802_3_CURRENT_ADDRESS:
@@ -286,13 +332,41 @@ L2MiniportSetInformation(
     OUT PULONG BytesNeeded
     )
 {
-    UNREFERENCED_PARAMETER(MiniportAdapterContext);
-    UNREFERENCED_PARAMETER(Oid);
-    UNREFERENCED_PARAMETER(InformationBuffer);
-    UNREFERENCED_PARAMETER(InformationBufferLength);
+    PL2_ADAPTER adapter = (PL2_ADAPTER)MiniportAdapterContext;
+
+    if ((adapter == NULL) || (InformationBuffer == NULL)) {
+        return NDIS_STATUS_INVALID_DATA;
+    }
 
     *BytesRead = 0;
     *BytesNeeded = 0;
 
-    return NDIS_STATUS_NOT_SUPPORTED;
+    switch (Oid) {
+    case OID_GEN_CURRENT_PACKET_FILTER:
+        if (InformationBufferLength < sizeof(ULONG)) {
+            *BytesNeeded = sizeof(ULONG);
+            return NDIS_STATUS_INVALID_LENGTH;
+        }
+
+        adapter->CurrentPacketFilter = *(PULONG)InformationBuffer;
+        *BytesRead = sizeof(ULONG);
+        return NDIS_STATUS_SUCCESS;
+
+    case OID_GEN_CURRENT_LOOKAHEAD:
+        if (InformationBufferLength < sizeof(ULONG)) {
+            *BytesNeeded = sizeof(ULONG);
+            return NDIS_STATUS_INVALID_LENGTH;
+        }
+
+        adapter->CurrentLookahead = *(PULONG)InformationBuffer;
+        if (adapter->CurrentLookahead > adapter->MaximumLookahead) {
+            adapter->CurrentLookahead = adapter->MaximumLookahead;
+        }
+
+        *BytesRead = sizeof(ULONG);
+        return NDIS_STATUS_SUCCESS;
+
+    default:
+        return NDIS_STATUS_NOT_SUPPORTED;
+    }
 }

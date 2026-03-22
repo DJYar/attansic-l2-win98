@@ -22,6 +22,9 @@ typedef struct _L2_ADAPTER {
     UCHAR CurrentAddress[L2_ETH_ADDR_LENGTH];
     ULONG LinkSpeed;
     ULONG MaximumFrameSize;
+    ULONG CurrentPacketFilter;
+    ULONG CurrentLookahead;
+    ULONG MaximumLookahead;
 } L2_ADAPTER, *PL2_ADAPTER;
 
 extern NDIS_HANDLE g_NdisWrapperHandle;
@@ -66,11 +69,6 @@ L2MiniportSend(
     IN UINT Flags
     );
 
-VOID
-L2MiniportReturnPacket(
-    IN NDIS_HANDLE MiniportAdapterContext,
-    IN PNDIS_PACKET Packet
-    );
 
 NDIS_STATUS
 L2MiniportQueryInformation(

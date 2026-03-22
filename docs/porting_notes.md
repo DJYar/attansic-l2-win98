@@ -146,12 +146,11 @@ are not populated by the hardware-free initialization path in this revision.
 
 To better match the base NDIS 5 miniport contract used by `e100bex`, the
 registration table now includes conservative diagnostic stubs for handlers that
-are commonly present when initialization succeeds:
+are commonly present for minimal serialized initialization:
 
 - `CheckForHangHandler`
 - `ResetHandler`
 - `SendHandler` (serialized miniport style)
-- `ReturnPacketHandler`
 
 Current mode remains **serialized** (`NdisMSetAttributesEx` flags = `0`, no
 `NDIS_ATTRIBUTE_DESERIALIZE`), which is consistent with using `SendHandler`
@@ -159,3 +158,29 @@ instead of `SendPacketsHandler` for this minimal bring-up phase.
 
 All newly added handlers are hardware-free stubs and do not touch MMIO,
 interrupts, PHY, or datapath setup.
+
+
+## Win98 successful-init contract diagnostics
+
+Current observations during Win98 bring-up:
+
+- `NdisMSetAttributesEx` followed by immediate `NDIS_STATUS_FAILURE` is stable.
+- Crashes occur only when `MiniportInitialize` returns success and NDIS starts
+  interacting with the adapter contract.
+
+To improve contract completeness while staying hardware-free, the miniport now
+adds serialized diagnostic stubs for:
+
+- `CheckForHangHandler`
+- `ResetHandler`
+- `SendHandler`
+
+`ReturnPacketHandler` was removed for this conservative serialized path to keep
+only the minimal set required for the current no-receive/no-indication phase.
+
+An A/B compile-time switch controls init completion behavior:
+
+- `L2_INIT_RETURN_FAILURE=1` => fail immediately after `NdisMSetAttributesEx`
+- `L2_INIT_RETURN_FAILURE=0` => return success with hardware-free adapter state
+
+This supports controlled Win98 contract testing without enabling hardware.

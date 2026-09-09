@@ -1,0 +1,80 @@
+; Attansic L2 NDIS miniport INF (Windows 98 SE / Windows ME)
+; Reference style: NTDDK/src/network/ndis/e100bex/NET557ex.INF
+;
+; Notes:
+; - Primary match intentionally scoped to ASUS subsystem first.
+; - REV is intentionally NOT matched so stepping updates (for same device/subsystem)
+;   can still bind during bring-up.
+; - Add additional PCI IDs in [Attansic] as needed in later phases.
+
+[Version]
+Signature   = "$Chicago$"
+Class       = Net
+ClassGUID   = {4D36E972-E325-11CE-BFC1-08002BE10318}
+Provider    = %Atheros%
+Compatible  = 1
+
+[Manufacturer]
+%Atheros% = Attansic
+
+[Attansic]
+; Primary active match (ASUS subsystem-specific)
+%L2.DeviceDesc% = L2.ndi, PCI\VEN_1969&DEV_2048&SUBSYS_82331043
+
+; Optional broader fallback for same silicon family (disabled by default)
+; %L2.DeviceDesc.Generic% = L2.ndi, PCI\VEN_1969&DEV_2048
+
+[ControlFlags]
+; Keep manual-selection UI conservative for current validated device scope.
+ExcludeFromSelect = PCI\VEN_1969&DEV_2048
+
+[L2.ndi]
+AddReg    = L2.id.reg, L2.ndi.reg, L2.win.reg
+CopyFiles = L2.CopyFiles
+DeviceID  = "PCI\VEN_1969&DEV_2048&SUBSYS_82331043"
+
+; Win9x/ME PCI + NDIS miniport identity/binding
+[L2.id.reg]
+HKR, Ndi, DeviceID,  0, "PCI\VEN_1969&DEV_2048&SUBSYS_82331043"
+HKR, Ndi, Service,   0, "l2ndis"
+HKR, Ndi, BusType,   0, "5"
+
+[L2.ndi.reg]
+; Win98/Memphis does not bind protocols to an ndis5 upper range.  NDIS 5
+; miniports use the ndis3 compatibility range here, as in NET557ex.INF.
+HKR, Ndi\Interfaces, UpperRange, 0, "ndis3"
+HKR, Ndi\Interfaces, LowerRange, 0, "ethernet"
+HKR, Ndi\Interfaces, DefUpper,   0, "ndis3"
+HKR, Ndi\Interfaces, DefLower,   0, "ethernet"
+
+; Win98/ME loader wiring for NDIS miniport SYS
+[L2.win.reg]
+HKR, ,            DevLoader,        0, "*ndis"
+HKR, ,            DeviceVxDs,       0, "l2ndis.sys"
+HKR, ,            EnumPropPages,    0, "netdi.dll,EnumPropPages"
+HKR, NDIS,        LogDriverName,    0, "L2NDIS"
+HKR, NDIS,        MajorNdisVersion, 1, 03
+HKR, NDIS,        MinorNdisVersion, 1, 0A
+HKR, Ndi\Install, ndis3,           0, "L2.install"
+
+[L2.install]
+CopyFiles = L2.CopyFiles
+
+[L2.CopyFiles]
+l2ndis.sys,,,2
+
+[SourceDisksNames]
+1 = %DiskName%,,,
+
+[SourceDisksFiles]
+l2ndis.sys = 1,,
+
+[DestinationDirs]
+L2.CopyFiles = 11
+DefaultDestDir = 11
+
+[Strings]
+Atheros              = "Atheros/Attansic"
+DiskName             = "Attansic L2 Driver Disk"
+L2.DeviceDesc        = "Attansic L2 Fast Ethernet Adapter (ASUS Eee PC)"
+L2.DeviceDesc.Generic= "Attansic L2 Fast Ethernet Adapter"

@@ -1,0 +1,22 @@
+# Proprietary or redistributable SDK/DDK trees are intentionally not published.
+/98DDK/
+/NTDDK/
+/linux/
+/build-win10.cmd
+
+# Legacy DDK build output.
+driver/src/objchk/
+driver/src/objfre/
+driver/src/buildchk_*.log
+driver/src/buildfre_*.log
+driver/src/*.err
+driver/src/*.wrn
+driver/src/*.log
+
+# Local packages and editor/OS files.
+*.zip
+*.bak
+*.tmp
+*~
+.DS_Store
+Thumbs.db

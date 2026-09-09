@@ -924,3 +924,25 @@ immediately supplied `192.168.0.121/24` with gateway `192.168.0.1`, and both
 gateway and Internet echo tests completed without loss.  A gateway TTL of 64
 confirmed that this validation traffic used the physical Attansic interface
 rather than the independent Raspberry Pi USB management path.
+
+
+## Free release-candidate runtime soak
+
+The clean-installed free RC ran a continuous Winamp Internet-radio stream for
+64 minutes.  During the run the Ethernet cable was removed long enough for the
+player's receive buffer to drain.  Playback stopped when the buffer emptied,
+then resumed automatically after the cable was reinserted; Winamp, the driver,
+and the DHCP client required no manual restart or renewal.
+
+Final Windows interface statistics reported 159,100,491 bytes and 113,845
+unicast packets received, zero discarded packets, and zero receive errors.
+The aggregate transmit-error count remained at its pre-test value of three.
+TCP retransmissions also remained at the pre-test value of three, including
+across the deliberate link interruption.  DHCP automatically renewed the same
+`192.168.0.121/24` lease during the run.
+
+After the stream test, ten consecutive gateway echo requests and ten Internet
+echo requests completed without loss.  Gateway replies had TTL 64 and
+0--1 ms latency, confirming direct use of the physical Attansic path.  This
+test validates the stripped 14,573-byte free binary in the published RC2
+archive; unlike the checked build, it contains no driver debug output.
